@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLIX Automations — סיסטם שעובד גם כשאתה לא</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* Section dividers */
+    .section-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.12);
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      max-width: calc(75% - 2rem);
+      margin: 0 auto;
+      background: #1a1d2e;
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      padding: 0.2rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.04) inset;
+    }
+    nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #fff; }
+
+    /* CTA Button */
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.4rem;
+      background: #e0176b;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-cta:hover { background: #c4115d; transform: translateY(-1px); }
+    .btn-cta:active { transform: translateY(0); }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.6rem;
+      background: transparent;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255,255,255,0.4);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover {
+      border-color: #2196b0;
+      background: rgba(33,150,176,0.08);
+    }
+
+    /* Floating tag bubbles */
+    .bubble-tag {
+      position: absolute;
+      border-radius: 50%;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.45);
+      animation: floatBubble 4s ease-in-out infinite;
+      overflow: hidden;
+    }
+    .bubble-tag img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+    .bubble-sm {
+      width: 54px;
+      height: 54px;
+    }
+    .bubble-sm img {
+      width: 40px;
+      height: 40px;
+    }
+    .bubble-lg {
+      width: 90px;
+      height: 90px;
+    }
+    .bubble-lg img {
+      width: 68px;
+      height: 68px;
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Circle service icons */
+    .service-circle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+    }
+    .service-circle .circle {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+    }
+    .service-circle:hover .circle {
+      background: rgba(33,150,176,0.2);
+      border-color: rgba(33,150,176,0.5);
+      transform: scale(1.06);
+    }
+    .service-circle .label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      text-align: center;
+      max-width: 90px;
+      line-height: 1.3;
+    }
+
+    /* Step number */
+    .step-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(33,150,176,0.2);
+      border: 1.5px solid #2196b0;
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: #2196b0;
+      flex-shrink: 0;
+    }
+
+    /* Stars */
+    .star { color: #f5c842; font-size: 1.1rem; }
+
+    /* Testimonial card */
+    .testi-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: border-color 0.25s;
+    }
+    .testi-card:hover { border-color: rgba(33,150,176,0.4); }
+
+    /* Process step row */
+    .process-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      padding: 1rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .process-row:last-child { border-bottom: none; }
+
+    /* Client logo placeholder */
+    .client-logo {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Mobile menu */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* form inputs */
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus {
+      border-color: rgba(33,150,176,0.6);
+      box-shadow: 0 0 0 3px rgba(33,150,176,0.12);
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.25); }
+
+    /* Tag chip */
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.8rem;
+      background: rgba(33,150,176,0.15);
+      border: 1px solid rgba(33,150,176,0.3);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #5dc8e0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ═══════════════════════════════════
+       NAV
+  ═══════════════════════════════════ -->
+  <nav>
+    <div class="nav-inner">
+
+      <!-- Logo (visual right) -->
+      <a href="#" style="display: flex; align-items: center; line-height: 0;">
+        <img src="brand_assets/logo-transparent.png" alt="CLIX Automations" style="height: 88px; width: auto; display: block;" />
+      </a>
+
+      <!-- Links (center) -->
+      <div style="display: flex; gap: 2.5rem;" class="hidden md:flex">
+        <a href="#" style="color: #e0176b; font-weight: 700;">דף הבית</a>
+        <a href="#results">תוצאות</a>
+        <a href="#services">שירותים</a>
+        <a href="#process">תהליך</a>
+        <a href="#contact">צרו קשר</a>
+      </div>
+
+      <!-- CTA (visual left) -->
+      <a href="#contact" class="btn-cta" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">
+        ◄ לפרטים נוספים
+      </a>
+    </div>
+  </nav>
+
+
+  <!-- ═══════════════════════════════════
+       HERO
+  ═══════════════════════════════════ -->
+  <section style="background: #0e1628; padding: 4rem 1.5rem 0; min-height: 92vh; display: flex; align-items: center; position: relative; overflow: hidden;">
+
+    <!-- Background subtle glow -->
+    <div style="position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 800px; height: 600px; background: radial-gradient(ellipse, rgba(33,150,176,0.12) 0%, transparent 65%); pointer-events: none;"></div>
+
+    <div style="max-width: 1100px; margin: 0 auto; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; position: relative; z-index: 1;">
+
+      <!-- RIGHT: Text content -->
+      <div class="reveal">
+
+
+        <h1 style="font-size: clamp(2.8rem, 6vw, 4.4rem); font-weight: 900; line-height: 1.15; margin-bottom: 1.25rem; letter-spacing: -0.02em;">
+          סיסטם שעובד<br />
+          <span style="color: #2196b0;">גם כשאתה לא</span>
+        </h1>
+
+        <p style="font-size: 1rem; line-height: 1.8; color: rgba(255,255,255,0.65); margin-bottom: 0.6rem; max-width: 380px;">
+          אנחנו בונים עבורך מערכות אוטומציה חכמות שמחברות כלי AI מתקדמים לתהליכי העסק שלך.
+        </p>
+        <p style="font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.45); margin-bottom: 2rem; max-width: 380px;">
+          רוצה לראות איך זה עובד בעסק שלך? נדבר.
+        </p>
+
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 2.5rem;">
+          <a href="#contact" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 1.8rem;">
+            לקבלת הצעה חינם ←
+          </a>
+          <a href="#process" class="btn-outline">
+            איך זה עובד?
+          </a>
+        </div>
+
+        <!-- Stars + social proof -->
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <div>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+          </div>
+          <span style="font-size: 0.82rem; color: rgba(255,255,255,0.5);">עשרות לקוחות מרוצים</span>
+        </div>
+      </div>
+
+      <!-- LEFT: Person image + bubbles -->
+      <div class="reveal" style="position: relative; display: flex; justify-content: center; align-items: flex-end; min-height: 480px; transition-delay: 0.15s;">
+
+        <!-- Person placeholder -->
+        <div style="position: relative; z-index: 2;">
+          <img src="brand_assets/profile_pic_final.png"
+               alt="מומחה אוטומציה"
+               style="width: 420px; height: 560px; object-fit: contain; object-position: center bottom; display: block;" />
+        </div>
+
+        <!-- Floating bubbles — local SVG icons -->
+        <!-- ימין: WhatsApp, Instagram, Facebook, Excel, Fillout -->
+        <div class="bubble-tag" style="top: 4%; right: -30px; animation-delay: 0s; background: #25D366;">
+          <img src="brand_assets/icons/whatsapp.svg" alt="WhatsApp" />
+        </div>
+        <div class="bubble-tag bubble-lg" style="top: 20%; right: -50px; animation-delay: 0.5s; background: radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%);">
+          <img src="brand_assets/icons/instagram.svg" alt="Instagram" />
+        </div>
+        <div class="bubble-tag" style="top: 42%; right: -45px; animation-delay: 1.0s; background: #1877F2;">
+          <img src="brand_assets/icons/facebook.svg" alt="Facebook" />
+        </div>
+        <div class="bubble-tag bubble-sm" style="top: 62%; right: -25px; animation-delay: 1.5s; background: #217346;">
+          <img src="brand_assets/icons/microsoftexcel.svg" alt="Excel" />
+        </div>
+        <div class="bubble-tag bubble-sm" style="top: 78%; right: -15px; animation-delay: 2.0s; background: #FFCB45;">
+          <img src="brand_assets/icons/fillout.svg" alt="Fillout" />
+        </div>
+
+        <!-- שמאל: Make, Monday, ManyChat, Fireberry, ChatGPT -->
+        <div class="bubble-tag bubble-sm" style="top: 4%; left: -25px; animation-delay: 0.2s; background: #6D00CC;">
+          <img src="brand_assets/icons/make.svg" alt="Make" />
+        </div>
+        <div class="bubble-tag" style="top: 20%; left: -50px; animation-delay: 0.7s; background: #ffffff;">
+          <img src="brand_assets/icons/aitools.png" alt="Monday" />
+        </div>
+        <div class="bubble-tag" style="top: 42%; left: -45px; animation-delay: 1.2s; background: #ffffff;">
+          <img src="brand_assets/icons/manychat.png" alt="ManyChat" />
+        </div>
+        <div class="bubble-tag bubble-sm" style="top: 62%; left: -25px; animation-delay: 1.7s; background: none; padding: 0;">
+          <img src="brand_assets/icons/fireberry.jpg" alt="Fireberry" style="width: 54px; height: 54px; object-fit: cover;" />
+        </div>
+        <div class="bubble-tag bubble-sm" style="top: 78%; left: -15px; animation-delay: 2.2s; background: #10a37f;">
+          <img src="brand_assets/icons/openai.svg" alt="ChatGPT" />
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       PROCESS — "אז איך מתחילים?"
+  ═══════════════════════════════════ -->
+  <section id="process" style="background: #0e1628; padding: 5rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+
+      <!-- LEFT: Steps list -->
+      <div>
+        <div class="reveal">
+          <div class="tag-chip" style="margin-bottom: 1rem;">📋 התהליך שלנו</div>
+          <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 900; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+            אז איך מתחילים ?
+          </h2>
+          <p style="color: rgba(255,255,255,0.5); font-size: 0.95rem; margin-bottom: 2.5rem;">
+            תהליך ברור, מהיר, ובלי סיבוכים — מפגישה ראשונה ועד לאוטומציה שרצה.
+          </p>
+        </div>
+
+        <div>
+          <div class="process-row reveal" style="transition-delay: 0.05s;">
+            <div class="step-pill">1</div>
+            <div>
+              <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem;">פגישת גילוי חינם</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">מבינים את העסק, הכאבים, והיעדים שלך — לפני שמדברים על פתרון.</div>
+            </div>
+          </div>
+          <div class="process-row reveal" style="transition-delay: 0.1s;">
+            <div class="step-pill">2</div>
+            <div>
+              <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem;">מיפוי ותכנון</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">בונים מפת אוטומציה מותאמת אישית עם ROI מדיד — לפני שורת קוד אחת.</div>
+            </div>
+          </div>
+          <div class="process-row reveal" style="transition-delay: 0.15s;">
+            <div class="step-pill">3</div>
+            <div>
+              <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem;">בנייה ובדיקות</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">פיתוח האוטומציות, בדיקות מקיפות, ואיטרציות מהירות עם עדכונים שוטפים.</div>
+            </div>
+          </div>
+          <div class="process-row reveal" style="transition-delay: 0.2s;">
+            <div class="step-pill">4</div>
+            <div>
+              <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem;">השקה + ליווי</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">פריסה חלקה, הדרכת הצוות, ותמיכה שוטפת לאחר ההשקה.</div>
+            </div>
+          </div>
+          <div class="process-row reveal" style="transition-delay: 0.25s;">
+            <div class="step-pill">5</div>
+            <div>
+              <div style="font-weight: 700; font-size: 1rem; margin-bottom: 0.3rem;">אופטימיזציה מתמדת</div>
+              <div style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.6;">מנטרים, משפרים, ומרחיבים את המערכת בהתאם לצמיחת העסק.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal" style="margin-top: 2rem; transition-delay: 0.3s;">
+          <a href="#contact" class="btn-cta" style="font-size: 0.95rem;">
+            שיחה ראשונה בחינם ←
+          </a>
+          <p style="font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 0.6rem;">
+            ✓ ללא התחייבות &nbsp;·&nbsp; ✓ תשובה תוך 24 שעות
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: Visual cards -->
+      <div class="reveal" style="transition-delay: 0.2s; display: flex; flex-direction: column; gap: 1rem;">
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem;">⏱️</div>
+          <div>
+            <div style="font-weight: 800; font-size: 1.4rem; color: #2196b0;">-80%</div>
+            <div style="font-size: 0.82rem; color: rgba(255,255,255,0.5);">זמן שמושקע במשימות חוזרות</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem;">📈</div>
+          <div>
+            <div style="font-weight: 800; font-size: 1.4rem; color: #2196b0;">8×</div>
+            <div style="font-size: 0.82rem; color: rgba(255,255,255,0.5);">שיפור ממוצע ביעילות תפעולית</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem;">🌙</div>
+          <div>
+            <div style="font-weight: 800; font-size: 1.4rem; color: #2196b0;">24/7</div>
+            <div style="font-size: 0.82rem; color: rgba(255,255,255,0.5);">המערכות עובדות בשבילך בכל שעה</div>
+          </div>
+        </div>
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+          <div style="font-size: 2rem;">✅</div>
+          <div>
+            <div style="font-weight: 800; font-size: 1.4rem; color: #2196b0;">50+</div>
+            <div style="font-size: 0.82rem; color: rgba(255,255,255,0.5);">פרוייקטי אוטומציה שהושלמו</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       SERVICES — "אילו אוטומציות קיימות?"
+  ═══════════════════════════════════ -->
+  <section id="services" style="background: #0a1220; padding: 5rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+
+      <div class="reveal" style="text-align: center; margin-bottom: 3.5rem;">
+        <div class="tag-chip" style="margin-bottom: 1rem; display: inline-flex;">🔧 שירותים</div>
+        <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 900; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+          אילו אוטומציות קיימות ?
+        </h2>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.95rem; max-width: 480px; margin: 0 auto;">
+          כל הכלים, כל הפלטפורמות, כל התהליכים — אנחנו מחברים ביניהם.
+        </p>
+      </div>
+
+      <!-- Circle icons grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 2rem 1.5rem; justify-items: center; margin-bottom: 3rem;">
+
+        <div class="service-circle reveal" style="transition-delay: 0.05s;">
+          <div class="circle">🤖</div>
+          <div class="label">סוכני AI חכמים</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.1s;">
+          <div class="circle">⚡</div>
+          <div class="label">Make / Zapier</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.15s;">
+          <div class="circle">💬</div>
+          <div class="label">צ׳אטבוטים</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.2s;">
+          <div class="circle">📧</div>
+          <div class="label">אוטומציית מייל</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.25s;">
+          <div class="circle">📱</div>
+          <div class="label">WhatsApp Bot</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.3s;">
+          <div class="circle">🛒</div>
+          <div class="label">אוטומציית מכירות</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.35s;">
+          <div class="circle">📊</div>
+          <div class="label">דשבורדים & BI</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.4s;">
+          <div class="circle">🔗</div>
+          <div class="label">CRM חכם</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.45s;">
+          <div class="circle">📋</div>
+          <div class="label">ניהול לידים</div>
+        </div>
+        <div class="service-circle reveal" style="transition-delay: 0.5s;">
+          <div class="circle">🧾</div>
+          <div class="label">חשבוניות אוטו׳</div>
+        </div>
+
+      </div>
+
+      <!-- Bottom CTA -->
+      <div class="reveal" style="text-align: center; transition-delay: 0.3s;">
+        <p style="font-size: 0.9rem; color: rgba(255,255,255,0.45); margin-bottom: 1.25rem;">
+          לא רואה את מה שאתה צריך? בוא נדבר — בדרך כלל יש פתרון.
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="#contact" class="btn-cta">לקבלת פתרון מותאם ←</a>
+          <a href="#process" class="btn-outline">סיפורי הצלחה</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       RESULTS — "עזרתי לעשרות עסקים"
+  ═══════════════════════════════════ -->
+  <section id="results" style="background: #0e1628; padding: 5rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+
+      <div class="reveal" style="text-align: center; margin-bottom: 3.5rem;">
+        <div class="tag-chip" style="margin-bottom: 1rem; display: inline-flex;">⭐ תוצאות</div>
+        <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 900; margin-bottom: 0.5rem; letter-spacing: -0.02em;">
+          עזרתי לעשרות עסקים<br />
+          <span style="color: rgba(255,255,255,0.6); font-size: 0.85em;">וזה מה שהם אומרים :</span>
+        </h2>
+      </div>
+
+      <!-- Testimonials grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+
+        <div class="testi-card reveal">
+          <div style="display: flex; gap: 0.3rem; margin-bottom: 1rem;">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p style="font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 1.25rem;">
+            "תוך שבועיים CLIX הכניסו לי אוטומציה שחסכה לי 3 שעות עבודה ביום. תשואה על ההשקעה הייתה מידית."
+          </p>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">ד.כ</div>
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700;">דוד כהן</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">מנכ"ל, חברת נדל"ן</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal" style="transition-delay: 0.1s;">
+          <div style="display: flex; gap: 0.3rem; margin-bottom: 1rem;">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p style="font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 1.25rem;">
+            "המערכת שלהם מנהלת לי את כל הלידים אוטומטית — אפס עבודה ידנית. הצוות שלי עכשיו מתמקד רק במכירות."
+          </p>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">ר.ל</div>
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700;">רחל לוי</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">בעלת סטודיו לאימון</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-card reveal" style="transition-delay: 0.2s;">
+          <div style="display: flex; gap: 0.3rem; margin-bottom: 1rem;">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p style="font-size: 0.9rem; line-height: 1.7; color: rgba(255,255,255,0.75); margin-bottom: 1.25rem;">
+            "ChatBot שבנו יחד עונה ל-80% מהשאלות של הלקוחות שלי — 24/7. שירות הלקוחות שלנו שופר לחלוטין."
+          </p>
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <div style="width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;">א.מ</div>
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700;">אמיר מזרחי</div>
+              <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">מייסד, חברת SaaS</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       CLIENTS LOGOS
+  ═══════════════════════════════════ -->
+  <section style="background: #0a1220; padding: 3.5rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <div class="reveal" style="text-align: center; margin-bottom: 2rem;">
+        <p style="font-size: 0.82rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3);">
+          הסדרונים שלי כבר היו אצל
+        </p>
+      </div>
+      <div class="reveal" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1rem; transition-delay: 0.1s;">
+        <div class="client-logo">חברת נדל"ן</div>
+        <div class="client-logo">סטודיו כושר</div>
+        <div class="client-logo">מרפאה פרטית</div>
+        <div class="client-logo">חנות אונליין</div>
+        <div class="client-logo">סוכנות שיווק</div>
+        <div class="client-logo">יועץ עסקי</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+
+  <!-- ═══════════════════════════════════
+       CONTACT FORM
+  ═══════════════════════════════════ -->
+  <section id="contact" style="background: #0e1628; padding: 5rem 1.5rem;">
+    <div style="max-width: 680px; margin: 0 auto;">
+
+      <div class="reveal" style="text-align: center; margin-bottom: 3rem;">
+        <div class="tag-chip" style="margin-bottom: 1rem; display: inline-flex;">📩 צור קשר</div>
+        <h2 style="font-size: clamp(1.8rem, 3.5vw, 2.5rem); font-weight: 900; margin-bottom: 0.75rem; letter-spacing: -0.02em;">
+          מוכן לקחת את העסק<br />
+          <span style="color: #2196b0;">לשלב הבא?</span>
+        </h2>
+        <p style="color: rgba(255,255,255,0.5); font-size: 0.95rem;">
+          פגישת ייעוץ ראשונה ללא עלות — נבין יחד איפה AI יכול לעזור לך הכי הרבה.
+        </p>
+      </div>
+
+      <form class="reveal" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2rem; transition-delay: 0.15s;" onsubmit="handleSubmit(event)">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">שם מלא *</label>
+            <input type="text" class="form-input" placeholder="ישראל ישראלי" required />
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">טלפון</label>
+            <input type="tel" class="form-input" placeholder="050-0000000" />
+          </div>
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">אימייל *</label>
+          <input type="email" class="form-input" placeholder="you@company.com" required />
+        </div>
+        <div style="margin-bottom: 1.5rem;">
+          <label style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">ספר לנו על העסק שלך</label>
+          <textarea rows="4" class="form-input" placeholder="באיזה תחום אתה פועל? אילו תהליכים תרצה לייעל?" style="resize: vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn-cta" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.875rem;">
+          שליחת פנייה ←
+        </button>
+        <p style="text-align: center; font-size: 0.75rem; color: rgba(255,255,255,0.25); margin-top: 0.75rem;">
+          ✓ ללא ספאם &nbsp;·&nbsp; ✓ תשובה תוך 24 שעות &nbsp;·&nbsp; ✓ ללא התחייבות
+        </p>
+      </form>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════ -->
+  <footer style="background: #080e1a; border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem;">
+      <img src="brand_assets/logo-transparent.png" alt="CLIX Automations" style="height: 36px; width: auto; opacity: 0.75;" />
+      <div style="display: flex; gap: 2rem;">
+        <a href="#services" style="color: rgba(255,255,255,0.4); font-size: 0.85rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">שירותים</a>
+        <a href="#process" style="color: rgba(255,255,255,0.4); font-size: 0.85rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">תהליך</a>
+        <a href="#contact" style="color: rgba(255,255,255,0.4); font-size: 0.85rem; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">צור קשר</a>
+      </div>
+      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.2);">© 2025 CLIX Automations · כל הזכויות שמורות</p>
+    </div>
+  </footer>
+
+
+  <!-- Toast -->
+  <div id="toast" style="display:none; position:fixed; bottom:2rem; left:50%; transform:translateX(-50%); background:#2196b0; color:#fff; font-family:'Heebo',sans-serif; font-weight:700; padding:0.9rem 1.8rem; border-radius:10px; box-shadow:0 8px 32px rgba(33,150,176,0.4); z-index:200; white-space:nowrap;">
+    ✓ הפנייה נשלחה! נחזור אליך בהקדם.
+  </div>
+
+
+  <script>
+    /* Scroll reveal */
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    /* Form */
+    function handleSubmit(e) {
+      e.preventDefault();
+      const t = document.getElementById('toast');
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 4000);
+      e.target.reset();
+    }
+  </script>
+
+</body>
+</html>

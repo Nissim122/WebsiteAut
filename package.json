@@ -1,0 +1,12 @@
+{
+  "name": "clix-automations",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@imgly/background-removal-node": "^1.4.5",
+    "jimp": "^1.6.1",
+    "puppeteer": "^24.40.0",
+    "simple-icons": "^16.15.0"
+  }
+}
