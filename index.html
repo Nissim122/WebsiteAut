@@ -257,17 +257,17 @@
     /* ── Zigzag flowchart ── */
     .zz-container { position: relative; width: 100%; max-width: 900px; margin: 0 auto; padding: 0 0 2rem; }
     .zz-row { display: grid; grid-template-columns: 1fr 40px 1fr; align-items: center; min-height: 163px; position: relative; }
-    .zz-spine { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 2px; height: 0; background: #f0c040; z-index: 1; }
-    .zz-dot { width: 12px; height: 12px; border-radius: 50%; background: #f0c040; border: 2px solid #0b1220; box-shadow: 0 0 0 3px rgba(240,192,64,0.25); position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(0); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 2; }
+    .zz-spine { position: absolute; left: 50%; top: 0; transform: translateX(-50%); width: 2px; height: 0; background: #2196b0; z-index: 1; }
+    .zz-dot { width: 12px; height: 12px; border-radius: 50%; background: #2196b0; border: 2px solid #0b1220; box-shadow: 0 0 0 3px rgba(33,150,176,0.25); position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%) scale(0); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 2; }
     .zz-dot.popped { transform: translate(-50%,-50%) scale(1); }
-    .zz-branch-left { display: block; height: 2px; background: #f0c040; width: 0; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); transform-origin: right center; }
-    .zz-branch-right { display: block; height: 2px; background: #f0c040; width: 0; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); transform-origin: left center; }
+    .zz-branch-left { display: block; height: 2px; background: #2196b0; width: 0; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); transform-origin: right center; }
+    .zz-branch-right { display: block; height: 2px; background: #2196b0; width: 0; transition: width 0.35s cubic-bezier(0.4,0,0.2,1); transform-origin: left center; }
     .zz-branch-left.grown, .zz-branch-right.grown { width: 100%; }
-    .zz-node { background: rgba(255,255,255,0.05); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 20px; padding: 1.25rem 1.56rem; opacity: 0; transform: scale(0.88); transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s; }
+    .zz-node { background: rgba(33,150,176,0.08); border: 1.5px solid rgba(33,150,176,0.28); border-radius: 20px; padding: 1.25rem 1.56rem; opacity: 0; transform: scale(0.88); transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.34,1.56,0.64,1), border-color 0.25s, box-shadow 0.25s; box-shadow: 0 0 30px rgba(33,150,176,0.2), inset 0 0 20px rgba(33,150,176,0.07); }
     .zz-node.shown { opacity: 1; transform: scale(1); }
-    .zz-node:hover { border-color: rgba(240,192,64,0.35); background: rgba(240,192,64,0.04); }
-.zz-node-title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.375rem; line-height: 1.4; }
-    .zz-node-body { font-size: 1rem; color: rgba(255,255,255,0.5); line-height: 1.7; }
+    .zz-node:hover { border-color: rgba(33,150,176,0.55); box-shadow: 0 0 45px rgba(33,150,176,0.32), inset 0 0 24px rgba(33,150,176,0.12); }
+    .zz-node-title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 0.375rem; line-height: 1.4; }
+    .zz-node-body { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.7; }
     @media (max-width: 640px) {
       .zz-row { grid-template-columns: 24px 1fr; min-height: auto; padding: 0.75rem 0; }
       .zz-cell-left { display: none; }
@@ -470,7 +470,7 @@
   <section id="process" dir="rtl" style="background: #0b1220; padding: 5rem 1.5rem;">
     <div style="max-width: 1100px; margin: 0 auto; text-align: right;">
 
-      <h2 class="reveal" style="font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 900; margin-bottom: 3rem; letter-spacing: -0.02em; text-align: right;">
+      <h2 class="reveal" style="font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 900; margin-bottom: 3rem; letter-spacing: -0.02em; text-align: center;">
         אז איך מתחילים ?
       </h2>
 
@@ -528,7 +528,7 @@
           <div class="zz-cell-left" style="padding-left:1rem;">
             <div class="zz-node" data-zz-node="3">
               <div class="zz-node-title">האפיון עובר לביצוע !</div>
-              <div class="zz-node-body">אני מעביר את הפרוייקט לשרונים - ושנינו מחכים שהאוטומציה תקום לחיים :)</div>
+              <div class="zz-node-body">אני מתחיל את התכנות - ומעדכן כשהאוטומציה מנגנת :)</div>
             </div>
           </div>
           <div style="position:relative;">
@@ -557,8 +557,8 @@
         <div class="zz-row">
           <div class="zz-cell-left" style="padding-left:1rem;">
             <div class="zz-node" data-zz-node="5">
-              <div class="zz-node-title">כבר לא בעל עסק - בעל עסק</div>
-              <div class="zz-node-body">ישן ? בחופשה ? ... העסק ממשיך לעבוד 🙂</div>
+              <div class="zz-node-title">כבר לא בעל עיסוק - בעל עסק</div>
+              <div class="zz-node-body">ישן ? בחופשה ? ... העסק ממשיך לעבוד !</div>
             </div>
           </div>
           <div style="position:relative;">
@@ -570,16 +570,6 @@
 
       </div>
 
-      <!-- CTA -->
-      <div class="reveal" style="margin-top: 3rem; transition-delay: 0.35s; text-align: right;">
-        <a href="#contact" style="display: inline-block; background: transparent; border: 1.5px solid rgba(255,255,255,0.35); color: #fff; font-size: 1rem; font-weight: 700; padding: 0.8rem 2.2rem; border-radius: 10px; text-decoration: none; cursor: pointer; transition: background 0.2s, border-color 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.borderColor='rgba(255,255,255,0.6)'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.35)'">
-          יאללה, תקרא לשרונים !
-        </a>
-        <div style="margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: flex-end; gap: 0.4rem;">
-          <span>מעביר לסוף הדף להשארת פרטים</span>
-          <span style="font-size: 0.7rem;">▼</span>
-        </div>
-      </div>
 
     </div>
   </section>
