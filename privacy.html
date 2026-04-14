@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>מדיניות פרטיות — CLIX Automations</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="robots" content="noindex, follow" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJT8YRED9B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SJT8YRED9B');
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      max-width: calc(80% - 2rem);
+      margin: 0 auto;
+      background: rgba(14, 16, 28, 0.55);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem;
+      height: 68px;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #fff; }
+
+    /* CTA Button */
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.4rem;
+      background: #e0176b;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: none;
+    }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-cta:hover .btn-arrow { transform: translateX(-5px); }
+
+    /* Hamburger button */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      flex-shrink: 0;
+    }
+    .hamburger-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.85);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+    }
+
+    /* Mobile menu */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    @media (max-width: 767px) {
+      .nav-inner { max-width: calc(100% - 2rem) !important; }
+      .hamburger-btn { display: flex; }
+      .nav-cta-desktop { display: none !important; }
+    }
+
+    .policy-container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    .policy-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.10);
+    }
+
+    .policy-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .policy-header .last-updated {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .policy-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .policy-section h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2196b0;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .policy-section h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 1.1em;
+      background: #2196b0;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .policy-section p,
+    .policy-section li {
+      font-size: 0.95rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.72);
+    }
+
+    .policy-section ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 0.6rem;
+    }
+
+    .policy-section ul li {
+      padding: 0.25rem 0 0.25rem 0;
+      padding-right: 1.2rem;
+      position: relative;
+    }
+
+    .policy-section ul li::before {
+      content: '·';
+      position: absolute;
+      right: 0;
+      color: #2196b0;
+      font-weight: 700;
+    }
+
+    .policy-section p + p {
+      margin-top: 0.75rem;
+    }
+
+    .contact-box {
+      margin-top: 1rem;
+      background: rgba(33,150,176,0.08);
+      border: 1px solid rgba(33,150,176,0.25);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.8;
+    }
+
+    .contact-box a {
+      color: #2196b0;
+      text-decoration: none;
+    }
+    .contact-box a:hover { text-decoration: underline; }
+
+    footer {
+      background: #080e1a;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 2rem 1.5rem;
+    }
+    footer p {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.2);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav aria-label="ניווט ראשי">
+    <div class="nav-inner">
+
+      <!-- Logo (right) -->
+      <img src="brand_assets/icons/עיצוב ללא שם (1).svg" alt="לוגו" style="height: 114px; width: auto; display: block; flex-shrink: 0; filter: brightness(0) invert(1);" />
+
+      <!-- CTA (visual left) -->
+      <a href="index.html#contact" class="btn-cta nav-cta-desktop" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">
+        לפרטים נוספים <span class="btn-arrow">◄</span>
+      </a>
+
+      <!-- Hamburger (mobile only) -->
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="תפריט">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
+    <a href="index.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">חזרה לאתר</a>
+    <a href="index.html#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 0.5rem;">
+      לפרטים נוספים <span class="btn-arrow">◄</span>
+    </a>
+  </div>
+
+  <main class="policy-container">
+
+    <div class="policy-header">
+      <h1>מדיניות פרטיות</h1>
+      <p class="last-updated">עודכן לאחרונה: אפריל 2025</p>
+    </div>
+
+    <!-- 1 -->
+    <div class="policy-section">
+      <h2>1. הקדמה</h2>
+      <p>
+        CLIX Automations ("אנו", "החברה") מחויבת להגן על פרטיותכם. מדיניות פרטיות זו מפרטת אילו מידע אישי אנו אוספים, כיצד אנו משתמשים בו, ומה הן זכויותיכם ביחס אליו.
+      </p>
+      <p>
+        השימוש באתר clix-automations.com ("האתר") ובשירותינו מהווה הסכמה לתנאי מדיניות זו. אם אינכם מסכימים לתנאים אלה, אנא הימנעו משימוש באתר.
+      </p>
+    </div>
+
+    <!-- 2 -->
+    <div class="policy-section">
+      <h2>2. המידע שאנו אוספים</h2>
+      <p>אנו עשויים לאסוף ולעבד את סוגי המידע הבאים:</p>
+      <ul>
+        <li>פרטי זיהוי: שם, כתובת דוא"ל, מספר טלפון — כפי שנמסרים בטפסי יצירת קשר או הרשמה.</li>
+        <li>פרטי עסק: שם העסק ותיאור פעילות, לצורך מתן הצעה מותאמת.</li>
+        <li>מידע טכני: כתובת IP, סוג דפדפן, גרסת מערכת הפעלה ומיקום גיאוגרפי כללי.</li>
+        <li>נתוני שימוש: עמודים שנצפו, זמן שהייה, מקור הגעה לאתר ונתיבי גלישה.</li>
+        <li>תכתובת: כל מידע שתבחרו לשתף בפניה אלינו בדוא"ל או בטופס יצירת קשר.</li>
+      </ul>
+      <p style="margin-top: 0.85rem;">
+        אין למסור לנו מידע אישי של אנשים אחרים ללא קבלת הסכמתם המפורשת מראש.
+      </p>
+    </div>
+
+    <!-- 3 -->
+    <div class="policy-section">
+      <h2>3. מטרות השימוש במידע</h2>
+      <p>המידע שנאסף ישמש אך ורק למטרות הבאות:</p>
+      <ul>
+        <li>מענה לפניות ומתן ייעוץ מקדמי בנוגע לשירותינו.</li>
+        <li>שליחת הצעת מחיר, הסכם שירות וחומרים רלוונטיים.</li>
+        <li>תפעול שוטף של האתר ושיפור חוויית המשתמש.</li>
+        <li>שליחת עדכונים שיווקיים — בכפוף להסכמתכם המפורשת ובהתאם לחוק.</li>
+        <li>עמידה בדרישות חוקיות וניהול סיכוני אבטחה.</li>
+        <li>ניתוח סטטיסטי מצטבר ואנונימי לשיפור השירות.</li>
+      </ul>
+    </div>
+
+    <!-- 4 -->
+    <div class="policy-section">
+      <h2>4. שיתוף מידע עם צדדים שלישיים</h2>
+      <p>
+        אנו אינם מוכרים, משכירים, או סוחרים בפרטיכם האישיים. המידע עשוי להיות משותף אך ורק עם:
+      </p>
+      <ul>
+        <li>נותני שירות חיצוניים הפועלים מטעמנו (כגון שירותי ענן, ניתוח נתונים) — תחת הסכמי סודיות מחייבים.</li>
+        <li>רשויות מוסמכות, כאשר החשיפה נדרשת על-פי דין או צו שיפוטי.</li>
+        <li>רוכש פוטנציאלי, במסגרת מיזוג, רכישה או העברת נכסים — בכפוף להמשך ההגנה על המידע.</li>
+      </ul>
+    </div>
+
+    <!-- 5 -->
+    <div class="policy-section">
+      <h2>5. העברת מידע מחוץ לישראל</h2>
+      <p>
+        חלק מהשירותים הטכנולוגיים שאנו משתמשים בהם (כגון שירותי ענן) עשויים לעבד נתונים בשרתים הממוקמים מחוץ לישראל. במקרים כאלה אנו מוודאים כי ההעברה מתבצעת בהתאם להוראות חוק הגנת הפרטיות הישראלי ובאמצעות מנגנוני הגנה מתאימים.
+      </p>
+    </div>
+
+    <!-- 6 -->
+    <div class="policy-section">
+      <h2>6. משך שמירת המידע</h2>
+      <p>
+        אנו שומרים מידע אישי למשך הזמן הנדרש לצורך מתן השירות ולעמידה בחובות חוקיות. כאשר המידע אינו נדרש עוד, הוא נמחק או מנואנם בצורה מאובטחת.
+      </p>
+    </div>
+
+    <!-- 7 -->
+    <div class="policy-section">
+      <h2>7. אבטחת מידע</h2>
+      <p>
+        אנו נוקטים באמצעי אבטחה טכניים וארגוניים מקובלים — לרבות הצפנה, בקרת גישה וסקירות אבטחה תקופתיות — כדי להגן על המידע האישי שברשותנו מפני גישה בלתי מורשית, אובדן, שינוי או חשיפה.
+      </p>
+      <p>
+        יחד עם זאת, אין אפשרות להבטיח אבטחה מוחלטת של מידע המועבר דרך האינטרנט, ואנו ממליצים לנהוג בזהירות בשיתוף מידע רגיש.
+      </p>
+    </div>
+
+    <!-- 8 -->
+    <div class="policy-section" id="cookies">
+      <h2>8. עוגיות (Cookies)</h2>
+      <p>
+        האתר משתמש בעוגיות — קבצי טקסט קטנים המאוחסנים בדפדפן שלכם — לצורך שיפור חוויית הגלישה, ניתוח תנועה סטטיסטי, ומדידת אפקטיביות פרסום.
+      </p>
+
+      <p style="margin-top: 1rem; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.88);">סוגי העוגיות בהן אנו משתמשים:</p>
+
+      <ul style="margin-top: 0.5rem;">
+        <li>
+          <strong>עוגיות הכרחיות</strong> — נדרשות לתפקוד בסיסי של האתר, כגון שמירת העדפת ההסכמה לעוגיות. אינן דורשות הסכמתכם ואינן אוספות מידע אישי מזהה.
+        </li>
+        <li>
+          <strong>עוגיות ניתוח (Google Analytics)</strong> — שירות Google Analytics משתמש בעוגיות לאיסוף מידע סטטיסטי אנונימי: עמודים שנצפו, משך שהייה, מקור הגעה לאתר ומאפייני המכשיר. הנתונים מצטברים ואינם מזהים אתכם אישית, ומשמשים אך ורק לשיפור תוכן האתר.
+        </li>
+        <li>
+          <strong>עוגיות שיווק ומדידת פרסום</strong> — במידה ואנו מפעילים קמפיינים ממומנים (כגון Google Ads או Meta/Facebook), עוגיות אלו מאפשרות למדוד את אפקטיביות המודעות ולמנוע הצגה חוזרת של אותה מודעה.
+        </li>
+      </ul>
+
+      <p style="margin-top: 1rem;">
+        <strong>ניהול עוגיות:</strong> ניתן לאשר, לדחות, או למחוק עוגיות בכל עת — הן דרך בנר ההסכמה שמופיע בכניסה לאתר, והן דרך הגדרות הדפדפן שלכם. שימו לב כי חסימת עוגיות מסוימות עשויה לפגוע בחלק מהפונקציונליות.
+      </p>
+
+      <p style="margin-top: 0.75rem;">
+        לפרטים נוספים על מדיניות הפרטיות של Google Analytics:
+        <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>
+      </p>
+    </div>
+
+    <!-- 9 -->
+    <div class="policy-section">
+      <h2>9. הזכויות שלכם</h2>
+      <p>בהתאם לחוק הגנת הפרטיות, התשמ"א-1981, ותקנותיו, עומדות לכם הזכויות הבאות:</p>
+      <ul>
+        <li><strong>עיון:</strong> לבקש לראות את המידע האישי המוחזק עליכם.</li>
+        <li><strong>תיקון:</strong> לבקש תיקון מידע שגוי או לא מדויק.</li>
+        <li><strong>מחיקה:</strong> לבקש מחיקת מידע שאינו נדרש עוד, בכפוף לחובות חוקיות.</li>
+        <li><strong>התנגדות:</strong> להתנגד לעיבוד המידע לצורכי שיווק ישיר.</li>
+      </ul>
+      <p style="margin-top: 0.85rem;">לממוש זכויותיכם, פנו אלינו בפרטים המפורטים בסעיף 12 למטה.</p>
+    </div>
+
+    <!-- 10 -->
+    <div class="policy-section">
+      <h2>10. קישורים לאתרים חיצוניים</h2>
+      <p>
+        האתר עשוי לכלול קישורים לאתרים של צדדים שלישיים. אנו אינם אחראים לתוכן או למדיניות הפרטיות של אתרים אלה, ומומלץ לעיין במדיניותם לפני מסירת מידע אישי.
+      </p>
+    </div>
+
+    <!-- 11 -->
+    <div class="policy-section">
+      <h2>11. עדכוני מדיניות</h2>
+      <p>
+        אנו רשאים לעדכן מדיניות זו מעת לעת. שינויים מהותיים יפורסמו באתר ויצוין תאריך העדכון בראש הדף. המשך השימוש באתר לאחר פרסום השינויים מהווה הסכמה לגרסה המעודכנת.
+      </p>
+    </div>
+
+    <!-- 12 -->
+    <div class="policy-section">
+      <h2>12. יצירת קשר</h2>
+      <p>לכל שאלה, בקשה, או הגשת תלונה בנושא הפרטיות, ניתן לפנות אלינו:</p>
+      <div class="contact-box">
+        <strong>CLIX Automations</strong><br />
+        דוא"ל: <a href="mailto:info@clix-automations.com">info@clix-automations.com</a><br />
+        אתר: <a href="index.html">clix-automations.com</a>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2025 CLIX Automations · כל הזכויות שמורות · <a href="privacy.html" style="color: rgba(255,255,255,0.35); text-decoration: none;">מדיניות פרטיות</a></p>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const isOpen = menu.classList.contains('open');
+      menu.classList.toggle('open', !isOpen);
+      document.body.style.overflow = isOpen ? '' : 'hidden';
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  </script>
+
+</body>
+</html>
