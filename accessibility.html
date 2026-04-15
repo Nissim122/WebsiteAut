@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>הצהרת נגישות — CLIX Automations</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="description" content="הצהרת נגישות של אתר CLIX Automations — האתר עומד בתקן הישראלי לנגישות ת״י 5568 ו-WCAG 2.0 AA." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://clix-automations.com/accessibility.html" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      overflow-x: hidden;
+      line-height: 1.8;
+    }
+
+    /* Skip link */
+    .skip-link {
+      position: absolute;
+      top: -200%;
+      right: 0; left: 0;
+      width: fit-content;
+      margin: 0 auto;
+      background: #2196b0;
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      z-index: 10000;
+      border-radius: 0 0 10px 10px;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; outline: 3px solid #fff; outline-offset: 2px; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      max-width: calc(80% - 2rem);
+      margin: 0 auto;
+      background: rgba(14, 16, 28, 0.55);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    @media (max-width: 767px) {
+      .nav-inner { max-width: calc(100% - 2rem) !important; }
+    }
+    nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+    }
+    nav a:hover { color: #fff; }
+    nav a:focus-visible { outline: 2px solid #2196b0; outline-offset: 3px; border-radius: 4px; }
+
+    /* Content */
+    .page-wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 6rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+    .subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #2196b0;
+      margin-top: 2.5rem;
+      margin-bottom: 0.9rem;
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.82);
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style: none;
+      margin-bottom: 1rem;
+      padding-right: 0;
+    }
+    ul li {
+      font-size: 1rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.82);
+      padding-right: 1.25rem;
+      position: relative;
+      margin-bottom: 0.35rem;
+    }
+    ul li::before {
+      content: "◆";
+      position: absolute;
+      right: 0;
+      color: #2196b0;
+      font-size: 0.55rem;
+      top: 0.6em;
+    }
+
+    .contact-box {
+      background: rgba(33,150,176,0.07);
+      border: 1px solid rgba(33,150,176,0.25);
+      border-radius: 14px;
+      padding: 1.75rem 2rem;
+      margin-top: 2.5rem;
+    }
+    .contact-box h2 {
+      margin-top: 0;
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.82);
+    }
+    .contact-item strong { color: #fff; min-width: 60px; }
+    .contact-item a { color: #5dc8e0; text-decoration: none; }
+    .contact-item a:hover { text-decoration: underline; }
+    .contact-item a:focus-visible { outline: 2px solid #2196b0; outline-offset: 2px; border-radius: 2px; }
+
+    .update-date {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.65);
+    }
+
+
+    footer a:focus-visible { outline: 2px solid #2196b0; outline-offset: 2px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+  <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
+
+  <!-- NAV -->
+  <nav aria-label="תפריט ראשי">
+    <div class="nav-inner">
+      <a href="index.html" aria-label="חזרה לדף הבית של CLIX Automations">
+        <img src="brand_assets/icons/עיצוב ללא שם (1).svg" alt="לוגו CLIX Automations" style="height: 114px; width: auto; display: block; filter: brightness(0) invert(1);" />
+      </a>
+      <a href="index.html" style="font-size: 0.9rem; color: rgba(255,255,255,0.6);">← חזרה לדף הבית</a>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <div class="page-wrapper">
+
+      <h1>הצהרת נגישות</h1>
+      <p class="subtitle">עמוד זה מתאר את מדיניות הנגישות של אתר CLIX Automations</p>
+
+      <!-- פסקה ראשונה -->
+      <p>
+        אתר אינטרנט נגיש הוא אתר המאפשר לאנשים עם מוגבלות ולאנשים מבוגרים לגלוש באותה רמה של יעילות והנאה ככל הגולשים מן המניין.
+      </p>
+      <p>
+        כ-20 עד 25 אחוזים מהאוכלוסיה נתקלים בקשיי שימוש באינטרנט ועשויים להיטיב מתכני אינטרנט נגישים יותר, כך על פי מחקר שנערך בשנת 2003 על ידי חברת מייקרוסופט.
+      </p>
+      <p>
+        CLIX Automations מאמינה ופועלת למען שיוויון הזדמנויות במרחב האינטרנטי לבעלי לקויות מגוונות ו/או המסתייעים בטכנולוגיות עזר לשימוש במחשבים.
+      </p>
+
+      <!-- נגישות האתר -->
+      <h2>נגישות האתר</h2>
+      <p>
+        אתר זה עומד בדרישות תקנות שיוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג 2013.
+      </p>
+      <p>
+        האתר תואם את המלצות התקן הישראלי (ת"י 5568) לנגישות תכנים באינטרנט ברמת AA ואת המלצות מסמך WCAG 2.0 מאת ארגון W3C.
+        כמו כן, מותאם לתצוגה בדפדפנים הנפוצים ולשימוש בטלפון הסלולרי.
+      </p>
+
+      <!-- תיקונים שבוצעו -->
+      <h2>תיקונים שבוצעו באתר</h2>
+      <p>
+        באתר זה בוצעו התאמות נגישות קפדניות הכוללות בין היתר מימוש סמנטי ואינפורמטיבי עבור טכנולוגיות מסייעות, קביעת ניווט והפעלה עם מקלדת בלבד עפ"י המלצות ארגון התקינה ברשת הבינלאומי (W3C), התאמות צבעים וכן הוספת תוויות עזר והנחיות בטפסים לטובת כלל הגולשים.
+      </p>
+      <p>
+        לשם קבלת חווית גלישה מיטבית עם תוכנת הקראת מסך, אנו ממליצים לשימוש בתוכנת NVDA העדכנית ביותר.
+      </p>
+
+      <!-- חלק מהדברים שבוצעו -->
+      <h2>חלק מהדברים שבוצעו באתר</h2>
+      <ul>
+        <li>הוספת קישור מעקף ניווט (Skip Navigation) לדלג לתוכן הראשי</li>
+        <li>שימוש בנקודות עיגון סמנטיות: <code style="color:#5dc8e0;font-size:0.9em;">header</code>, <code style="color:#5dc8e0;font-size:0.9em;">nav</code>, <code style="color:#5dc8e0;font-size:0.9em;">main</code>, <code style="color:#5dc8e0;font-size:0.9em;">footer</code></li>
+        <li>תוויות ARIA מפורטות לכל הכפתורים, הטפסים, והרכיבים האינטראקטיביים</li>
+        <li>ניווט מקלדת מלא — ניתן לגלוש בכל האתר ללא שימוש בעכבר</li>
+        <li>מדדי מוקד נראים לעין (focus indicators) עבור כל רכיב ניתן להפעלה</li>
+        <li>תוויות <code style="color:#5dc8e0;font-size:0.9em;">for/id</code> מתאימות לכל שדות הטפסים</li>
+        <li>קישור "הרחב/כווץ" (aria-expanded) באקורדיון השאלות הנפוצות</li>
+        <li>מאפייני aria-live להצגת הודעות דינמיות (הצלחת שליחה, עדכונים)</li>
+        <li>תיאורים חלופיים (alt text) לכל התמונות</li>
+        <li>טקסט נסתר לקוראי מסך (sr-only) לדירוגי כוכבים ואלמנטים דקורטיביים</li>
+        <li>תפריט הניווט הנייד מוגדר כדיאלוג נגיש עם ניהול מוקד מתאים</li>
+        <li>הגדרת שפת הדף כעברית (<code style="color:#5dc8e0;font-size:0.9em;">lang="he"</code>) וכיוון RTL</li>
+        <li>קישור להצהרת הנגישות בפוטר כל דף באתר</li>
+      </ul>
+      <p>
+        במידה ונדרש לכם מסמך המופיע באתר והוא אינו נגיש מספיק, אנא פנו אלינו עם קישור ספציפי ונדאג לכך בהקדם.
+        במידה ומצאתם רכיב או עמוד שאינו נגיש באתר נשמח אם תיצרו אתנו קשר ונדאג לטפל בבעיה בהקדם האפשרי.
+      </p>
+
+      <!-- יצירת קשר -->
+      <div class="contact-box">
+        <h2>יצירת קשר עם אחראי תחום הנגישות</h2>
+        <p style="margin-bottom: 1.25rem;">
+          אם במהלך הגלישה באתר נתקלת בבעיה בנושא נגישות נשמח אם תדווחו לנו ואנחנו נדאג לתקן בהקדם.
+        </p>
+        <div class="contact-item">
+          <strong>שם:</strong>
+          <span>ניסים בנגייב</span>
+        </div>
+        <div class="contact-item">
+          <strong>אימייל:</strong>
+          <a href="mailto:nisimelec77@gmail.com">nisimelec77@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <strong>טלפון:</strong>
+          <a href="tel:+972532407762" dir="ltr">+972 53-240-7762</a>
+        </div>
+      </div>
+
+      <p class="update-date">הצהרה זו עודכנה לאחרונה בתאריך: <strong>15.04.2026</strong></p>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer role="contentinfo" style="background: #080e1a; border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem 1.5rem;">
+    <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+      <p style="font-size: 0.75rem; color: rgba(255,255,255,0.65);">© 2026 CLIX Automations · כל הזכויות שמורות · <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: underline;">מדיניות פרטיות</a> · <a href="accessibility.html" style="color: #5dc8e0; text-decoration: underline;" aria-current="page">הצהרת נגישות</a></p>
+    </div>
+  </footer>
+
+
+</body>
+</html>

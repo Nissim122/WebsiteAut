@@ -139,7 +139,7 @@
 
     .policy-header .last-updated {
       font-size: 0.82rem;
-      color: rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.65);
     }
 
     .policy-section {
@@ -214,6 +214,28 @@
     }
     .contact-box a:hover { text-decoration: underline; }
 
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute; top: -200%; right: 0; left: 0;
+      width: fit-content; margin: 0 auto;
+      background: #2196b0; color: #fff;
+      padding: 0.75rem 1.5rem; z-index: 10000;
+      border-radius: 0 0 10px 10px;
+      font-weight: 700; text-decoration: none;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; outline: 3px solid #fff; outline-offset: 2px; }
+
+    /* ── Focus styles ── */
+    a:focus-visible, button:focus-visible, [tabindex="0"]:focus-visible {
+      outline: 2px solid #2196b0; outline-offset: 3px; border-radius: 4px;
+    }
+    .btn-cta:focus-visible {
+      outline: 2px solid #fff; outline-offset: 3px;
+      box-shadow: 0 0 0 5px rgba(33,150,176,0.55);
+    }
+
+
     footer {
       background: #080e1a;
       border-top: 1px solid rgba(255,255,255,0.08);
@@ -221,12 +243,15 @@
     }
     footer p {
       font-size: 0.75rem;
-      color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.65);
       text-align: center;
     }
   </style>
 </head>
 <body>
+
+  <!-- Skip link — מעקף ניווט (נגישות) -->
+  <a href="#main-content" class="skip-link">דלג לתוכן הראשי</a>
 
   <!-- NAV -->
   <nav aria-label="ניווט ראשי">
@@ -241,23 +266,23 @@
       </a>
 
       <!-- Hamburger (mobile only) -->
-      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="תפריט">
-        <span></span>
-        <span></span>
-        <span></span>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט ניווט" aria-expanded="false" aria-controls="mobile-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
       </button>
     </div>
   </nav>
 
   <!-- Mobile Navigation Menu -->
-  <div id="mobile-menu" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 99; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
     <a href="index.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">חזרה לאתר</a>
     <a href="index.html#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 0.5rem;">
-      לפרטים נוספים <span class="btn-arrow">◄</span>
+      לפרטים נוספים <span class="btn-arrow" aria-hidden="true">◄</span>
     </a>
   </div>
 
-  <main class="policy-container">
+  <main id="main-content" class="policy-container">
 
     <div class="policy-header">
       <h1>מדיניות פרטיות</h1>
@@ -418,20 +443,54 @@
 
   </main>
 
-  <footer>
-    <p>© 2025 CLIX Automations · כל הזכויות שמורות · <a href="privacy.html" style="color: rgba(255,255,255,0.35); text-decoration: none;">מדיניות פרטיות</a></p>
+  <footer role="contentinfo">
+    <p>© 2026 CLIX Automations · כל הזכויות שמורות · <a href="privacy.html" style="color: rgba(255,255,255,0.8); text-decoration: underline;" aria-current="page">מדיניות פרטיות</a> · <a href="accessibility.html" style="color: rgba(255,255,255,0.8); text-decoration: underline;">הצהרת נגישות</a></p>
   </footer>
 
+
   <script>
+    const FOCUSABLE = 'a[href], button:not([disabled]), input, textarea, [tabindex]:not([tabindex="-1"])';
+
+    function trapFocus(e) {
+      const menu = document.getElementById('mobile-menu');
+      const focusable = Array.from(menu.querySelectorAll(FOCUSABLE));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        }
+      } else if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    }
+
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
-      const isOpen = menu.classList.contains('open');
-      menu.classList.toggle('open', !isOpen);
-      document.body.style.overflow = isOpen ? '' : 'hidden';
+      if (menu.classList.contains('open')) {
+        closeMobileMenu();
+      } else {
+        const btn = document.getElementById('hamburger-btn');
+        menu.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'סגור תפריט ניווט');
+        document.addEventListener('keydown', trapFocus);
+        const firstLink = menu.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
     }
+
     function closeMobileMenu() {
-      document.getElementById('mobile-menu').classList.remove('open');
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.getElementById('hamburger-btn');
+      menu.classList.remove('open');
       document.body.style.overflow = '';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'פתח תפריט ניווט');
+      document.removeEventListener('keydown', trapFocus);
+      btn.focus();
     }
   </script>
 
