@@ -559,8 +559,18 @@
       .cta-banner-headline { white-space: normal !important; font-size: 1rem !important; }
       .cta-banner-form {
         flex-direction: column !important;
+        align-items: stretch !important;
         gap: 0.6rem !important;
+        width: 100% !important;
       }
+      .cta-banner-form .cta-banner-input,
+      .cta-banner-form #banner-submit {
+        width: 100% !important;
+        flex: none !important;
+        box-sizing: border-box !important;
+      }
+      .cta-banner-form #banner-privacy-label { order: 4 !important; width: 100% !important; }
+      .cta-banner-form #banner-submit { order: 5 !important; }
 
       /* Results */
       .results-flex {
@@ -629,19 +639,23 @@
       .cta-banner-headline { white-space: normal !important; font-size: 1.05rem !important; }
       .cta-banner-form {
         flex-direction: column !important;
+        align-items: stretch !important;
         gap: 0.6rem !important;
         width: 100% !important;
+      }
+      .cta-banner-form .cta-banner-input,
+      .cta-banner-form #banner-submit {
+        width: 100% !important;
+        flex: none !important;
+        box-sizing: border-box !important;
       }
 
       /* Results: reduce the excessive 10rem gap when flex items wrap */
       .results-flex { gap: 3rem !important; }
 
-      /* Contact icons: row instead of column at this size */
+      /* Contact icons: keep column */
       .contact-side-icons {
-        flex-direction: row !important;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem !important;
+        flex-direction: column !important;
       }
     }
 
@@ -771,10 +785,7 @@
       }
       #contact .contact-grid > div:first-child { display: none; }
       .contact-side-icons {
-        flex-direction: row !important;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 1rem !important;
+        flex-direction: column !important;
       }
     }
 
@@ -1092,19 +1103,17 @@
       <!-- Left: form -->
       <div class="cta-banner-form" style="display: flex; gap: 0.75rem; align-items: flex-start; flex: 2; min-width: 0;">
 
-        <!-- שם + צ'קבוקס תחתיו -->
-        <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-width: 0;">
-          <input id="banner-name" type="text" placeholder="שם" aria-label="שם" class="cta-banner-input" style="width: 100%; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" />
-          <label for="banner-privacy" style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: #0e1628; cursor: pointer; white-space: nowrap;">
-            <input id="banner-privacy" type="checkbox" required />
-            אני מסכים למסור את פרטיי בהתאם
-            <a href="privacy.html" target="_blank" rel="noopener" style="color: #0e1628; text-decoration: underline;">למדיניות הפרטיות</a>
-          </label>
-        </div>
-
+        <input id="banner-name" type="text" placeholder="שם" aria-label="שם" class="cta-banner-input" style="flex: 1; min-width: 0; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" />
         <input id="banner-phone" type="tel" placeholder="טלפון" aria-label="טלפון" class="cta-banner-input" style="flex: 1; min-width: 0; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" />
         <input id="banner-business" type="text" placeholder="תחום העסק" aria-label="תחום העסק" class="cta-banner-input" style="flex: 1; min-width: 0; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" />
-        <button id="banner-submit" class="btn-cta" onclick="handleBannerSubmit(event)" style="background: #fff; color: #0e1628; white-space: nowrap; padding: 0.65rem 1.5rem; font-size: 0.95rem; border-radius: 8px; font-weight: 800; flex-shrink: 0;">שליחה <span class="btn-arrow">◄</span></button>
+
+        <!-- צ'קבוקס פרטיות — order-4 על דסקטופ (שורה 2), order-4 על מובייל (לפני כפתור) -->
+        <label id="banner-privacy-label" for="banner-privacy" style="display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.75rem; color: #0e1628; cursor: pointer; order: 4; flex-wrap: wrap;">
+          <input id="banner-privacy" type="checkbox" required style="flex-shrink:0; margin-top:2px;" />
+          <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: #0e1628; text-decoration: underline;">למדיניות הפרטיות</a></span>
+        </label>
+
+        <button id="banner-submit" class="btn-cta" onclick="handleBannerSubmit(event)" style="background: #fff; color: #0e1628; white-space: nowrap; padding: 0.65rem 1.5rem; font-size: 0.95rem; border-radius: 8px; font-weight: 800; flex-shrink: 0; order: 3;">שליחה <span class="btn-arrow">◄</span></button>
 
       </div>
 
@@ -1413,10 +1422,9 @@
             <textarea id="contact-message" rows="4" class="form-input" placeholder="באיזה תחום אתה פועל? אילו תהליכים תרצה לייעל?" style="resize: vertical;" maxlength="1000"></textarea>
           </div>
           <div style="margin-bottom: 1.25rem;">
-            <label for="contact-privacy" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl;">
-              <input id="contact-privacy" type="checkbox" required />
-              אני מסכים למסור את פרטיי בהתאם
-              <a href="privacy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.85); text-decoration: underline;">למדיניות הפרטיות</a>
+            <label for="contact-privacy" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
+              <input id="contact-privacy" type="checkbox" required style="flex-shrink:0; margin-top:2px;" />
+              <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.85); text-decoration: underline;">למדיניות הפרטיות</a></span>
             </label>
           </div>
           <button id="contact-submit" type="submit" class="btn-cta" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.875rem;">
@@ -1426,8 +1434,6 @@
 
         <!-- Contact icons — left column of the grid -->
         <div class="reveal contact-side-icons" style="display: flex; flex-direction: column; gap: 1.25rem; transition-delay: 0.25s; padding-top: 0.5rem; align-self: center;">
-
-          <p style="font-size: 0.75rem; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.1rem;">צור קשר</p>
 
           <!-- Instagram -->
           <a href="https://www.instagram.com/" target="_blank" rel="noopener"
@@ -1986,7 +1992,7 @@
         letter-spacing: -0.03em;
         margin-bottom: 0.7rem;
         position: relative; z-index: 1;
-      ">קבל שיחת אפיון מעמיקה<br><span style="color:#e0176b;">לעסק שלך — ללא עלות</span></h2>
+      ">שיחה אחת יכולה לחסוך לך<br><span style="color:#e0176b;">חודשים של עבודה מיותרת</span></h2>
 
       <!-- Sub -->
       <p style="
@@ -1997,7 +2003,7 @@
         max-width: 520px;
         margin-inline: auto;
         position: relative; z-index: 1;
-      ">נזהה יחד את צווארי הבקבוק בעסק שלך, נמפה הזדמנויות לאוטומציה — ונצא עם תוכנית פעולה קונקרטית. בלי מחויבות, בלי מכירה.</p>
+      ">נשב ביחד, נבין איפה הזמן שלך הולך לאיבוד — ונחשוב ביחד מה אפשר לעשות אחרת.</p>
 
       <!-- Form -->
       <form
@@ -2006,7 +2012,7 @@
         style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem; position:relative; z-index:1;"
       >
         <!-- Fields row -->
-        <div style="display:flex; gap:0.65rem; flex-wrap:wrap;">
+        <div style="display:flex; gap:0.65rem; flex-wrap:nowrap;">
           <input
             type="text"
             name="name"
@@ -2014,7 +2020,8 @@
             required
             autocomplete="name"
             style="
-              flex: 1 1 120px;
+              flex: 1 1 0%;
+              min-width: 0;
               background: rgba(255,255,255,0.05);
               border: 1.5px solid rgba(255,255,255,0.10);
               border-radius: 12px;
@@ -2035,7 +2042,8 @@
             placeholder="המייל שלך"
             autocomplete="email"
             style="
-              flex: 1 1 140px;
+              flex: 1 1 0%;
+              min-width: 0;
               background: rgba(255,255,255,0.05);
               border: 1.5px solid rgba(255,255,255,0.10);
               border-radius: 12px;
@@ -2057,7 +2065,8 @@
             required
             autocomplete="tel"
             style="
-              flex: 1 1 110px;
+              flex: 1 1 0%;
+              min-width: 0;
               background: rgba(255,255,255,0.05);
               border: 1.5px solid rgba(255,255,255,0.10);
               border-radius: 12px;
