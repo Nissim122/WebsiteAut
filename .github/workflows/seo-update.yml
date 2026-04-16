@@ -1,0 +1,34 @@
+name: SEO Keyword Update
+
+on:
+  schedule:
+    - cron: '0 8 1,15 * *'  # ה-1 וה-15 בחודש, 8:00 UTC (11:00 שעון ישראל)
+  workflow_dispatch:          # הפעלה ידנית מ-GitHub
+
+jobs:
+  update-seo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run SEO updater
+        run: node seo-updater.mjs
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name "SEO Bot"
+          git config user.email "bot@clix-automations.com"
+          git add index.html
+          git diff --staged --quiet && echo "No changes" || (
+            git commit -m "seo: עדכון מילות מפתח $(date +'%Y-%m-%d')" &&
+            git push
+          )
