@@ -1905,6 +1905,29 @@
       btn.focus();
     }
 
+    /* Save lead fields to localStorage on blur so chat webhook always has them */
+    function saveLeadField(field, key) {
+      var val = field.value.trim();
+      if (!val) return;
+      try {
+        var lead = JSON.parse(localStorage.getItem('clix_lead') || '{}');
+        lead[key] = val;
+        localStorage.setItem('clix_lead', JSON.stringify(lead));
+      } catch (_) {}
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      [
+        ['contact-name',  'name'],
+        ['contact-phone', 'phone'],
+        ['contact-email', 'email'],
+        ['banner-name',   'name'],
+        ['banner-phone',  'phone'],
+      ].forEach(function (pair) {
+        var el = document.getElementById(pair[0]);
+        if (el) el.addEventListener('blur', function () { saveLeadField(el, pair[1]); });
+      });
+    });
+
     /* Cookie consent */
     document.addEventListener('DOMContentLoaded', function() {
       if (!localStorage.getItem('cookie-consent')) {
@@ -2516,7 +2539,10 @@
           max-width: 82%;
           word-break: break-word;
           overflow-wrap: break-word;
-        ">שלום! 👋 אני הסוכן של CLIX. איך אפשר לעזור לך היום?</div>
+          direction: rtl;
+          text-align: right;
+          unicode-bidi: plaintext;
+        ">היי אני העוזר AI של צוות Clix automations<br>איך אפשר לעזור ?</div>
       </div>
     </div>
 
@@ -2610,6 +2636,36 @@
       }
       var tooltipDismissed = false;
 
+      // ─── Rate limiting ────────────────────────────────────────────────────────
+      var DAILY_LIMIT = 7;
+      var BLOCKED_MSG = 'הגעת למכסת ההודעות היומית עם הסוכן 🙏\n\nלתיאום פגישת ייעוץ ללא עלות — לחץ כאן:\nhttps://forms.fillout.com/t/nt2oT7MZyBus?lead_source=social\n\nאו שלח הודעה ל‑053‑240‑7762';
+
+      function getRateLimit() {
+        try {
+          var rl = JSON.parse(localStorage.getItem('clix_rl') || 'null');
+          if (!rl || Date.now() >= rl.resetAt) return { count: 0, resetAt: 0 };
+          return rl;
+        } catch (_) { return { count: 0, resetAt: 0 }; }
+      }
+
+      function incrementRateLimit() {
+        var rl = getRateLimit();
+        var newCount = rl.count + 1;
+        var resetAt = rl.resetAt || (Date.now() + 24 * 60 * 60 * 1000);
+        localStorage.setItem('clix_rl', JSON.stringify({ count: newCount, resetAt: resetAt }));
+        return newCount;
+      }
+
+      function isBlocked() { return getRateLimit().count >= DAILY_LIMIT; }
+
+      function applyBlockedUI() {
+        var input = document.getElementById('chat-input');
+        var sendBtn = document.getElementById('chat-send');
+        if (input) { input.disabled = true; input.placeholder = 'הגעת למכסת ההודעות היומית'; input.style.opacity = '0.45'; input.style.cursor = 'not-allowed'; }
+        if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.3'; sendBtn.style.cursor = 'not-allowed'; }
+      }
+      // ─────────────────────────────────────────────────────────────────────────
+
       // Adjust launcher height when cookie banner is visible
       function adjustLauncherForCookieBanner() {
         var banner = document.getElementById('cookie-banner');
@@ -2675,10 +2731,12 @@
           panel.style.pointerEvents = 'auto';
           if (iconOpen) { iconOpen.style.opacity = '0'; iconOpen.style.transform = 'rotate(90deg)'; }
           if (iconClose) { iconClose.style.opacity = '1'; iconClose.style.transform = 'rotate(0deg)'; }
-          // Focus input
+            // Focus input
           setTimeout(function () {
-            var inp = document.getElementById('chat-input');
-            if (inp) inp.focus();
+            if (isBlocked()) { applyBlockedUI(); } else {
+              var inp = document.getElementById('chat-input');
+              if (inp) inp.focus();
+            }
             scrollChatToBottom();
           }, 350);
         } else {
@@ -2701,6 +2759,15 @@
         var input = document.getElementById('chat-input');
         var text = input ? input.value.trim() : '';
         if (!text) return;
+
+        if (isBlocked()) {
+          appendBotMessage(BLOCKED_MSG);
+          scrollChatToBottom();
+          applyBlockedUI();
+          return;
+        }
+
+        var newCount = incrementRateLimit();
 
         input.value = '';
         input.style.height = 'auto';
@@ -2734,6 +2801,9 @@
             } catch (_) {}
             removeTyping(typing);
             appendBotMessage(reply);
+            if (newCount >= DAILY_LIMIT) {
+              setTimeout(function () { appendBotMessage(BLOCKED_MSG); scrollChatToBottom(); applyBlockedUI(); }, 400);
+            }
             scrollChatToBottom();
           })
           .catch(function () {
@@ -2742,7 +2812,7 @@
             scrollChatToBottom();
           })
           .finally(function () {
-            if (sendBtn) sendBtn.style.opacity = '1';
+            if (!isBlocked() && sendBtn) sendBtn.style.opacity = '1';
           });
       };
 
@@ -2764,7 +2834,7 @@
           '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e0176b,#2196b0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>' +
           '</div>' +
-          '<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:16px 16px 16px 4px;padding:0.65rem 0.9rem;font-family:Heebo,sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.88);line-height:1.55;max-width:82%;direction:rtl;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;">' +
+          '<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:16px 16px 16px 4px;padding:0.65rem 0.9rem;font-family:Heebo,sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.88);line-height:1.55;max-width:82%;direction:rtl;text-align:right;unicode-bidi:plaintext;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;">' +
           linkifyHtml(String(text)) + '</div>';
         msgs.appendChild(div);
       }
