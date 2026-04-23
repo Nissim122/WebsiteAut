@@ -2343,6 +2343,7 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(33,150,176,0.08);
       pointer-events: none;
       direction: rtl;
+      position: relative;
     ">
       👋 יש לך שאלה? אני כאן!
       <div style="
@@ -2481,7 +2482,7 @@
     ">
       <!-- Welcome message -->
       <div class="chat-msg-bot" style="
-        display: flex; align-items: flex-end; gap: 0.5rem;
+        display: flex; align-items: flex-end; gap: 0.5rem; direction: ltr;
       ">
         <div style="
           width: 28px; height: 28px; border-radius: 50%;
@@ -2501,6 +2502,8 @@
           color: rgba(255,255,255,0.88);
           line-height: 1.55;
           max-width: 82%;
+          word-break: break-word;
+          overflow-wrap: break-word;
         ">שלום! 👋 אני הסוכן של CLIX. איך אפשר לעזור לך היום?</div>
       </div>
     </div>
@@ -2594,6 +2597,33 @@
         localStorage.setItem('clix_conv_id', conversationId);
       }
       var tooltipDismissed = false;
+
+      // Adjust launcher height when cookie banner is visible
+      function adjustLauncherForCookieBanner() {
+        var banner = document.getElementById('cookie-banner');
+        var launcher = document.getElementById('chat-launcher');
+        var panel = document.getElementById('chat-panel');
+        if (!launcher) return;
+        if (banner && banner.style.display !== 'none' && banner.offsetHeight > 0) {
+          var offset = banner.offsetHeight + 12;
+          launcher.style.bottom = offset + 'px';
+          if (panel) panel.style.bottom = (offset + 4.75 * 16) + 'px';
+        } else {
+          launcher.style.bottom = '1.75rem';
+          if (panel) panel.style.bottom = '6.5rem';
+        }
+      }
+
+      // Run on load and whenever cookie banner changes
+      document.addEventListener('DOMContentLoaded', function () {
+        adjustLauncherForCookieBanner();
+        var banner = document.getElementById('cookie-banner');
+        if (banner) {
+          new MutationObserver(adjustLauncherForCookieBanner).observe(banner, { attributes: true, attributeFilter: ['style'] });
+        }
+      });
+      // Also run immediately in case DOMContentLoaded already fired
+      if (document.readyState !== 'loading') adjustLauncherForCookieBanner();
 
       // Show tooltip after 5 seconds
       setTimeout(function () {
@@ -2710,7 +2740,7 @@
         var msgs = document.getElementById('chat-messages');
         if (!msgs) return;
         var div = document.createElement('div');
-        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;';
+        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;direction:ltr;';
         div.innerHTML =
           '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e0176b,#2196b0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>' +
@@ -2724,7 +2754,7 @@
         var msgs = document.getElementById('chat-messages');
         if (!msgs) return null;
         var div = document.createElement('div');
-        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;';
+        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;direction:ltr;';
         div.innerHTML =
           '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e0176b,#2196b0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
           '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>' +
