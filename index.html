@@ -2312,5 +2312,448 @@
     </div>
   </div>
 
+
+  <!-- ═══ AI Chat Widget ═══ -->
+
+  <!-- Floating button + tooltip -->
+  <div id="chat-launcher" style="
+    position: fixed;
+    bottom: 1.75rem;
+    left: 1.75rem;
+    z-index: 9980;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+  ">
+    <!-- Tooltip bubble -->
+    <div id="chat-tooltip" style="
+      opacity: 0;
+      transform: translateY(8px) scale(0.92);
+      transition: opacity 0.35s cubic-bezier(0.34,1.56,0.64,1), transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      background: linear-gradient(135deg, #111827 0%, #0d1524 100%);
+      border: 1.5px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 0.6rem 1rem;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(33,150,176,0.08);
+      pointer-events: none;
+      direction: rtl;
+    ">
+      👋 יש לך שאלה? אני כאן!
+      <div style="
+        position: absolute;
+        bottom: -7px; left: 20px;
+        width: 14px; height: 7px;
+        overflow: hidden;
+      ">
+        <div style="
+          width: 10px; height: 10px;
+          background: #111827;
+          border-right: 1.5px solid rgba(255,255,255,0.10);
+          border-bottom: 1.5px solid rgba(255,255,255,0.10);
+          transform: rotate(45deg) translate(-3px,-3px);
+        "></div>
+      </div>
+    </div>
+
+    <!-- Button -->
+    <button id="chat-btn" aria-label="פתח צ'אט" onclick="toggleChat()" style="
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #e0176b 0%, #b8105a 100%);
+      box-shadow: 0 4px 24px rgba(224,23,107,0.45), 0 0 0 0 rgba(224,23,107,0.3);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+      position: relative;
+    " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+      <!-- Chat icon -->
+      <svg id="chat-icon-open" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: opacity 0.2s, transform 0.2s;">
+        <path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/>
+        <circle cx="8.5" cy="11.5" r="1.2" fill="#e0176b"/>
+        <circle cx="12" cy="11.5" r="1.2" fill="#e0176b"/>
+        <circle cx="15.5" cy="11.5" r="1.2" fill="#e0176b"/>
+      </svg>
+      <!-- Close icon -->
+      <svg id="chat-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; opacity:0; transition: opacity 0.2s, transform 0.2s; transform: rotate(-90deg);">
+        <path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <!-- Unread dot -->
+      <span id="chat-dot" style="
+        position: absolute; top: 2px; right: 2px;
+        width: 14px; height: 14px;
+        background: #2196b0;
+        border: 2px solid #0e1628;
+        border-radius: 50%;
+        opacity: 0;
+        transform: scale(0);
+        transition: opacity 0.25s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+      "></span>
+    </button>
+  </div>
+
+  <!-- Chat Panel -->
+  <div id="chat-panel" style="
+    position: fixed;
+    bottom: 6.5rem;
+    left: 1.75rem;
+    z-index: 9981;
+    width: 360px;
+    max-height: 520px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(155deg, #111827 0%, #0d1524 60%, #0a1020 100%);
+    border: 1.5px solid rgba(255,255,255,0.09);
+    border-radius: 20px;
+    box-shadow: 0 0 0 1px rgba(33,150,176,0.07), 0 32px 80px rgba(0,0,0,0.75);
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.34,1.4,0.64,1), transform 0.35s cubic-bezier(0.34,1.4,0.64,1);
+    direction: rtl;
+  ">
+
+    <!-- Panel glow -->
+    <div style="
+      position: absolute; top: -40px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 120px;
+      background: radial-gradient(ellipse, rgba(224,23,107,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    "></div>
+
+    <!-- Header -->
+    <div style="
+      padding: 1rem 1.1rem 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    ">
+      <div style="
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e0176b 0%, #2196b0 100%);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px rgba(224,23,107,0.35);
+      ">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>
+      </div>
+      <div style="flex:1; min-width:0;">
+        <div style="font-family:'Heebo',sans-serif; font-weight:700; font-size:0.93rem; color:#fff;">CLIX Assistant</div>
+        <div style="display:flex; align-items:center; gap:0.35rem; margin-top:1px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.7);display:inline-block;"></span>
+          <span style="font-family:'Heebo',sans-serif; font-size:0.76rem; color:rgba(255,255,255,0.45);">מחובר · עונה בשניות</span>
+        </div>
+      </div>
+      <button onclick="toggleChat()" aria-label="סגור" style="
+        width: 30px; height: 30px;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.04);
+        color: rgba(255,255,255,0.4);
+        font-size: 0.85rem;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        transition: background 0.2s, color 0.2s;
+      " onmouseover="this.style.background='rgba(255,255,255,0.10)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.color='rgba(255,255,255,0.4)'">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div id="chat-messages" style="
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      scroll-behavior: smooth;
+    ">
+      <!-- Welcome message -->
+      <div class="chat-msg-bot" style="
+        display: flex; align-items: flex-end; gap: 0.5rem;
+      ">
+        <div style="
+          width: 28px; height: 28px; border-radius: 50%;
+          background: linear-gradient(135deg, #e0176b, #2196b0);
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0;
+        ">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>
+        </div>
+        <div style="
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 16px 16px 16px 4px;
+          padding: 0.65rem 0.9rem;
+          font-family:'Heebo',sans-serif;
+          font-size: 0.88rem;
+          color: rgba(255,255,255,0.88);
+          line-height: 1.55;
+          max-width: 82%;
+        ">שלום! 👋 אני הסוכן של CLIX. איך אפשר לעזור לך היום?</div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div style="
+      padding: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      gap: 0.5rem;
+      align-items: flex-end;
+      flex-shrink: 0;
+    ">
+      <textarea
+        id="chat-input"
+        placeholder="כתוב הודעה..."
+        rows="1"
+        onkeydown="chatKeydown(event)"
+        oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,96)+'px'"
+        style="
+          flex: 1;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.10);
+          border-radius: 12px;
+          padding: 0.6rem 0.85rem;
+          color: #fff;
+          font-family: 'Heebo', sans-serif;
+          font-size: 0.88rem;
+          resize: none;
+          outline: none;
+          line-height: 1.5;
+          transition: border-color 0.2s;
+          direction: rtl;
+          overflow: hidden;
+        "
+        onfocus="this.style.borderColor='rgba(33,150,176,0.5)'"
+        onblur="this.style.borderColor='rgba(255,255,255,0.10)'"
+      ></textarea>
+      <button id="chat-send" onclick="sendChatMessage()" aria-label="שלח" style="
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        border: none;
+        background: #e0176b;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 2px 12px rgba(224,23,107,0.4);
+        transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+      " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="transform: rotate(180deg)">
+          <path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <style>
+    #chat-messages::-webkit-scrollbar { width: 4px; }
+    #chat-messages::-webkit-scrollbar-track { background: transparent; }
+    #chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+    @keyframes chatDotPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+    .typing-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.45);
+      animation: chatDotPulse 1.2s ease-in-out infinite;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @media (max-width: 420px) {
+      #chat-panel { width: calc(100vw - 2rem); left: 1rem; right: 1rem; }
+      #chat-launcher { left: 1rem; }
+    }
+  </style>
+
+  <script>
+    (function () {
+      var CHAT_WEBHOOK = 'https://hook.eu2.make.com/wdp5b419qpeeiiyytrn2v896y5jv1cvd';
+      var chatOpen = false;
+      var sessionId = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+      // Persistent conversation ID — survives page reloads and return visits
+      var conversationId = localStorage.getItem('clix_conv_id');
+      if (!conversationId) {
+        conversationId = 'clix_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+        localStorage.setItem('clix_conv_id', conversationId);
+      }
+      var tooltipDismissed = false;
+
+      // Show tooltip after 5 seconds
+      setTimeout(function () {
+        var tooltip = document.getElementById('chat-tooltip');
+        var dot = document.getElementById('chat-dot');
+        if (!tooltip || chatOpen || tooltipDismissed) return;
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = 'translateY(0) scale(1)';
+        if (dot) { dot.style.opacity = '1'; dot.style.transform = 'scale(1)'; }
+        // Pulse the button
+        var btn = document.getElementById('chat-btn');
+        if (btn) {
+          btn.style.animation = 'none';
+          btn.style.boxShadow = '0 4px 24px rgba(224,23,107,0.45), 0 0 0 0 rgba(224,23,107,0.3)';
+          var pulse = [
+            { boxShadow: '0 4px 24px rgba(224,23,107,0.45), 0 0 0 0 rgba(224,23,107,0.3)' },
+            { boxShadow: '0 4px 24px rgba(224,23,107,0.45), 0 0 0 14px rgba(224,23,107,0)' }
+          ];
+          if (btn.animate) btn.animate(pulse, { duration: 1200, iterations: 3, easing: 'ease-out' });
+        }
+      }, 5000);
+
+      window.toggleChat = function () {
+        chatOpen = !chatOpen;
+        var panel = document.getElementById('chat-panel');
+        var tooltip = document.getElementById('chat-tooltip');
+        var dot = document.getElementById('chat-dot');
+        var iconOpen = document.getElementById('chat-icon-open');
+        var iconClose = document.getElementById('chat-icon-close');
+
+        if (chatOpen) {
+          tooltipDismissed = true;
+          if (tooltip) { tooltip.style.opacity = '0'; tooltip.style.transform = 'translateY(8px) scale(0.92)'; }
+          if (dot) { dot.style.opacity = '0'; dot.style.transform = 'scale(0)'; }
+          panel.style.opacity = '1';
+          panel.style.transform = 'translateY(0) scale(1)';
+          panel.style.pointerEvents = 'auto';
+          if (iconOpen) { iconOpen.style.opacity = '0'; iconOpen.style.transform = 'rotate(90deg)'; }
+          if (iconClose) { iconClose.style.opacity = '1'; iconClose.style.transform = 'rotate(0deg)'; }
+          // Focus input
+          setTimeout(function () {
+            var inp = document.getElementById('chat-input');
+            if (inp) inp.focus();
+            scrollChatToBottom();
+          }, 350);
+        } else {
+          panel.style.opacity = '0';
+          panel.style.transform = 'translateY(16px) scale(0.96)';
+          panel.style.pointerEvents = 'none';
+          if (iconOpen) { iconOpen.style.opacity = '1'; iconOpen.style.transform = 'rotate(0deg)'; }
+          if (iconClose) { iconClose.style.opacity = '0'; iconClose.style.transform = 'rotate(-90deg)'; }
+        }
+      };
+
+      window.chatKeydown = function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendChatMessage();
+        }
+      };
+
+      window.sendChatMessage = function () {
+        var input = document.getElementById('chat-input');
+        var text = input ? input.value.trim() : '';
+        if (!text) return;
+
+        input.value = '';
+        input.style.height = 'auto';
+
+        appendUserMessage(text);
+        var typing = appendTyping();
+        scrollChatToBottom();
+
+        // Disable send while waiting
+        var sendBtn = document.getElementById('chat-send');
+        if (sendBtn) sendBtn.style.opacity = '0.45';
+
+        fetch(CHAT_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text, session_id: sessionId, conversation_id: conversationId, source: 'website_chat' })
+        })
+          .then(function (res) { return res.text(); })
+          .then(function (raw) {
+            var reply = raw;
+            try {
+              var j = JSON.parse(raw);
+              reply = j.response || j.message || j.reply || j.text || j.answer || raw;
+            } catch (_) {}
+            removeTyping(typing);
+            appendBotMessage(reply);
+            scrollChatToBottom();
+          })
+          .catch(function () {
+            removeTyping(typing);
+            appendBotMessage('מצטער, הייתה תקלה. נסה שוב בעוד רגע 🙏');
+            scrollChatToBottom();
+          })
+          .finally(function () {
+            if (sendBtn) sendBtn.style.opacity = '1';
+          });
+      };
+
+      function appendUserMessage(text) {
+        var msgs = document.getElementById('chat-messages');
+        if (!msgs) return;
+        var div = document.createElement('div');
+        div.style.cssText = 'display:flex; justify-content:flex-start;';
+        div.innerHTML = '<div style="background:linear-gradient(135deg,#e0176b,#b8105a);border-radius:16px 16px 4px 16px;padding:0.65rem 0.9rem;font-family:Heebo,sans-serif;font-size:0.88rem;color:#fff;line-height:1.55;max-width:82%;direction:rtl;word-break:break-word;overflow-wrap:break-word;">' + escapeHtml(text) + '</div>';
+        msgs.appendChild(div);
+      }
+
+      function appendBotMessage(text) {
+        var msgs = document.getElementById('chat-messages');
+        if (!msgs) return;
+        var div = document.createElement('div');
+        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;';
+        div.innerHTML =
+          '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e0176b,#2196b0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>' +
+          '</div>' +
+          '<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:16px 16px 16px 4px;padding:0.65rem 0.9rem;font-family:Heebo,sans-serif;font-size:0.88rem;color:rgba(255,255,255,0.88);line-height:1.55;max-width:82%;direction:rtl;white-space:pre-wrap;word-break:break-word;overflow-wrap:break-word;">' +
+          escapeHtml(String(text)) + '</div>';
+        msgs.appendChild(div);
+      }
+
+      function appendTyping() {
+        var msgs = document.getElementById('chat-messages');
+        if (!msgs) return null;
+        var div = document.createElement('div');
+        div.style.cssText = 'display:flex;align-items:flex-end;gap:0.5rem;';
+        div.innerHTML =
+          '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e0176b,#2196b0);display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
+          '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>' +
+          '</div>' +
+          '<div style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:16px 16px 16px 4px;padding:0.65rem 0.9rem;display:flex;gap:5px;align-items:center;">' +
+          '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>' +
+          '</div>';
+        msgs.appendChild(div);
+        return div;
+      }
+
+      function removeTyping(el) {
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+      }
+
+      function scrollChatToBottom() {
+        var msgs = document.getElementById('chat-messages');
+        if (msgs) msgs.scrollTop = msgs.scrollHeight;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+    })();
+  </script>
+
 </body>
 </html>
