@@ -2636,26 +2636,60 @@
       }
       var tooltipDismissed = false;
 
+      // ─── Cookie helpers ───────────────────────────────────────────────────────
+      function getCookie(name) {
+        var m = document.cookie.match('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)');
+        return m ? decodeURIComponent(m[1]) : null;
+      }
+      function setCookie(name, value, days) {
+        var exp = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + exp + '; path=/; SameSite=Lax';
+      }
+
+      // ─── Persistent user ID (cookie → localStorage → new) ────────────────────
+      var persistentUid = getCookie('clix_uid') || localStorage.getItem('clix_uid');
+      if (!persistentUid) {
+        persistentUid = 'cu_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 9);
+      }
+      setCookie('clix_uid', persistentUid, 365);
+      try { localStorage.setItem('clix_uid', persistentUid); } catch (_) {}
+
       // ─── Rate limiting ────────────────────────────────────────────────────────
       var DAILY_LIMIT = 4;
       var WHITELIST   = ['chat_1776972108666_rt4mif'];
       var BLOCKED_MSG = 'הגעת למכסת ההודעות היומית עם הסוכן 🙏\n\nלתיאום פגישת ייעוץ ללא עלות — לחץ כאן:\nhttps://forms.fillout.com/t/nt2oT7MZyBus?lead_source=social\n\nאו שלח הודעה ל‑053‑240‑7762';
+      var fpVisitorId = null;
 
-      function isWhitelisted() { return WHITELIST.indexOf(sessionId) !== -1 || WHITELIST.indexOf(conversationId) !== -1; }
+      function isWhitelisted() {
+        return WHITELIST.indexOf(sessionId) !== -1 ||
+               WHITELIST.indexOf(conversationId) !== -1 ||
+               WHITELIST.indexOf(persistentUid) !== -1;
+      }
 
       function getRateLimit() {
         try {
-          var rl = JSON.parse(localStorage.getItem('clix_rl') || 'null');
+          // Cookie is more persistent than localStorage — prefer it
+          var raw = getCookie('clix_rl') || localStorage.getItem('clix_rl');
+          var rl = JSON.parse(raw || 'null');
           if (!rl || Date.now() >= rl.resetAt) return { count: 0, resetAt: 0 };
           return rl;
         } catch (_) { return { count: 0, resetAt: 0 }; }
+      }
+
+      function setRateLimit(rl) {
+        var json = JSON.stringify(rl);
+        var daysLeft = Math.max((rl.resetAt - Date.now()) / 864e5, 1);
+        setCookie('clix_rl', json, daysLeft);
+        try { localStorage.setItem('clix_rl', json); } catch (_) {}
+        // Also store under fingerprint key if available
+        if (fpVisitorId) setCookie('clix_fp_' + fpVisitorId, json, daysLeft);
       }
 
       function incrementRateLimit() {
         var rl = getRateLimit();
         var newCount = rl.count + 1;
         var resetAt = rl.resetAt || (Date.now() + 24 * 60 * 60 * 1000);
-        localStorage.setItem('clix_rl', JSON.stringify({ count: newCount, resetAt: resetAt }));
+        setRateLimit({ count: newCount, resetAt: resetAt });
         return newCount;
       }
 
@@ -2667,6 +2701,30 @@
         if (input) { input.disabled = true; input.placeholder = 'הגעת למכסת ההודעות היומית'; input.style.opacity = '0.45'; input.style.cursor = 'not-allowed'; }
         if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.3'; sendBtn.style.cursor = 'not-allowed'; }
       }
+
+      // ─── FingerprintJS — async layer for fingerprint-based blocking ───────────
+      (function () {
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js';
+        s.onload = function () {
+          FingerprintJS.load().then(function (fp) { return fp.get(); }).then(function (result) {
+            fpVisitorId = result.visitorId;
+            // Check if this fingerprint was blocked before (e.g. after cookie/localStorage clear)
+            var fpRaw = getCookie('clix_fp_' + fpVisitorId);
+            if (fpRaw) {
+              try {
+                var fpRl = JSON.parse(fpRaw);
+                var current = getRateLimit();
+                if (fpRl.count > current.count && Date.now() < fpRl.resetAt) {
+                  setRateLimit(fpRl);
+                  if (isBlocked()) applyBlockedUI();
+                }
+              } catch (_) {}
+            }
+          }).catch(function () {});
+        };
+        document.head.appendChild(s);
+      })();
       // ─────────────────────────────────────────────────────────────────────────
 
       // Adjust launcher height when cookie banner is visible
