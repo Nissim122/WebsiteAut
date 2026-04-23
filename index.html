@@ -2637,8 +2637,11 @@
       var tooltipDismissed = false;
 
       // ─── Rate limiting ────────────────────────────────────────────────────────
-      var DAILY_LIMIT = 7;
+      var DAILY_LIMIT = 4;
+      var WHITELIST   = ['chat_1776972108666_rt4mif'];
       var BLOCKED_MSG = 'הגעת למכסת ההודעות היומית עם הסוכן 🙏\n\nלתיאום פגישת ייעוץ ללא עלות — לחץ כאן:\nhttps://forms.fillout.com/t/nt2oT7MZyBus?lead_source=social\n\nאו שלח הודעה ל‑053‑240‑7762';
+
+      function isWhitelisted() { return WHITELIST.indexOf(sessionId) !== -1 || WHITELIST.indexOf(conversationId) !== -1; }
 
       function getRateLimit() {
         try {
@@ -2656,7 +2659,7 @@
         return newCount;
       }
 
-      function isBlocked() { return getRateLimit().count >= DAILY_LIMIT; }
+      function isBlocked() { return !isWhitelisted() && getRateLimit().count >= DAILY_LIMIT; }
 
       function applyBlockedUI() {
         var input = document.getElementById('chat-input');
@@ -2767,7 +2770,7 @@
           return;
         }
 
-        var newCount = incrementRateLimit();
+        var newCount = isWhitelisted() ? 0 : incrementRateLimit();
 
         input.value = '';
         input.style.height = 'auto';
