@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>בלוג — אוטומציה ו-AI לעסקים | CLIX Automations</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="192x192" href="brand_assets/profile_pic_2_nobg.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="brand_assets/profile_pic_2_nobg.png" />
+  <meta name="description" content="מאמרים, מדריכים וסרטונים על אוטומציה עסקית, Make, Monday, AI ועוד — מאת CLIX Automations." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://clix-automations.com/blog.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://clix-automations.com/blog.html" />
+  <meta property="og:title" content="בלוג אוטומציה ו-AI | CLIX Automations" />
+  <meta property="og:description" content="מאמרים, מדריכים וסרטונים על אוטומציה עסקית, Make, Monday, AI ועוד." />
+  <meta property="og:image" content="https://clix-automations.com/brand_assets/profile_pic_2_nobg.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    window.addEventListener('load', () => {
+      const s = document.createElement('script');
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-SJT8YRED9B';
+      s.async = true;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-SJT8YRED9B', { send_page_view: true });
+    });
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      max-width: calc(80% - 2rem);
+      margin: 0 auto;
+      background: rgba(14,16,28,0.55);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    nav a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #fff; }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.4rem;
+      background: #e0176b;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-cta:hover .btn-arrow { transform: translateX(-5px); }
+
+    /* Hamburger */
+    .hamburger-btn {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+    }
+    .hamburger-btn span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+    }
+    @media (max-width: 768px) {
+      .hamburger-btn { display: flex; }
+      .nav-links-desktop { display: none !important; }
+      .nav-cta-desktop { display: none !important; }
+      .nav-inner { max-width: 100%; }
+    }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22,1,0.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Category pill */
+    .cat-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.28rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .cat-pill.active, .cat-pill:hover {
+      background: #2196b0;
+      border-color: #2196b0;
+      color: #fff;
+    }
+    .cat-pill:not(.active) {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Blog card */
+    .blog-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    }
+    .blog-card:hover {
+      border-color: rgba(33,150,176,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35), 0 0 0 1px rgba(33,150,176,0.12);
+    }
+    .blog-card-thumb {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      position: relative;
+    }
+    .blog-card-thumb-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .blog-card-thumb-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(14,22,40,0.75) 0%, transparent 55%);
+    }
+    .blog-card-thumb-wrap img {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s cubic-bezier(0.22,1,0.36,1);
+    }
+    .blog-card:hover .blog-card-thumb-wrap img {
+      transform: scale(1.04);
+    }
+    .blog-card-body {
+      padding: 1.4rem 1.5rem 1.6rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.75rem;
+    }
+    .blog-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .blog-tag.make    { background: rgba(172,72,244,0.18); color: #c97cf8; }
+    .blog-tag.ai      { background: rgba(33,150,176,0.18); color: #5ecfec; }
+    .blog-tag.monday  { background: rgba(255,153,0,0.15);  color: #ffa830; }
+    .blog-tag.tips    { background: rgba(224,23,107,0.18); color: #f55fa0; }
+    .blog-tag.whatsapp{ background: rgba(37,211,102,0.18); color: #4cd97e; }
+    .blog-tag.video   { background: rgba(255,68,68,0.18);  color: #ff7070; }
+
+    .blog-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      line-height: 1.45;
+      color: #fff;
+      text-decoration: none;
+    }
+    .blog-title:hover { color: #5ecfec; }
+
+    .blog-excerpt {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.7;
+      flex: 1;
+    }
+
+    .blog-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.77rem;
+      color: rgba(255,255,255,0.38);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      padding-top: 0.85rem;
+    }
+    .blog-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.25); flex-shrink: 0; }
+
+    /* Featured card */
+    .blog-card-featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+    .blog-card-featured .blog-card-thumb-wrap {
+      border-radius: 0;
+    }
+    .blog-card-featured .blog-card-body {
+      padding: 2rem 2rem 2rem;
+      justify-content: center;
+    }
+    .blog-card-featured .blog-title {
+      font-size: 1.45rem;
+    }
+    .blog-card-featured .blog-excerpt {
+      font-size: 0.95rem;
+    }
+    @media (max-width: 768px) {
+      .blog-card-featured {
+        grid-column: 1;
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Newsletter strip */
+    .newsletter-strip {
+      background: rgba(33,150,176,0.08);
+      border: 1px solid rgba(33,150,176,0.22);
+      border-radius: 20px;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    /* Video embed wrapper */
+    .video-wrap {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: rgba(0,0,0,0.4);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .video-play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: rgba(14,22,40,0.55);
+      transition: background 0.2s;
+    }
+    .video-play-overlay:hover { background: rgba(14,22,40,0.35); }
+    .play-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #e0176b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 12px rgba(224,23,107,0.2);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
+    }
+    .video-play-overlay:hover .play-btn {
+      transform: scale(1.1);
+      box-shadow: 0 0 0 18px rgba(224,23,107,0.15);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════════════════ -->
+<nav aria-label="תפריט ראשי">
+  <div class="nav-inner">
+    <a href="index.html" aria-label="CLIX Automations — דף הבית" style="text-decoration: none; display: flex; align-items: baseline; gap: 0.15rem; flex-shrink: 0; direction: ltr;">
+      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">CLIX</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
+    </a>
+
+    <div style="display:flex;gap:2.5rem;" class="hidden md:flex nav-links-desktop">
+      <a href="index.html">דף הבית</a>
+      <a href="index.html#results">תוצאות</a>
+      <a href="index.html#process">תהליך</a>
+      <a href="blog.html" style="color:#2196b0;font-weight:700;">בלוג</a>
+      <a href="index.html#contact">צרו קשר</a>
+    </div>
+
+    <a href="index.html#contact" class="btn-cta nav-cta-desktop" style="font-size:0.85rem;padding:0.5rem 1.25rem;">
+      לפרטים נוספים <span class="btn-arrow">◄</span>
+    </a>
+
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position:fixed;inset:0;background:rgba(10,15,30,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:2rem;">
+  <button onclick="closeMobileMenu()" style="position:absolute;top:1.25rem;left:1.25rem;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer;opacity:0.7;">✕</button>
+  <a href="index.html"         onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">דף הבית</a>
+  <a href="index.html#results" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">תוצאות</a>
+  <a href="index.html#process" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">תהליך</a>
+  <a href="blog.html"          onclick="closeMobileMenu()" style="color:#2196b0;font-weight:800;font-size:1.5rem;text-decoration:none;">בלוג</a>
+  <a href="index.html#contact" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">צרו קשר</a>
+  <a href="index.html#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size:1rem;padding:0.75rem 2rem;margin-top:0.5rem;">
+    לתיאום פגישה <span class="btn-arrow">◄</span>
+  </a>
+</div>
+
+<main>
+
+<!-- ═══ HERO ════════════════════════════════════════════════════════ -->
+<section style="padding: 5rem 1.5rem 3.5rem; position: relative; overflow: hidden;">
+  <div style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:min(900px,100vw);height:500px;background:radial-gradient(ellipse,rgba(33,150,176,0.13) 0%,transparent 65%);pointer-events:none;"></div>
+
+  <div style="max-width:800px;margin:0 auto;text-align:center;position:relative;z-index:1;" class="reveal">
+    <h1 style="font-size:clamp(2.2rem,5vw,3.5rem);font-weight:900;line-height:1.15;letter-spacing:-0.03em;margin-bottom:1.1rem;">
+      בלוג <span style="color:#2196b0;">אוטומציה ו-AI</span>
+    </h1>
+    <p style="font-size:1.1rem;color:rgba(255,255,255,0.6);line-height:1.75;max-width:560px;margin:0 auto;">
+      מדריכים מעשיים, כלים חדשים, ו-case studies מהשטח — שבוע אחרי שבוע.
+    </p>
+  </div>
+</section>
+
+<!-- ═══ FILTER BAR ════════════════════════════════════════════════ -->
+<section style="padding:0 1.5rem 2.5rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;" id="filter-bar">
+      <button class="cat-pill active" data-cat="all"       onclick="filterPosts(this)">הכל</button>
+      <button class="cat-pill"        data-cat="make"      onclick="filterPosts(this)">Make & Zapier</button>
+      <button class="cat-pill"        data-cat="ai"        onclick="filterPosts(this)">AI כלים</button>
+      <button class="cat-pill"        data-cat="monday"    onclick="filterPosts(this)">Monday.com</button>
+      <button class="cat-pill"        data-cat="whatsapp"  onclick="filterPosts(this)">WhatsApp עסקי</button>
+      <button class="cat-pill"        data-cat="tips"      onclick="filterPosts(this)">טיפים</button>
+      <button class="cat-pill"        data-cat="video"     onclick="filterPosts(this)">וידאו</button>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider" style="max-width:1100px;margin:0 auto;"></div>
+
+<!-- ═══ POSTS GRID ════════════════════════════════════════════════ -->
+<section style="padding:3rem 1.5rem 4rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div id="posts-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.75rem;">
+
+      <!-- AGENT_INSERT_HERE -->
+
+      <!-- FEATURED POST -->
+      <article class="blog-card blog-card-featured reveal" data-cats="make,tips">
+        <div class="blog-card-thumb-wrap" style="min-height:260px;">
+          <img src="https://placehold.co/800x450/0e2240/2196b0?text=Make+Automation" alt="אוטומציה עם Make" loading="lazy" />
+        </div>
+        <div class="blog-card-body">
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+            <span class="blog-tag make">Make</span>
+            <span class="blog-tag tips">טיפ מקצועי</span>
+          </div>
+          <a href="#" class="blog-title">
+            5 אוטומציות ב-Make שכל עסק צריך ב-2025 — כולל תבניות מוכנות
+          </a>
+          <p class="blog-excerpt">
+            מחיבור טפסי לקוחות ל-CRM ועד שליחת חשבוניות אוטומטית — אלה החמשה שהכי חוסכים זמן, ויש לנו תבנית מוכנה לכל אחד.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>18 באפריל 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>6 דק' קריאה</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 2 -->
+      <article class="blog-card reveal" data-cats="ai" style="transition-delay:0.05s;">
+        <div class="blog-card-thumb-wrap">
+          <img src="https://placehold.co/640x360/0d1f38/5ecfec?text=AI+Tools+2025" alt="כלי AI לעסקים" loading="lazy" />
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag ai">AI כלים</span>
+          <a href="#" class="blog-title">
+            Claude vs ChatGPT לעסקים — מה מתאים לך ב-2025?
+          </a>
+          <p class="blog-excerpt">
+            השוואה מעשית של שני המודלים הגדולים: יכולות, עלויות, ואיפה כל אחד מנצח בתסריטים אמיתיים.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>10 באפריל 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>5 דק' קריאה</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 3 -->
+      <article class="blog-card reveal" data-cats="whatsapp" style="transition-delay:0.1s;">
+        <div class="blog-card-thumb-wrap">
+          <img src="https://placehold.co/640x360/0d2518/4cd97e?text=WhatsApp+Business" alt="WhatsApp עסקי" loading="lazy" />
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag whatsapp">WhatsApp עסקי</span>
+          <a href="#" class="blog-title">
+            איך הגדרתי בוט WhatsApp שעונה ללידים תוך 30 שניות — בלי מתכנת
+          </a>
+          <p class="blog-excerpt">
+            צעד אחר צעד: חיבור WhatsApp Business API עם Make, בניית תגובות חכמות, ושמירה על טון אישי גם כשזה אוטומטי.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>3 באפריל 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>8 דק' קריאה</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 4 — VIDEO -->
+      <article class="blog-card reveal" data-cats="video,make" style="transition-delay:0.05s;">
+        <div style="position:relative;overflow:hidden;">
+          <div class="video-wrap" style="border-radius:0;">
+            <img src="https://placehold.co/640x360/1a0d2e/c97cf8?text=וידאו%3A+Make+Tutorial" alt="סרטון Make" style="width:100%;height:100%;object-fit:cover;opacity:0.7;" loading="lazy" />
+            <div class="video-play-overlay">
+              <div class="play-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="blog-card-body">
+          <div style="display:flex;gap:0.5rem;">
+            <span class="blog-tag video">וידאו</span>
+            <span class="blog-tag make">Make</span>
+          </div>
+          <a href="#" class="blog-title">
+            סרטון: בניית תהליך onboarding אוטומטי מאפס — 20 דקות
+          </a>
+          <p class="blog-excerpt">
+            צפו בי בונה תהליך קבלת לקוח חדש מלא: מייל ברוכים הבאים, יצירת כרטיס CRM, ותזמון פגישה — הכל אוטומטי.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>27 במרץ 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>20 דק' צפייה</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 5 -->
+      <article class="blog-card reveal" data-cats="monday" style="transition-delay:0.1s;">
+        <div class="blog-card-thumb-wrap">
+          <img src="https://placehold.co/640x360/1a1200/ffa830?text=Monday.com+Tips" alt="Monday.com" loading="lazy" />
+        </div>
+        <div class="blog-card-body">
+          <span class="blog-tag monday">Monday.com</span>
+          <a href="#" class="blog-title">
+            7 טעויות שעסקים עושים ב-Monday.com — ואיך נמנעים מהן
+          </a>
+          <p class="blog-excerpt">
+            אחרי עשרות הטמעות, אלה הטעויות שחוזרות על עצמן. מ-boards מבולגנים ועד אוטומציות שמתנגשות זו בזו.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>20 במרץ 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>4 דק' קריאה</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- POST 6 -->
+      <article class="blog-card reveal" data-cats="ai,tips" style="transition-delay:0.15s;">
+        <div class="blog-card-thumb-wrap">
+          <img src="https://placehold.co/640x360/0d1e33/5ecfec?text=Prompt+Engineering" alt="Prompt Engineering" loading="lazy" />
+        </div>
+        <div class="blog-card-body">
+          <div style="display:flex;gap:0.5rem;">
+            <span class="blog-tag ai">AI כלים</span>
+            <span class="blog-tag tips">טיפ מקצועי</span>
+          </div>
+          <a href="#" class="blog-title">
+            Prompt Engineering לעסקים — איך לכתוב פרומפטים שנותנים תוצאות
+          </a>
+          <p class="blog-excerpt">
+            המדריך המעשי לכתיבת הוראות לבינה מלאכותית שמשפרות תוצאות ב-80% — עם דוגמאות מהחיים האמיתיים.
+          </p>
+          <div class="blog-meta">
+            <span>ניסים בנגייב</span>
+            <span class="blog-meta-dot"></span>
+            <span>13 במרץ 2025</span>
+            <span class="blog-meta-dot"></span>
+            <span>7 דק' קריאה</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-state" style="display:none;text-align:center;padding:4rem 1rem;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">🔍</div>
+      <p style="color:rgba(255,255,255,0.45);font-size:1rem;">אין פוסטים בקטגוריה זו עדיין. בדוק שוב בשבוע הבא.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER STRIP ════════════════════════════════════════ -->
+<section style="padding:0 1.5rem 5rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="newsletter-strip reveal" style="padding:2.5rem 2rem;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem;">
+      <div>
+        <div style="font-size:0.78rem;font-weight:700;color:#2196b0;margin-bottom:0.4rem;letter-spacing:0.06em;">NEWSLETTER</div>
+        <h2 style="font-size:1.35rem;font-weight:800;margin-bottom:0.4rem;">פוסט חדש כל שבוע — ישירות למייל</h2>
+        <p style="font-size:0.9rem;color:rgba(255,255,255,0.5);">בלי ספאם. רק תוכן שמקדם את העסק שלך.</p>
+      </div>
+      <form style="display:flex;gap:0.6rem;flex-wrap:wrap;" onsubmit="handleNewsletterSubmit(event)">
+        <input
+          type="email"
+          placeholder="המייל שלך"
+          required
+          id="nl-email"
+          style="padding:0.65rem 1.1rem;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;font-family:'Heebo',sans-serif;font-size:0.95rem;min-width:220px;outline:none;transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='#2196b0'"
+          onblur="this.style.borderColor='rgba(255,255,255,0.15)'"
+        />
+        <button type="submit" class="btn-cta" style="font-size:0.9rem;white-space:nowrap;">
+          הרשמה <span class="btn-arrow">◄</span>
+        </button>
+      </form>
+      <p id="nl-msg" style="display:none;color:#4cd97e;font-size:0.9rem;font-weight:700;width:100%;"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════════════ -->
+<footer style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 1.5rem;text-align:center;">
+  <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">
+    <a href="index.html" style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.03em;color:#fff;text-decoration:none;">
+      CLIX<span style="font-weight:400;color:#e0176b;">Automations</span>
+    </a>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.3);">© 2025 CLIX Automations. כל הזכויות שמורות.</p>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="privacy.html" style="font-size:0.82rem;color:rgba(255,255,255,0.35);text-decoration:none;">מדיניות פרטיות</a>
+      <a href="index.html#contact" style="font-size:0.82rem;color:rgba(255,255,255,0.35);text-decoration:none;">צרו קשר</a>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<script>
+  // Mobile menu
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Category filter
+  function filterPosts(btn) {
+    document.querySelectorAll('#filter-bar .cat-pill').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cat = btn.dataset.cat;
+    const cards = document.querySelectorAll('#posts-grid article');
+    let visible = 0;
+
+    cards.forEach(card => {
+      const cats = card.dataset.cats ? card.dataset.cats.split(',') : [];
+      const show = cat === 'all' || cats.includes(cat);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  // Newsletter
+  function handleNewsletterSubmit(e) {
+    e.preventDefault();
+    const msg = document.getElementById('nl-msg');
+    msg.textContent = '✓ נרשמת בהצלחה! נשלח לך את הפוסט הבא.';
+    msg.style.display = 'block';
+    document.getElementById('nl-email').value = '';
+  }
+</script>
+</body>
+</html>

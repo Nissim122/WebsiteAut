@@ -1,0 +1,36 @@
+name: Blog Agent — Weekly Post
+
+on:
+  schedule:
+    - cron: '0 6 * * 3'  # כל רביעי 06:00 UTC = 09:00 שעון ישראל
+  workflow_dispatch:        # הפעלה ידנית מ-GitHub
+
+jobs:
+  write-draft:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run Blog Agent
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node blog-agent.mjs
+
+      - name: Commit draft
+        run: |
+          git config user.name "Blog Agent"
+          git config user.email "bot@clix-automations.com"
+          git add drafts/
+          git diff --staged --quiet && echo "No new draft" || (
+            git commit -m "blog-draft: $(date +'%Y-%m-%d') 🤖" &&
+            git push
+          )
