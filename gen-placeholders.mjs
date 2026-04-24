@@ -1,0 +1,223 @@
+/**
+ * gen-placeholders.mjs
+ * סורק blog.html, ומוצא כרטיסי מאמר שאין להם דף HTML תואם.
+ * לכל כזה יוצר דף "בכתיבה" בפורמט posts/YYYY-MM-DD.html
+ *
+ * Usage: node gen-placeholders.mjs
+ */
+
+import { readFile, writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
+import { join } from 'path';
+
+const BASE_DIR  = process.cwd();
+const BLOG_PATH = join(BASE_DIR, 'blog.html');
+const POSTS_DIR = join(BASE_DIR, 'posts');
+
+function buildComingSoonHtml(dateStr) {
+  const heDate = new Date(dateStr).toLocaleDateString('he-IL', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  return `<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>המאמר בדרך | CLIX Automations</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Heebo', sans-serif; background: #0e1628; color: #ffffff; overflow-x: hidden; min-height: 100dvh; display: flex; flex-direction: column; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: transparent; padding: 0.75rem 1rem; }
+    .nav-inner {
+      max-width: calc(80% - 2rem); margin: 0 auto;
+      background: rgba(14,16,28,0.55); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px; border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem; height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    nav a { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 1.05rem; font-weight: 500; transition: color 0.2s; }
+    nav a:hover { color: #fff; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.4rem; background: #e0176b; color: #fff;
+      font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 0.9rem;
+      border-radius: 10px; border: none; cursor: pointer; text-decoration: none;
+    }
+    .btn-arrow { display: inline-block; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .btn-cta:hover .btn-arrow { transform: translateX(-5px); }
+    .hamburger-btn { display: none; flex-direction: column; gap: 5px; background: none; border: none; cursor: pointer; padding: 6px; }
+    .hamburger-btn span { display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px; }
+    @media (max-width: 768px) {
+      .hamburger-btn { display: flex; }
+      .nav-links-desktop { display: none !important; }
+      .nav-cta-desktop { display: none !important; }
+      .nav-inner { max-width: 100%; }
+    }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+
+    main {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+    .card {
+      max-width: 520px; width: 100%; text-align: center;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+    }
+    .icon {
+      font-size: 3.5rem; line-height: 1;
+      margin-bottom: 1.5rem;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 900; line-height: 1.25;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff 40%, #5ecfec);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    p {
+      color: rgba(255,255,255,0.55);
+      font-size: 1.05rem; line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+    .date-badge {
+      display: inline-block;
+      background: rgba(33,150,176,0.12);
+      border: 1px solid rgba(33,150,176,0.25);
+      color: #5ecfec;
+      font-size: 0.82rem; font-weight: 700;
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.8rem;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: rgba(255,255,255,0.4); font-size: 0.9rem; font-weight: 600;
+      text-decoration: none; margin-top: 1.5rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+
+<nav aria-label="תפריט ראשי">
+  <div class="nav-inner">
+    <a href="../index.html" aria-label="CLIX Automations — דף הבית" style="text-decoration:none;display:flex;align-items:baseline;gap:0.15rem;flex-shrink:0;direction:ltr;">
+      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">CLIX</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
+    </a>
+    <div style="display:flex;gap:2.5rem;" class="hidden md:flex nav-links-desktop">
+      <a href="../index.html">דף הבית</a>
+      <a href="../index.html#results">תוצאות</a>
+      <a href="../index.html#process">תהליך</a>
+      <a href="../blog.html" style="color:#2196b0;font-weight:700;">בלוג</a>
+      <a href="../index.html#contact">צרו קשר</a>
+    </div>
+    <a href="../index.html#contact" class="btn-cta nav-cta-desktop" style="font-size:0.85rem;padding:0.5rem 1.25rem;">
+      לפרטים נוספים <span class="btn-arrow">◄</span>
+    </a>
+    <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position:fixed;inset:0;background:rgba(10,15,30,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);z-index:200;flex-direction:column;align-items:center;justify-content:center;gap:2rem;">
+  <button onclick="closeMobileMenu()" style="position:absolute;top:1.25rem;left:1.25rem;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer;opacity:0.7;">✕</button>
+  <a href="../index.html"         onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">דף הבית</a>
+  <a href="../index.html#results" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">תוצאות</a>
+  <a href="../index.html#process" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">תהליך</a>
+  <a href="../blog.html"          onclick="closeMobileMenu()" style="color:#2196b0;font-weight:800;font-size:1.5rem;text-decoration:none;">בלוג</a>
+  <a href="../index.html#contact" onclick="closeMobileMenu()" style="color:rgba(255,255,255,0.85);font-weight:600;font-size:1.5rem;text-decoration:none;">צרו קשר</a>
+  <a href="../index.html#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size:1rem;padding:0.75rem 2rem;margin-top:0.5rem;">
+    לתיאום פגישה <span class="btn-arrow">◄</span>
+  </a>
+</div>
+
+<main>
+  <div class="card">
+    <span class="icon">✍️</span>
+    <div class="date-badge">📅 ${heDate}</div>
+    <h1>המאמר בכתיבה</h1>
+    <p>הוא יעלה בקרוב :)</p>
+    <a href="../index.html#contact" class="btn-cta" style="font-size:0.95rem;padding:0.65rem 1.8rem;">
+      רוצים לדעת מתי? <span class="btn-arrow">◄</span>
+    </a>
+    <br/>
+    <a href="../blog.html" class="back-link">◄ חזרה לבלוג</a>
+  </div>
+</main>
+
+<script>
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn  = document.getElementById('hamburger-btn');
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+</script>
+</body>
+</html>`;
+}
+
+async function main() {
+  console.log('\n📋 סריקת blog.html לקישורים חסרים...\n');
+
+  const blogHtml = await readFile(BLOG_PATH, 'utf8');
+  const matches  = [...blogHtml.matchAll(/href="posts\/(\d{4}-\d{2}-\d{2})\.html"/g)];
+  const dates    = [...new Set(matches.map(m => m[1]))];
+
+  if (dates.length === 0) {
+    console.log('ℹ️  לא נמצאו קישורי מאמרים ב-blog.html.');
+    return;
+  }
+
+  if (!existsSync(POSTS_DIR)) await mkdir(POSTS_DIR, { recursive: true });
+
+  let created = 0;
+  for (const date of dates) {
+    const postPath = join(POSTS_DIR, `${date}.html`);
+    if (existsSync(postPath)) {
+      console.log(`  ✅ קיים: posts/${date}.html`);
+    } else {
+      await writeFile(postPath, buildComingSoonHtml(date), 'utf8');
+      console.log(`  🆕 נוצר placeholder: posts/${date}.html`);
+      created++;
+    }
+  }
+
+  console.log(`\n✅ סיום — ${created} placeholder${created !== 1 ? 's' : ''} נוצרו.\n`);
+}
+
+main().catch(err => {
+  console.error('❌ שגיאה:', err.message);
+  process.exit(1);
+});

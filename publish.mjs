@@ -259,8 +259,13 @@ async function main() {
   // ── 1. Create post page ──────────────────────────────────────────────────────
   if (!existsSync(POSTS_DIR)) await mkdir(POSTS_DIR, { recursive: true });
 
+  const isPlaceholder = existsSync(POST_PATH) &&
+    (await readFile(POST_PATH, 'utf8')).includes('המאמר בכתיבה');
+
   await writeFile(POST_PATH, buildPostHtml(post, cat, heDate), 'utf8');
-  console.log(`📄 נוצר: posts/${dateArg}.html`);
+  console.log(isPlaceholder
+    ? `📄 דורס placeholder: posts/${dateArg}.html`
+    : `📄 נוצר: posts/${dateArg}.html`);
 
   // ── 2. Insert card into blog.html ────────────────────────────────────────────
   let html = await readFile(BLOG_PATH, 'utf8');
