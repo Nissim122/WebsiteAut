@@ -177,7 +177,10 @@ function buildPostHtml(post, cat, heDate) {
     <a href="../blog.html" class="back-link">◄ חזרה לבלוג</a>
 
     <div style="border-radius:16px;overflow:hidden;margin-bottom:2.5rem;aspect-ratio:16/9;background:#131c34;">
-      <img src="../images/blog/${dateArg}.jpg" alt="${post.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      <picture>
+        <source srcset="../images/blog/${dateArg}.webp" type="image/webp" />
+        <img src="../images/blog/${dateArg}.jpg" alt="${post.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />
+      </picture>
     </div>
 
     <div class="post-header">
@@ -273,7 +276,10 @@ async function main() {
     const cardHtml = `<!-- AGENT POST ${dateArg} -->
       <article class="blog-card reveal" data-cats="${post.category}" style="transition-delay:0.05s;">
         <div class="blog-card-thumb-wrap">
-          <img src="images/blog/${dateArg}.jpg" alt="${post.title}" loading="lazy" />
+          <picture>
+            <source srcset="images/blog/${dateArg}.webp" type="image/webp" />
+            <img src="images/blog/${dateArg}.jpg" alt="${post.title}" loading="lazy" />
+          </picture>
         </div>
         <div class="blog-card-body">
           <span class="blog-tag ${cat.css}">${cat.label}</span>

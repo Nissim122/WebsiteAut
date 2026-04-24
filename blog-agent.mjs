@@ -147,7 +147,10 @@ function buildCardHtml(post, date) {
   return `      <!-- AGENT POST ${date} -->
       <article class="blog-card reveal" data-cats="${post.category}" style="transition-delay:0.05s;">
         <div class="blog-card-thumb-wrap">
-          <img src="images/blog/${date}.jpg" alt="${post.title}" loading="lazy" />
+          <picture>
+            <source srcset="images/blog/${date}.webp" type="image/webp" />
+            <img src="images/blog/${date}.jpg" alt="${post.title}" loading="lazy" />
+          </picture>
         </div>
         <div class="blog-card-body">
           <span class="blog-tag ${cat.css}">${cat.label}</span>
@@ -219,7 +222,9 @@ function buildDraftHtml(post, date) {
     <p style="color:#c8d8ee;font-size:0.9rem;line-height:1.7;margin:0;">
       צור תמונה AI שקשורה למאמר ושמור אותה בנתיב:<br/>
       <code style="background:rgba(0,0,0,0.4);padding:0.2rem 0.6rem;border-radius:5px;font-family:monospace;color:#5ecfec;">images/blog/${date}.jpg</code><br/>
-      (גודל מומלץ: 1280×720 px)
+      (גודל מומלץ: 1280×720 px)<br/><br/>
+      לאחר העלאה, הרץ: <code style="background:rgba(0,0,0,0.4);padding:0.2rem 0.6rem;border-radius:5px;font-family:monospace;color:#5ecfec;">node optimize-images.mjs</code><br/>
+      — ידחס את התמונה ויצור גרסת WebP קלה יותר אוטומטית.
     </p>
   </div>
 
