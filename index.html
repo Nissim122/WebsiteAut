@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
@@ -321,7 +321,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 0.6rem;
       transition: transform 0.5s cubic-bezier(0.34,1.1,0.64,1), z-index 0s;
       will-change: transform;
     }
@@ -397,7 +397,7 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 14px;
-      padding: 1.5rem;
+      padding: 1.1rem 1.5rem;
       transition: border-color 0.25s;
     }
     .testi-card:hover { border-color: rgba(33,150,176,0.4); }
@@ -1154,62 +1154,61 @@
       <!-- Two-column: cards left + about text right -->
       <div class="reveal results-flex" style="direction: ltr; display: flex; justify-content: space-between; align-items: center; gap: 10rem; flex-wrap: wrap; min-height: 500px; transition-delay: 0.12s; padding-left: 0;">
         <div id="testi-stack" class="testi-stack-wrap" role="group" aria-live="polite" aria-label="המלצות לקוחות" style="position: relative; height: 400px; width: 320px; user-select: none; flex-shrink: 0;">
-
           <!-- Card 0 -->
-          <div class="testi-card shuffle-card pos-front" data-idx="0" role="article" aria-label="המלצה מאת דוד כהן">
+          <div class="testi-card shuffle-card pos-front" data-idx="0" role="article" aria-label="המלצה מאת יעל חן רז">
+            <div style="display: flex; justify-content: center;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); border: 2px solid #2196b0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">י.ח</div>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: center; margin: 0;" dir="rtl">
+              "כבעלת עסק קטן, בזבזתי שעות על שיווק והכל ידני — ניוזלטרים, פוסטים, מעקב לקוחות. בזכות אוטומציה שהציעו לי יש לי מערכת שמייצרת ושולחת תוכן שיווקי אוטומטית, מנהלת את הרשתות החברתיות ועוקבת אחרי לידים. ההכנסות בעסק גדלו משמעותית, ועכשיו אני מתחילה להרחיב את השירותים בעסק."
+            </p>
+            <div style="text-align: center; margin-bottom: 0;" dir="rtl">
+              <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">יעל חן רז</div>
+              <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem;">אקדמיית רזי החן, ר"ג</div>
+            </div>
             <div style="display: flex; gap: 0.25rem; justify-content: center; color: #eab308;" aria-hidden="true">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
             </div>
             <span class="sr-only">דירוג: 5 כוכבים</span>
-            <p style="font-size: 0.95rem; line-height: 1.75; color: rgba(255,255,255,0.85); text-align: center;" dir="rtl">
-              "תוך שבועיים CLIX הכניסו לי אוטומציה שחסכה לי 3 שעות עבודה ביום. תשואה על ההשקעה הייתה מידית."
-            </p>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
-              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); border: 2px solid #2196b0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">ד.כ</div>
-              <div style="text-align: center;">
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;" dir="rtl">דוד כהן</div>
-                <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4);" dir="rtl">מנכ"ל, חברת נדל"ן</div>
-              </div>
-            </div>
           </div>
 
           <!-- Card 1 -->
-          <div class="testi-card shuffle-card pos-middle" data-idx="1" role="article" aria-label="המלצה מאת רחל לוי">
+          <div class="testi-card shuffle-card pos-middle" data-idx="1" role="article" aria-label="המלצה מאת יהודה סבן">
+            <div style="display: flex; justify-content: center;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #e0176b, #8b0038); border: 2px solid #e0176b; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">י.ס</div>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: center; margin: 0;" dir="rtl">
+              "הייתי תקוע בשליחת תזכורות במייל ללקוחות ולחברות ביטוח. אחרי שיחת אפיון קיבלתי הצעה למספר אוטומציות שיעזרו לי בעסק. החלטתי לעשות את זה — ועכשיו כל הפעולות הידניות שלי נעשות אוטומטית. אני רוצה להודות לניסים על העבודה המקצועית והדרך. ממליץ בחום :)"
+            </p>
+            <div style="text-align: center; margin-bottom: 0;" dir="rtl">
+              <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">יהודה סבן</div>
+              <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem;">ביטוחי רכב</div>
+            </div>
             <div style="display: flex; gap: 0.25rem; justify-content: center; color: #eab308;" aria-hidden="true">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
             </div>
             <span class="sr-only">דירוג: 5 כוכבים</span>
-            <p style="font-size: 0.95rem; line-height: 1.75; color: rgba(255,255,255,0.85); text-align: center;" dir="rtl">
-              "המערכת שלהם מנהלת לי את כל הלידים אוטומטית — אפס עבודה ידנית. הצוות שלי עכשיו מתמקד רק במכירות."
-            </p>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
-              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #e0176b, #8b0038); border: 2px solid #e0176b; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">ר.ל</div>
-              <div style="text-align: center;">
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;" dir="rtl">רחל לוי</div>
-                <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4);" dir="rtl">בעלת סטודיו לאימון</div>
-              </div>
-            </div>
           </div>
 
           <!-- Card 2 -->
-          <div class="testi-card shuffle-card pos-back" data-idx="2" role="article" aria-label="המלצה מאת אמיר מזרחי">
+          <div class="testi-card shuffle-card pos-back" data-idx="2" role="article" aria-label="המלצה מאת מיכל יוסופוביץ">
+            <div style="display: flex; justify-content: center;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); border: 2px solid #2196b0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">מ.י</div>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: center; margin: 0;" dir="rtl">
+              "את הדרך שלי עם אוטומציות עסקיות התחלתי לפני יותר משנה. לא הייתה לי מערכת CRM בעסק, ובפגישת אפיון הבנתי שאני חייבת אחת. ומאז העסק שלי לא אותו דבר — הכל מדוד, הכל כתוב, ואני יודעת איפה נמצא כל לקוח בכל רגע נתון :)"
+            </p>
+            <div style="text-align: center; margin-bottom: 0;" dir="rtl">
+              <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">מיכל יוסופוביץ</div>
+              <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem;">מדרסים - אורטודוק</div>
+            </div>
             <div style="display: flex; gap: 0.25rem; justify-content: center; color: #eab308;" aria-hidden="true">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
             </div>
             <span class="sr-only">דירוג: 5 כוכבים</span>
-            <p style="font-size: 0.95rem; line-height: 1.75; color: rgba(255,255,255,0.85); text-align: center;" dir="rtl">
-              "ChatBot שבנו יחד עונה ל-80% מהשאלות של הלקוחות שלי — 24/7. שירות הלקוחות שלנו שופר לחלוטין."
-            </p>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
-              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #2196b0, #0d3a5c); border: 2px solid #2196b0; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">א.מ</div>
-              <div style="text-align: center;">
-                <div style="font-size: 0.9rem; font-weight: 700; color: #fff;" dir="rtl">אמיר מזרחי</div>
-                <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4);" dir="rtl">מייסד, חברת SaaS</div>
-              </div>
-            </div>
           </div>
 
-        </div>
+                </div>
 
         <!-- About me — right column -->
         <div dir="rtl" class="results-about" style="flex: 1; min-width: 280px; max-width: 520px;">
@@ -1282,10 +1281,10 @@
               <div class="faq-sub">
                 <button class="faq-sub-trigger" onclick="toggleSub(this)" aria-expanded="false">
                   <svg class="sub-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                  <span>מי יכול להרוויח מאוטומציה?</span>
+                  <span>האם אוטומציה תעזור בכל תחום?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">כל עסק שמשקיע זמן על משימות שחוזרות על עצמן — בין אם זה עסק קטן עם צוות של 2 אנשים ובין אם חברה עם עשרות עובדים.</div>
+                  <div class="faq-sub-answer">חד משמעית - כן. בשנה האחרונה ליווינו עשרות עסקים במגוון תחומים – החל ממשדרי פרסום, מאמני כושר ועד יועצי מכירות, חניויות דיגיטליות ונותני שירות בתחומי המכירות. הצעד הראשון שלנו הוא שיחת אפיון ללא עלות, שבה נצלול לעומק הפעילות שלך ונוודא שהפתרונות שלנו אכן יעזרו — בדיוק למידות ולצרכים שלכם.</div>
                 </div>
               </div>
             </div>
@@ -1306,7 +1305,7 @@
                   <span>מה לוח הזמנים הממוצע?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">אוטומציה פשוטה יכולה להיות מוכנה תוך 3–5 ימי עבודה. פתרונות מורכבים יותר עם אינטגרציות מרובות לוקחים 2–4 שבועות.</div>
+                  <div class="faq-sub-answer">זה תלוי במורכבות הפתרון — ולכן מתחילים תמיד משיחת אפיון. לאחריה נותנים הערכת זמן מדויקת. ברוב המקרים אוטומציה ממוקדת מוכנה תוך שבוע עד שבועיים, ופרויקטים רחבים יותר עם אינטגרציות מרובות — עד חודש.</div>
                 </div>
               </div>
             </div>
@@ -1317,7 +1316,7 @@
                   <span>מה קורה אחרי שהאוטומציה עולה לאוויר?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">עוברים שלב בדיקות משותף, ואז האוטומציה רצה בעצמה. אני נשאר זמין לתמיכה ושינויים לפי הצורך.</div>
+                  <div class="faq-sub-answer">לפני העלייה לאוויר עוברים איתך שלב בדיקות מסודר — כדי לוודא שהכל עובד בדיוק כפי שסוכם. לאחר מכן האוטומציה רצה בעצמה, ואנחנו נשארים זמינים לתמיכה, שאלות ושינויים לאורך הדרך.</div>
                 </div>
               </div>
             </div>
@@ -1335,10 +1334,10 @@
               <div class="faq-sub">
                 <button class="faq-sub-trigger" onclick="toggleSub(this)" aria-expanded="false">
                   <svg class="sub-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-                  <span>מה אני צריך להכין לפני הפגישה הראשונה?</span>
+                  <span>האם אני צריך ידע טכני כדי להסתדר עם המערכת?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">בסך הכל — להבין אילו משימות אתה עושה שוב ושוב ורוצה לחסוך בהן זמן. לא צריך שום ידע טכני. אני מסביר הכל בעברית פשוטה.</div>
+                  <div class="faq-sub-answer">ממש לא. חלק גדול מלקוחותינו מגדירים את עצמם כ"טכנופובים" או כחסרי רקע טכנולוגי. בדיוק בגלל זה, אנחנו מעניקים ליווי צמוד ומקיף גם לאחר סיום ההטמה. המטרה שלנו היא שתצאו לדרך כשאתם שולטים ב-100% במערכות החדשות ומרגישים איתן בנוח.</div>
                 </div>
               </div>
             </div>
@@ -1349,7 +1348,7 @@
                   <span>האם אני צריך לתחזק את האוטומציה לבד?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">לא. האוטומציות שאני בונה מתוכננות לרוץ ללא תחזוקה שוטפת. אם משהו משתנה — אני כאן.</div>
+                  <div class="faq-sub-answer">לא. האוטומציות שאנחנו בונים מתוכננות מראש לרוץ ללא תחזוקה שוטפת מצדך. אם משהו בעסק משתנה ודורש עדכון — אנחנו כאן וזמינים.</div>
                 </div>
               </div>
             </div>
@@ -1370,7 +1369,7 @@
                   <span>אילו פלטפורמות נתמכות?</span>
                 </button>
                 <div class="faq-sub-body">
-                  <div class="faq-sub-answer">Make, Zapier, n8n, Google Sheets, Gmail, WhatsApp Business API, Notion, HubSpot, Airtable ועוד. אם יש לך מערכת ספציפית — פשוט שאל.</div>
+                  <div class="faq-sub-answer">Make, Zapier, n8n, Google Sheets, Gmail, WhatsApp Business API, Notion, HubSpot, Airtable ועוד עשרות פלטפורמות נוספות. אם יש לך מערכת ספציפית — נשמח לבדוק יחד בשיחת האפיון.</div>
                 </div>
               </div>
             </div>
@@ -1382,6 +1381,17 @@
                 </button>
                 <div class="faq-sub-body">
                   <div class="faq-sub-answer">בהחלט. כלי AI כמו ChatGPT ו-Claude משולבים לסינון לידים, כתיבת תגובות, סיכום שיחות וניתוח נתונים — הכל אוטומטית.</div>
+                </div>
+              </div>
+            </div>
+            <div class="faq-sub-item">
+              <div class="faq-sub">
+                <button class="faq-sub-trigger" onclick="toggleSub(this)" aria-expanded="false">
+                  <svg class="sub-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  <span>מה עושים אם כבר מוטמעות אצלי מערכות ותוכנות רבות?</span>
+                </button>
+                <div class="faq-sub-body">
+                  <div class="faq-sub-answer">אז אתה כבר עם רגל בעולם. המומחיות שלנו היא לקחת את הכלים הקיימים שלך ולחבר אותם לכדי יחידה אחת הרמונית. אנחנו נבנה אוטומציות חכמות שיסנכרנו בין המערכות השונות, ימנעו טעויות אנוש ויחסכו לך ולצוות שלך שעות רבות של עבודה ידנית סיזיפית.</div>
                 </div>
               </div>
             </div>
