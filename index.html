@@ -2883,6 +2883,12 @@
         background: rgba(255,255,255,0.04);
       }
       #chat-tooltip { display: none !important; }
+      /* font-size ≥16px prevents iOS Safari from auto-zooming the input,
+         which is the primary cause of the horizontal viewport shift */
+      #chat-input { font-size: 16px !important; }
+      /* block any horizontal overflow the RTL panel could trigger */
+      #chat-panel { overflow-x: hidden !important; }
+      #chat-messages { overflow-x: hidden !important; }
     }
   </style>
 
@@ -3090,6 +3096,20 @@
           }, 350);
         }
       };
+
+      // Fix: prevent RTL focus from shifting the page horizontally on mobile
+      document.addEventListener('DOMContentLoaded', function () {
+        var chatInput = document.getElementById('chat-input');
+        if (chatInput) {
+          chatInput.addEventListener('focus', function () {
+            setTimeout(function () {
+              window.scrollTo(0, window.scrollY);
+              document.documentElement.scrollLeft = 0;
+              document.body.scrollLeft = 0;
+            }, 100);
+          });
+        }
+      });
 
       window.chatKeydown = function (e) {
         if (e.key === 'Enter' && !e.shiftKey) {
