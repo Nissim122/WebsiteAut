@@ -40,17 +40,55 @@ function buildPostHtml(post, cat, heDate) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${post.title} | CLIX Automations</title>
+  <title>${post.title} | Clix Automations</title>
   <meta name="description" content="${post.excerpt}" />
+  <meta name="keywords" content="${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}" />
+  <meta name="author" content="ניסים בנגייב" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://clix-automations.com/posts/${dateArg}.html" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 
   <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Clix Automations" />
   <meta property="og:url" content="https://clix-automations.com/posts/${dateArg}.html" />
   <meta property="og:title" content="${post.title}" />
   <meta property="og:description" content="${post.excerpt}" />
-  <meta property="og:image" content="https://clix-automations.com/brand_assets/profile_pic_2_nobg.png" />
+  <meta property="og:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
+  <meta property="article:published_time" content="${datePart}T00:00:00Z" />
+  <meta property="article:author" content="ניסים בנגייב" />
+  <meta property="article:section" content="${post.category}" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${post.title}" />
+  <meta name="twitter:description" content="${post.excerpt}" />
+  <meta name="twitter:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "${post.title.replace(/"/g, '\\"')}",
+    "description": "${post.excerpt.replace(/"/g, '\\"')}",
+    "image": "https://clix-automations.com/images/blog/${dateArg}.jpg",
+    "datePublished": "${datePart}T00:00:00Z",
+    "author": {
+      "@type": "Person",
+      "name": "ניסים בנגייב",
+      "url": "https://clix-automations.com"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Clix Automations",
+      "url": "https://clix-automations.com",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://clix-automations.com/brand_assets/profile_pic_2_nobg.png"
+      }
+    },
+    "mainEntityOfPage": "https://clix-automations.com/posts/${dateArg}.html",
+    "keywords": "${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}"
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -143,8 +181,8 @@ function buildPostHtml(post, cat, heDate) {
 
 <nav aria-label="תפריט ראשי">
   <div class="nav-inner">
-    <a href="../index.html" aria-label="CLIX Automations — דף הבית" style="text-decoration:none;display:flex;align-items:baseline;gap:0.15rem;flex-shrink:0;direction:ltr;">
-      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">CLIX</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
+    <a href="../index.html" aria-label="Clix Automations — דף הבית" style="text-decoration:none;display:flex;align-items:baseline;gap:0.15rem;flex-shrink:0;direction:ltr;">
+      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">Clix</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
     </a>
     <div style="display:flex;gap:2.5rem;" class="hidden md:flex nav-links-desktop">
       <a href="../index.html">דף הבית</a>
@@ -211,9 +249,9 @@ function buildPostHtml(post, cat, heDate) {
 <footer style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 1.5rem;text-align:center;">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">
     <a href="../index.html" style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.03em;color:#fff;text-decoration:none;">
-      CLIX<span style="font-weight:400;color:#e0176b;">Automations</span>
+      Clix<span style="font-weight:400;color:#e0176b;">Automations</span>
     </a>
-    <p style="font-size:0.82rem;color:rgba(255,255,255,0.3);">© 2025 CLIX Automations. כל הזכויות שמורות.</p>
+    <p style="font-size:0.82rem;color:rgba(255,255,255,0.3);">© 2025 Clix Automations. כל הזכויות שמורות.</p>
     <div style="display:flex;gap:1.5rem;">
       <a href="../privacy.html" style="font-size:0.82rem;color:rgba(255,255,255,0.35);text-decoration:none;">מדיניות פרטיות</a>
       <a href="../index.html#contact" style="font-size:0.82rem;color:rgba(255,255,255,0.35);text-decoration:none;">צרו קשר</a>

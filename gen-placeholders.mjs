@@ -24,7 +24,7 @@ function buildComingSoonHtml(dateStr) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>המאמר בדרך | CLIX Automations</title>
+  <title>המאמר בדרך | Clix Automations</title>
   <meta name="robots" content="noindex" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -123,8 +123,8 @@ function buildComingSoonHtml(dateStr) {
 
 <nav aria-label="תפריט ראשי">
   <div class="nav-inner">
-    <a href="../index.html" aria-label="CLIX Automations — דף הבית" style="text-decoration:none;display:flex;align-items:baseline;gap:0.15rem;flex-shrink:0;direction:ltr;">
-      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">CLIX</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
+    <a href="../index.html" aria-label="Clix Automations — דף הבית" style="text-decoration:none;display:flex;align-items:baseline;gap:0.15rem;flex-shrink:0;direction:ltr;">
+      <span style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.75rem;letter-spacing:-0.04em;color:#ffffff;">Clix</span><span style="font-family:'Inter',sans-serif;font-weight:400;font-size:1.35rem;letter-spacing:-0.02em;color:#e0176b;">Automations</span>
     </a>
     <div style="display:flex;gap:2.5rem;" class="hidden md:flex nav-links-desktop">
       <a href="../index.html">דף הבית</a>

@@ -3065,7 +3065,18 @@
           setTimeout(function () {
             if (isBlocked()) { applyBlockedUI(); } else {
               var inp = document.getElementById('chat-input');
-              if (inp) inp.focus();
+              if (inp) {
+                inp.focus({ preventScroll: true });
+                // Reset horizontal scroll immediately after focus to prevent iOS RTL shift
+                window.scrollTo(0, window.scrollY);
+                document.documentElement.scrollLeft = 0;
+                document.body.scrollLeft = 0;
+                setTimeout(function() {
+                  window.scrollTo(0, window.scrollY);
+                  document.documentElement.scrollLeft = 0;
+                  document.body.scrollLeft = 0;
+                }, 100);
+              }
             }
             scrollChatToBottom();
           }, 350);
@@ -3258,6 +3269,10 @@
           panel.style.removeProperty('bottom');
           panel.style.removeProperty('top');
         }
+        // Always reset horizontal scroll — prevents iOS RTL viewport shift
+        window.scrollTo(0, window.scrollY);
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
       }
 
       if (window.visualViewport) {
@@ -3283,6 +3298,7 @@
     window.addEventListener('scroll', _resetHScroll, { passive: true });
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', _resetHScroll);
+      window.visualViewport.addEventListener('scroll', _resetHScroll);
     }
   </script>
 

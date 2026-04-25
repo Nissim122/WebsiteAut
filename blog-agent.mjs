@@ -125,7 +125,7 @@ function buildPrompt(newsItems) {
     .map((item, i) => `${i + 1}. [${item.source}] ${item.title}\n   ${item.desc}`)
     .join('\n\n');
 
-  return `אתה כותב תוכן מקצועי עבור בלוג של CLIX Automations — חברה ישראלית לאוטומציות עסקיות.
+  return `אתה כותב תוכן מקצועי עבור בלוג של Clix Automations — חברה ישראלית לאוטומציות עסקיות.
 הכותב הוא ניסים בנגייב, מומחה שעובד בשטח עם Make, Monday, WhatsApp Business, CRM ועוד.
 
 סגנון כתיבה:
@@ -145,6 +145,7 @@ ${newsBlock}
 4. בחר קטגוריה אחת: make | zapier | ai | monday | whatsapp | tips
 5. כתוב תקציר קצר (2 משפטים) לכרטיס הבלוג.
 6. הערך מספר דקות קריאה (4–7).
+7. הגדר 8-10 מילות מפתח SEO רלוונטיות למאמר — שילוב של עברית ואנגלית, ממוקדות בנושא המאמר הספציפי. כלול שמות כלים (Make, Monday, Zapier וכו') רק אם קשורים ישירות.
 
 החזר JSON בלבד, ללא markdown fences:
 {
@@ -152,12 +153,13 @@ ${newsBlock}
   "category": "make|ai|monday|whatsapp|tips",
   "excerpt": "תקציר 2 משפטים",
   "readTime": 5,
+  "keywords": ["מילה1", "מילה2", "keyword3"],
   "content": "תוכן המאמר ב-HTML פשוט — p, h2, h3, ul, li בלבד"
 }`;
 }
 
 function buildTopicPrompt(topic) {
-  return `אתה כותב תוכן מקצועי עבור בלוג של CLIX Automations — חברה ישראלית לאוטומציות עסקיות.
+  return `אתה כותב תוכן מקצועי עבור בלוג של Clix Automations — חברה ישראלית לאוטומציות עסקיות.
 הכותב הוא ניסים בנגייב, מומחה שעובד בשטח עם Make, Monday, WhatsApp Business, CRM ועוד.
 
 סגנון כתיבה:
@@ -175,6 +177,7 @@ function buildTopicPrompt(topic) {
 3. בחר קטגוריה אחת: make | zapier | ai | monday | whatsapp | tips
 4. כתוב תקציר קצר (2 משפטים) לכרטיס הבלוג.
 5. הערך מספר דקות קריאה (4–7).
+6. הגדר 8-10 מילות מפתח SEO רלוונטיות למאמר — שילוב של עברית ואנגלית, ממוקדות בנושא המאמר הספציפי. כלול שמות כלים (Make, Monday, Zapier וכו') רק אם קשורים ישירות.
 
 החזר JSON בלבד, ללא markdown fences:
 {
@@ -182,6 +185,7 @@ function buildTopicPrompt(topic) {
   "category": "make|ai|monday|whatsapp|tips",
   "excerpt": "תקציר 2 משפטים",
   "readTime": 5,
+  "keywords": ["מילה1", "מילה2", "keyword3"],
   "content": "תוכן המאמר ב-HTML פשוט — p, h2, h3, ul, li בלבד"
 }`;
 }
@@ -302,7 +306,7 @@ function buildDraftHtml(post, date) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('\n✍️  CLIX Blog Agent');
+  console.log('\n✍️  Clix Blog Agent');
   console.log('═'.repeat(50));
 
   if (!GEMINI_API_KEY) {
