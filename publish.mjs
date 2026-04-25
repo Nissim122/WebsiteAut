@@ -50,15 +50,18 @@ function buildPostHtml(post, cat, heDate) {
 
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Clix Automations" />
+  <meta property="og:locale" content="he_IL" />
   <meta property="og:url" content="https://clix-automations.com/posts/${dateArg}.html" />
   <meta property="og:title" content="${post.title}" />
   <meta property="og:description" content="${post.excerpt}" />
   <meta property="og:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
-  <meta property="article:published_time" content="${datePart}T00:00:00Z" />
+  <meta property="article:published_time" content="${datePart}T00:00:00+03:00" />
+  <meta property="article:modified_time" content="${datePart}T00:00:00+03:00" />
   <meta property="article:author" content="ניסים בנגייב" />
   <meta property="article:section" content="${post.category}" />
 
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ClixAutomations" />
   <meta name="twitter:title" content="${post.title}" />
   <meta name="twitter:description" content="${post.excerpt}" />
   <meta name="twitter:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
@@ -70,7 +73,8 @@ function buildPostHtml(post, cat, heDate) {
     "headline": "${post.title.replace(/"/g, '\\"')}",
     "description": "${post.excerpt.replace(/"/g, '\\"')}",
     "image": "https://clix-automations.com/images/blog/${dateArg}.jpg",
-    "datePublished": "${datePart}T00:00:00Z",
+    "datePublished": "${datePart}T00:00:00+03:00",
+    "dateModified": "${datePart}T00:00:00+03:00",
     "author": {
       "@type": "Person",
       "name": "ניסים בנגייב",
@@ -85,8 +89,25 @@ function buildPostHtml(post, cat, heDate) {
         "url": "https://clix-automations.com/brand_assets/profile_pic_2_nobg.png"
       }
     },
-    "mainEntityOfPage": "https://clix-automations.com/posts/${dateArg}.html",
-    "keywords": "${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}"
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://clix-automations.com/posts/${dateArg}.html"
+    },
+    "inLanguage": "he",
+    "keywords": "${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}",
+    "articleSection": "${post.category}"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "דף הבית", "item": "https://clix-automations.com/" },
+      { "@type": "ListItem", "position": 2, "name": "בלוג", "item": "https://clix-automations.com/blog.html" },
+      { "@type": "ListItem", "position": 3, "name": "${post.title.replace(/"/g, '\\"')}", "item": "https://clix-automations.com/posts/${dateArg}.html" }
+    ]
   }
   </script>
 

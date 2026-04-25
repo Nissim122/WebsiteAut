@@ -1756,32 +1756,71 @@
        STRUCTURED DATA (JSON-LD)
   ═══════════════════════════════════ -->
 
+  <!-- 0. WebSite -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Clix Automations",
+    "url": "https://clix-automations.com",
+    "inLanguage": "he",
+    "description": "קליקס אוטומציות — מומחים לאוטומציות עסקיות בישראל. חיבור מערכות Make, Monday, WhatsApp ו-CRM.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://clix-automations.com/blog.html?q={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
+
   <!-- 1. LocalBusiness + Person -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": ["LocalBusiness", "ProfessionalService"],
     "name": "Clix Automations",
+    "alternateName": "קליקס אוטומציות",
     "description": "שירותי אוטומציה לעסקים — חיבור בין כלים, בניית תהליכים, וסיסטם שעובד גם כשאתה לא",
     "url": "https://clix-automations.com",
-    "logo": "https://clix-automations.com/brand_assets/profile_pic_2_nobg.png",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://clix-automations.com/brand_assets/profile_pic_2_nobg.png",
+      "width": 400,
+      "height": 400
+    },
     "image": "https://clix-automations.com/brand_assets/profile_pic_2_nobg.png",
     "address": {
       "@type": "PostalAddress",
-      "addressCountry": "IL"
+      "addressCountry": "IL",
+      "addressLocality": "ישראל"
     },
     "areaServed": {
       "@type": "Country",
       "name": "Israel"
     },
     "priceRange": "$$",
+    "currenciesAccepted": "ILS",
     "inLanguage": "he",
     "founder": {
       "@type": "Person",
       "name": "ניסים בנגייב",
-      "jobTitle": "מומחה אוטומציה"
+      "jobTitle": "מומחה אוטומציה",
+      "url": "https://clix-automations.com"
     },
-    "knowsAbout": ["אוטומציה עסקית", "Make", "Monday.com", "WhatsApp Business API", "CRM", "AI Automation"]
+    "knowsAbout": ["אוטומציה עסקית", "Make", "Monday.com", "WhatsApp Business API", "CRM", "AI Automation", "n8n", "Zapier"],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "שירותי אוטומציה",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "בניית אוטומציות Make.com" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "חיבור Monday.com ל-CRM" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "אוטומציית WhatsApp Business" } },
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "ייעוץ אוטומציה לעסקים קטנים" } }
+      ]
+    }
   }
   </script>
 
