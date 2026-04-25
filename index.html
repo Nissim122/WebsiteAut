@@ -3196,29 +3196,40 @@
     })();
 
     // ── Mobile keyboard fix ──────────────────────────────────────────────────
-    // On iOS, position:fixed is relative to the layout viewport (doesn't shrink
-    // when the keyboard opens). This listener repositions the chat panel above
-    // the keyboard using the Visual Viewport API.
+    // On iOS, position:fixed is anchored to the layout viewport (doesn't shrink
+    // when the keyboard opens). The CSS media query uses !important, so plain
+    // panel.style.bottom = '…' is overridden by it. We must use setProperty with
+    // 'important' to win the cascade, and removeProperty to restore the CSS rule.
     (function () {
-      if (!window.visualViewport) return;
       var panel = document.getElementById('chat-panel');
       if (!panel) return;
 
-      function onViewportChange() {
+      function adjustForKeyboard() {
         if (window.innerWidth > 600) return;
         var vv = window.visualViewport;
+        if (!vv) return;
         var kbHeight = window.innerHeight - vv.height - vv.offsetTop;
         if (kbHeight > 50) {
-          panel.style.bottom = (kbHeight + 8) + 'px';
-          panel.style.top    = Math.max(vv.offsetTop + 56, 56) + 'px';
+          panel.style.setProperty('bottom', (kbHeight + 8) + 'px', 'important');
+          panel.style.setProperty('top', Math.max(vv.offsetTop + 56, 56) + 'px', 'important');
         } else {
-          panel.style.bottom = '';
-          panel.style.top    = '';
+          panel.style.removeProperty('bottom');
+          panel.style.removeProperty('top');
         }
       }
 
-      window.visualViewport.addEventListener('resize', onViewportChange);
-      window.visualViewport.addEventListener('scroll', onViewportChange);
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', adjustForKeyboard);
+        window.visualViewport.addEventListener('scroll', adjustForKeyboard);
+      }
+
+      // Fallback focus/blur listeners — covers browsers where visualViewport
+      // resize doesn't fire reliably (older iOS Safari).
+      var inp = document.getElementById('chat-input');
+      if (inp) {
+        inp.addEventListener('focus', function () { setTimeout(adjustForKeyboard, 300); });
+        inp.addEventListener('blur',  function () { setTimeout(adjustForKeyboard, 100); });
+      }
     })();
   </script>
 
