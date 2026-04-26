@@ -109,7 +109,7 @@ async function callGemini(prompt) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.85, maxOutputTokens: 8192 },
+      generationConfig: { temperature: 0.85, maxOutputTokens: 16384 },
     }),
   });
   if (!res.ok) throw new Error(`Gemini error ${res.status}: ${await res.text()}`);
@@ -340,9 +340,14 @@ async function main() {
 
   // 3. Parse JSON
   let post;
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) {
+    console.error('❌ שגיאה בפענוח JSON:\n', raw.slice(0, 600));
+    throw new Error('Gemini לא החזיר JSON תקין');
+  }
   try {
-    const cleaned = raw.replace(/^```[a-z]*\n?/gm, '').replace(/^```$/gm, '').trim();
-    post = JSON.parse(cleaned);
+    post = JSON.parse(raw.slice(start, end + 1));
   } catch {
     console.error('❌ שגיאה בפענוח JSON:\n', raw.slice(0, 600));
     throw new Error('Gemini לא החזיר JSON תקין');
