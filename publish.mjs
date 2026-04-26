@@ -241,11 +241,9 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
     <a href="../blog.html" class="back-link">◄ חזרה לבלוג</a>
 
     <div style="border-radius:16px;overflow:hidden;margin-bottom:2.5rem;aspect-ratio:16/9;background:#131c34;">
-      <picture>
-        <source srcset="../images/blog/${imageSlug}.webp" type="image/webp" />
-        <source srcset="../images/blog/${imageSlug}.png" type="image/png" />
-        <img src="../images/blog/${imageSlug}.jpg" alt="${post.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />
-      </picture>
+      <img src="../images/blog/${imageSlug}.webp"
+           onerror="(function(t,b){var e=['png','jpg'],i=0;t.onerror=function(){i<e.length?t.src=b+'.'+e[i++]:t.onerror=null};t.onerror()})(this,'../images/blog/${imageSlug}')"
+           alt="${post.title}" style="width:100%;height:100%;object-fit:cover;display:block;" />
     </div>
 
     <div class="post-header">
@@ -349,11 +347,9 @@ async function main() {
     const cardHtml = `<!-- AGENT POST ${dateArg} -->
       <article class="blog-card reveal" data-cats="${post.category}" style="transition-delay:0.05s;">
         <div class="blog-card-thumb-wrap">
-          <picture>
-            <source srcset="images/blog/${imageSlug}.webp" type="image/webp" />
-            <source srcset="images/blog/${imageSlug}.png" type="image/png" />
-            <img src="images/blog/${imageSlug}.jpg" alt="${post.title}" loading="lazy" />
-          </picture>
+          <img src="images/blog/${imageSlug}.webp"
+               onerror="(function(t,b){var e=['png','jpg'],i=0;t.onerror=function(){i<e.length?t.src=b+'.'+e[i++]:t.onerror=null};t.onerror()})(this,'images/blog/${imageSlug}')"
+               alt="${post.title}" loading="lazy" />
         </div>
         <div class="blog-card-body">
           <span class="blog-tag ${cat.css}">${cat.label}</span>
