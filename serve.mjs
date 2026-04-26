@@ -38,26 +38,41 @@ const MIME = {
   '.woff': 'font/woff',
 };
 
-http.createServer((req, res) => {
-  if (isBot(req)) {
-    res.writeHead(403, { 'Content-Type': 'text/plain' });
-    res.end('Forbidden');
-    return;
-  }
-  let urlPath = req.url.split('?')[0];
-  if (urlPath === '/') urlPath = '/index.html';
-  const filePath = path.join(__dirname, urlPath);
-  const ext = path.extname(filePath);
-  const contentType = MIME[ext] || 'application/octet-stream';
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      res.writeHead(404);
-      res.end('Not found');
-    } else {
-      res.writeHead(200, { 'Content-Type': contentType });
-      res.end(data);
-    }
+function serve500(res) {
+  const page500 = path.join(__dirname, '500.html');
+  fs.readFile(page500, (err, data) => {
+    res.writeHead(500, { 'Content-Type': 'text/html; charset=utf-8' });
+    res.end(err ? 'Internal Server Error' : data);
   });
+}
+
+http.createServer((req, res) => {
+  try {
+    if (isBot(req)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('Forbidden');
+      return;
+    }
+    let urlPath = req.url.split('?')[0];
+    if (urlPath === '/') urlPath = '/index.html';
+    const filePath = path.join(__dirname, urlPath);
+    const ext = path.extname(filePath);
+    const contentType = MIME[ext] || 'application/octet-stream';
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        const page404 = path.join(__dirname, '404.html');
+        fs.readFile(page404, (err2, data2) => {
+          res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+          res.end(err2 ? 'Not found' : data2);
+        });
+      } else {
+        res.writeHead(200, { 'Content-Type': contentType });
+        res.end(data);
+      }
+    });
+  } catch (e) {
+    serve500(res);
+  }
 }).listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — עמוד לא נמצא | Clix Automations</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; overflow-x: hidden; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: transparent;
+      padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      max-width: calc(80% - 2rem);
+      margin: 0 auto;
+      background: rgba(14, 16, 28, 0.55);
+      backdrop-filter: blur(22px);
+      -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px;
+      border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    @media (max-width: 767px) {
+      .nav-inner { max-width: calc(100% - 2rem) !important; }
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #2196b0;
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      box-shadow: 0 4px 20px rgba(33,150,176,0.35);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-cta:hover {
+      background: #1a7a90;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(33,150,176,0.45);
+    }
+    .btn-cta:active { transform: translateY(0); }
+
+    /* Big 404 glitch number */
+    .glitch-404 {
+      font-size: clamp(7rem, 20vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(33,150,176,0.6);
+      position: relative;
+      user-select: none;
+    }
+    .glitch-404::before,
+    .glitch-404::after {
+      content: '404';
+      position: absolute;
+      inset: 0;
+      -webkit-text-stroke: 0;
+    }
+    .glitch-404::before {
+      color: rgba(33,150,176,0.18);
+      transform: translate(-4px, 2px);
+      animation: glitch-a 3.5s infinite steps(1);
+    }
+    .glitch-404::after {
+      color: rgba(255,255,255,0.07);
+      transform: translate(4px, -2px);
+      animation: glitch-b 3.5s infinite steps(1);
+    }
+    @keyframes glitch-a {
+      0%, 85%, 100% { clip-path: none; transform: translate(-4px, 2px); }
+      86% { clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%); transform: translate(-6px, 0); }
+      90% { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); transform: translate(4px, 0); }
+      94% { clip-path: none; transform: translate(-4px, 2px); }
+    }
+    @keyframes glitch-b {
+      0%, 85%, 100% { clip-path: none; transform: translate(4px, -2px); }
+      87% { clip-path: polygon(0 55%, 100% 55%, 100% 70%, 0 70%); transform: translate(6px, 0); }
+      91% { clip-path: polygon(0 10%, 100% 10%, 100% 25%, 0 25%); transform: translate(-4px, 0); }
+      95% { clip-path: none; transform: translate(4px, -2px); }
+    }
+
+    /* Glow pulse around the number */
+    .glow-ring {
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(33,150,176,0.12) 0%, transparent 70%);
+      animation: pulse-ring 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(33,150,176,0.35);
+      animation: float-up linear infinite;
+      pointer-events: none;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(1); opacity: 0.6; }
+      100% { transform: translateY(-120px) scale(0.3); opacity: 0; }
+    }
+
+    /* Fade-in-up animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fade-up-anim 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .fade-up:nth-child(1) { animation-delay: 0.1s; }
+    .fade-up:nth-child(2) { animation-delay: 0.2s; }
+    .fade-up:nth-child(3) { animation-delay: 0.35s; }
+    .fade-up:nth-child(4) { animation-delay: 0.5s; }
+    @keyframes fade-up-anim {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid background lines */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(33,150,176,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(33,150,176,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main { flex: 1; }
+
+    footer {
+      background: #080e1a;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.5rem 1.5rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Grid background -->
+  <div class="grid-bg" aria-hidden="true"></div>
+
+  <!-- NAV -->
+  <nav aria-label="ניווט ראשי">
+    <div class="nav-inner">
+      <a href="index.html" style="display: flex; align-items: center; gap: 0.5rem; text-decoration: none; flex-shrink: 0;">
+        <img src="brand_assets/profile_pic_2_nobg.webp"
+             onerror="this.src='brand_assets/profile_pic_2_nobg.png'"
+             alt="Clix Automations"
+             style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;" />
+        <span style="font-size: 1rem; font-weight: 800; color: #fff; letter-spacing: -0.02em;">Clix</span>
+      </a>
+      <a href="index.html" class="btn-cta" style="font-size: 0.85rem; padding: 0.55rem 1.1rem;">
+        חזרה לבית
+        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transform: scaleX(-1);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+    <section style="min-height: calc(100vh - 140px); display: flex; align-items: center; justify-content: center; padding: 4rem 1.5rem; position: relative;">
+
+      <!-- Glow -->
+      <div class="glow-ring" aria-hidden="true" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+
+      <!-- Particles -->
+      <div aria-hidden="true" id="particles" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none;"></div>
+
+      <div style="text-align: center; position: relative; z-index: 1; max-width: 620px; width: 100%;">
+
+        <!-- 404 number -->
+        <div class="fade-up" style="position: relative; display: inline-block; margin-bottom: 1.5rem;">
+          <div class="glitch-404" aria-label="שגיאה 404">404</div>
+        </div>
+
+        <!-- Headline -->
+        <div class="fade-up">
+          <h1 style="font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.3;">
+            העמוד הזה <span style="color: #2196b0;">לא קיים</span>
+          </h1>
+        </div>
+
+        <!-- Description -->
+        <div class="fade-up">
+          <p style="font-size: 1.05rem; line-height: 1.8; color: rgba(255,255,255,0.6); max-width: 440px; margin: 0 auto 2rem;">
+            נראה שהגעת לעמוד שנמחק, הועבר, או לא היה כאן מעולם.
+            <br />
+            הבשורה הטובה? אוטומציה לא תעזור כאן — אבל הכפתור הזה כן.
+          </p>
+        </div>
+
+        <!-- CTAs -->
+        <div class="fade-up" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+          <a href="index.html" class="btn-cta" style="font-size: 1rem; padding: 0.85rem 1.8rem;">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            חזרה לדף הבית
+          </a>
+          <a href="blog.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.85); font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 700; padding: 0.85rem 1.8rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; text-decoration: none; transition: background 0.2s, border-color 0.2s;"
+            onmouseover="this.style.background='rgba(255,255,255,0.1)';this.style.borderColor='rgba(255,255,255,0.22)'"
+            onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.12)'">
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            לבלוג
+          </a>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <p style="font-size: 0.75rem; color: rgba(255,255,255,0.45);">
+      © 2026 Clix Automations ·
+      <a href="privacy.html" style="color: rgba(255,255,255,0.6); text-decoration: underline;">מדיניות פרטיות</a> ·
+      <a href="accessibility.html" style="color: rgba(255,255,255,0.6); text-decoration: underline;">הצהרת נגישות</a>
+    </p>
+  </footer>
+
+  <script>
+    /* Floating particles */
+    (function () {
+      var container = document.getElementById('particles');
+      var count = 18;
+      for (var i = 0; i < count; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        var size = Math.random() * 5 + 2;
+        var left = Math.random() * 100;
+        var delay = Math.random() * 6;
+        var dur = Math.random() * 5 + 5;
+        var bottom = Math.random() * 60 + 10;
+        p.style.cssText = [
+          'width:' + size + 'px',
+          'height:' + size + 'px',
+          'left:' + left + '%',
+          'bottom:' + bottom + '%',
+          'animation-duration:' + dur + 's',
+          'animation-delay:' + delay + 's',
+        ].join(';');
+        container.appendChild(p);
+      }
+    })();
+  </script>
+
+</body>
+</html>

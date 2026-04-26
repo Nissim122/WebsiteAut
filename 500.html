@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>500 — שגיאת שרת | Clix Automations</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { overflow-x: hidden; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: #0e1628;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* Grid background */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(33,150,176,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(33,150,176,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Big 500 number — orange-tinted to signal "danger" vs 404's blue */
+    .error-number {
+      font-size: clamp(7rem, 20vw, 14rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(255, 100, 60, 0.55);
+      position: relative;
+      user-select: none;
+    }
+    .error-number::before,
+    .error-number::after {
+      content: '500';
+      position: absolute;
+      inset: 0;
+      -webkit-text-stroke: 0;
+    }
+    .error-number::before {
+      color: rgba(255, 100, 60, 0.12);
+      transform: translate(-4px, 2px);
+      animation: shake-a 4s infinite steps(1);
+    }
+    .error-number::after {
+      color: rgba(255,255,255,0.05);
+      transform: translate(4px, -2px);
+      animation: shake-b 4s infinite steps(1);
+    }
+    @keyframes shake-a {
+      0%, 88%, 100% { clip-path: none; transform: translate(-4px, 2px); }
+      89% { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); transform: translate(-7px, 0); }
+      92% { clip-path: polygon(0 65%, 100% 65%, 100% 80%, 0 80%); transform: translate(5px, 0); }
+      95% { clip-path: none; transform: translate(-4px, 2px); }
+    }
+    @keyframes shake-b {
+      0%, 88%, 100% { clip-path: none; transform: translate(4px, -2px); }
+      90% { clip-path: polygon(0 50%, 100% 50%, 100% 68%, 0 68%); transform: translate(7px, 0); }
+      93% { clip-path: polygon(0 12%, 100% 12%, 100% 28%, 0 28%); transform: translate(-5px, 0); }
+      96% { clip-path: none; transform: translate(4px, -2px); }
+    }
+
+    /* Glow */
+    .glow-ring {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,80,40,0.08) 0%, transparent 70%);
+      animation: pulse-ring 3.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+      50% { transform: translate(-50%,-50%) scale(1.18); opacity: 1; }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: fixed;
+      border-radius: 50%;
+      background: rgba(255, 90, 50, 0.3);
+      animation: float-up linear infinite;
+      pointer-events: none;
+    }
+    @keyframes float-up {
+      0% { transform: translateY(0) scale(1); opacity: 0.5; }
+      100% { transform: translateY(-130px) scale(0.2); opacity: 0; }
+    }
+
+    /* Fade-in-up */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      animation: fade-up-anim 0.7s cubic-bezier(0.22,1,0.36,1) forwards;
+    }
+    .fade-up:nth-child(1) { animation-delay: 0.1s; }
+    .fade-up:nth-child(2) { animation-delay: 0.22s; }
+    .fade-up:nth-child(3) { animation-delay: 0.38s; }
+    .fade-up:nth-child(4) { animation-delay: 0.54s; }
+    @keyframes fade-up-anim {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(255, 80, 40, 0.12);
+      border: 1px solid rgba(255, 80, 40, 0.3);
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #ff6b4a;
+      letter-spacing: 0.04em;
+    }
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #ff6b4a;
+      animation: blink 1.2s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* Retry button — minimal, no nav to other pages */
+    .btn-retry {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.85);
+      font-family: 'Heebo', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.12);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .btn-retry:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.22);
+      transform: translateY(-2px);
+    }
+    .btn-retry:active { transform: translateY(0); }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1.1rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="glow-ring" aria-hidden="true"></div>
+  <div id="particles" aria-hidden="true"></div>
+
+  <main style="position: relative; z-index: 1; text-align: center; padding: 2rem 1.5rem; max-width: 580px; width: 100%;">
+
+    <!-- Status badge -->
+    <div class="fade-up" style="margin-bottom: 1.5rem;">
+      <span class="status-badge">
+        <span class="status-dot"></span>
+        שגיאת שרת
+      </span>
+    </div>
+
+    <!-- 500 number -->
+    <div class="fade-up" style="margin-bottom: 1.5rem;">
+      <div class="error-number" aria-label="שגיאה 500">500</div>
+    </div>
+
+    <!-- Headline -->
+    <div class="fade-up">
+      <h1 style="font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; letter-spacing: -0.03em; margin-bottom: 1rem; line-height: 1.3;">
+        משהו השתבש <span style="color: #ff6b4a;">אצלנו</span>
+      </h1>
+    </div>
+
+    <!-- Description + retry -->
+    <div class="fade-up">
+      <p style="font-size: 1rem; line-height: 1.85; color: rgba(255,255,255,0.55); max-width: 400px; margin: 0 auto 2rem;">
+        השרת נתקל בשגיאה לא צפויה ולא הצליח לסיים את הבקשה.
+        <br />
+        זה לא בגללך — ניסיון נוסף יעזור לרוב.
+      </p>
+
+      <button class="btn-retry" onclick="location.reload()">
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.64"/>
+        </svg>
+        נסה שוב
+      </button>
+
+      <p style="margin-top: 2rem; font-size: 0.85rem; color: rgba(255,255,255,0.35);">
+        הבעיה נמשכת?
+        <a href="tel:0532407762" style="color: rgba(255,255,255,0.65); text-decoration: none; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1px; transition: color 0.2s, border-color 0.2s;"
+          onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,0.5)'"
+          onmouseout="this.style.color='rgba(255,255,255,0.65)';this.style.borderColor='rgba(255,255,255,0.2)'">
+          053-240-7762
+        </a>
+      </p>
+    </div>
+
+  </main>
+
+  <footer>© 2026 Clix Automations</footer>
+
+  <script>
+    (function () {
+      var container = document.getElementById('particles');
+      for (var i = 0; i < 16; i++) {
+        var p = document.createElement('div');
+        p.className = 'particle';
+        var size = Math.random() * 5 + 2;
+        p.style.cssText = [
+          'width:' + size + 'px',
+          'height:' + size + 'px',
+          'left:' + (Math.random() * 100) + '%',
+          'bottom:' + (Math.random() * 60 + 10) + '%',
+          'animation-duration:' + (Math.random() * 5 + 5) + 's',
+          'animation-delay:' + (Math.random() * 6) + 's',
+        ].join(';');
+        container.appendChild(p);
+      }
+    })();
+  </script>
+
+</body>
+</html>
