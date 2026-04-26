@@ -35,5 +35,6 @@ jobs:
           git add drafts/ next-topic.txt posts/ blog.html
           git diff --staged --quiet && echo "No new draft" || (
             git commit -m "blog-draft: $(date +'%Y-%m-%d') 🤖" &&
+            git pull --rebase &&
             git push
           )
