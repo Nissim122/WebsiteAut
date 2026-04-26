@@ -21,7 +21,6 @@ const BASE_DIR    = process.cwd();
 const META_PATH   = join(BASE_DIR, 'drafts', `${dateArg}.json`);
 const BLOG_PATH   = join(BASE_DIR, 'blog.html');
 const POSTS_DIR   = join(BASE_DIR, 'posts');
-const POST_PATH   = join(POSTS_DIR, `${dateArg}.html`);
 const INDEX_PATH  = join(POSTS_DIR, 'index.json');
 const MARKER      = '<!-- AGENT_INSERT_HERE -->';
 
@@ -34,7 +33,7 @@ const CATEGORIES = {
   tips:     { label: 'טיפים',          css: 'tips' },
 };
 
-function buildPostHtml(post, cat, heDate) {
+function buildPostHtml(post, cat, heDate, postSlug) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -45,16 +44,18 @@ function buildPostHtml(post, cat, heDate) {
   <meta name="keywords" content="${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}" />
   <meta name="author" content="ניסים בנגייב" />
   <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://clix-automations.com/posts/${dateArg}.html" />
+  <link rel="canonical" href="https://clix-automations.com/posts/${postSlug}.html" />
   <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
 
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Clix Automations" />
   <meta property="og:locale" content="he_IL" />
-  <meta property="og:url" content="https://clix-automations.com/posts/${dateArg}.html" />
+  <meta property="og:url" content="https://clix-automations.com/posts/${postSlug}.html" />
   <meta property="og:title" content="${post.title}" />
   <meta property="og:description" content="${post.excerpt}" />
-  <meta property="og:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
+  <meta property="og:image" content="https://clix-automations.com/images/blog/${postSlug}.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="article:published_time" content="${datePart}T00:00:00+03:00" />
   <meta property="article:modified_time" content="${datePart}T00:00:00+03:00" />
   <meta property="article:author" content="ניסים בנגייב" />
@@ -64,7 +65,7 @@ function buildPostHtml(post, cat, heDate) {
   <meta name="twitter:site" content="@ClixAutomations" />
   <meta name="twitter:title" content="${post.title}" />
   <meta name="twitter:description" content="${post.excerpt}" />
-  <meta name="twitter:image" content="https://clix-automations.com/images/blog/${dateArg}.jpg" />
+  <meta name="twitter:image" content="https://clix-automations.com/images/blog/${postSlug}.jpg" />
 
   <script type="application/ld+json">
   {
@@ -72,7 +73,7 @@ function buildPostHtml(post, cat, heDate) {
     "@type": "BlogPosting",
     "headline": "${post.title.replace(/"/g, '\\"')}",
     "description": "${post.excerpt.replace(/"/g, '\\"')}",
-    "image": "https://clix-automations.com/images/blog/${dateArg}.jpg",
+    "image": "https://clix-automations.com/images/blog/${postSlug}.jpg",
     "datePublished": "${datePart}T00:00:00+03:00",
     "dateModified": "${datePart}T00:00:00+03:00",
     "author": {
@@ -91,7 +92,7 @@ function buildPostHtml(post, cat, heDate) {
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https://clix-automations.com/posts/${dateArg}.html"
+      "@id": "https://clix-automations.com/posts/${postSlug}.html"
     },
     "inLanguage": "he",
     "keywords": "${Array.isArray(post.keywords) ? post.keywords.join(', ') : ''}",
@@ -106,7 +107,7 @@ function buildPostHtml(post, cat, heDate) {
     "itemListElement": [
       { "@type": "ListItem", "position": 1, "name": "דף הבית", "item": "https://clix-automations.com/" },
       { "@type": "ListItem", "position": 2, "name": "בלוג", "item": "https://clix-automations.com/blog.html" },
-      { "@type": "ListItem", "position": 3, "name": "${post.title.replace(/"/g, '\\"')}", "item": "https://clix-automations.com/posts/${dateArg}.html" }
+      { "@type": "ListItem", "position": 3, "name": "${post.title.replace(/"/g, '\\"')}", "item": "https://clix-automations.com/posts/${postSlug}.html" }
     ]
   }
   </script>
@@ -317,16 +318,19 @@ async function main() {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
+  const postSlug = post.slug || dateArg;
+  const postPath = join(POSTS_DIR, `${postSlug}.html`);
+
   // ── 1. Create post page ──────────────────────────────────────────────────────
   if (!existsSync(POSTS_DIR)) await mkdir(POSTS_DIR, { recursive: true });
 
-  const isPlaceholder = existsSync(POST_PATH) &&
-    (await readFile(POST_PATH, 'utf8')).includes('המאמר בכתיבה');
+  const isPlaceholder = existsSync(postPath) &&
+    (await readFile(postPath, 'utf8')).includes('המאמר בכתיבה');
 
-  await writeFile(POST_PATH, buildPostHtml(post, cat, heDate), 'utf8');
+  await writeFile(postPath, buildPostHtml(post, cat, heDate, postSlug), 'utf8');
   console.log(isPlaceholder
-    ? `📄 דורס placeholder: posts/${dateArg}.html`
-    : `📄 נוצר: posts/${dateArg}.html`);
+    ? `📄 דורס placeholder: posts/${postSlug}.html`
+    : `📄 נוצר: posts/${postSlug}.html`);
 
   // ── 2. Insert card into blog.html ────────────────────────────────────────────
   let html = await readFile(BLOG_PATH, 'utf8');
@@ -343,13 +347,13 @@ async function main() {
       <article class="blog-card reveal" data-cats="${post.category}" style="transition-delay:0.05s;">
         <div class="blog-card-thumb-wrap">
           <picture>
-            <source srcset="images/blog/${dateArg}.webp" type="image/webp" />
-            <img src="images/blog/${dateArg}.jpg" alt="${post.title}" loading="lazy" />
+            <source srcset="images/blog/${postSlug}.webp" type="image/webp" />
+            <img src="images/blog/${postSlug}.jpg" alt="${post.title}" loading="lazy" />
           </picture>
         </div>
         <div class="blog-card-body">
           <span class="blog-tag ${cat.css}">${cat.label}</span>
-          <a href="posts/${dateArg}.html" class="blog-title">
+          <a href="posts/${postSlug}.html" class="blog-title">
             ${post.title}
           </a>
           <p class="blog-excerpt">
@@ -381,7 +385,7 @@ async function main() {
     console.warn(`⚠️  ${dateArg} כבר קיים ב-index.json`);
   } else {
     index.unshift({
-      slug:         dateArg,
+      slug:         postSlug,
       title:        post.title,
       excerpt:      post.excerpt,
       date:         datePart,
@@ -389,9 +393,9 @@ async function main() {
       readTime:     `${post.readTime} דק' קריאה`,
       tag:          post.category,
       tagLabel:     cat.label,
-      image:        `images/blog/${dateArg}.webp`,
-      imageFallback:`images/blog/${dateArg}.jpg`,
-      url:          `posts/${dateArg}.html`,
+      image:        `images/blog/${postSlug}.webp`,
+      imageFallback:`images/blog/${postSlug}.jpg`,
+      url:          `posts/${postSlug}.html`,
     });
     await writeFile(INDEX_PATH, JSON.stringify(index, null, 2), 'utf8');
     console.log(`📋 עודכן: posts/index.json`);

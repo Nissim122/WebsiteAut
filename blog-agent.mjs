@@ -146,10 +146,12 @@ ${newsBlock}
 5. כתוב תקציר קצר (2 משפטים) לכרטיס הבלוג.
 6. הערך מספר דקות קריאה (4–7).
 7. הגדר 8-10 מילות מפתח SEO רלוונטיות למאמר — שילוב של עברית ואנגלית, ממוקדות בנושא המאמר הספציפי. כלול שמות כלים (Make, Monday, Zapier וכו') רק אם קשורים ישירות.
+8. הגדר slug קצר באנגלית לURL — 3-5 מילים עם מקפים, ללא תאריך (לדוגמה: "crm-for-small-business", "monday-automation-tips").
 
 החזר JSON בלבד, ללא markdown fences:
 {
   "title": "כותרת המאמר",
+  "slug": "short-english-url-slug",
   "category": "make|ai|monday|whatsapp|tips",
   "excerpt": "תקציר 2 משפטים",
   "readTime": 5,
@@ -178,10 +180,12 @@ function buildTopicPrompt(topic) {
 4. כתוב תקציר קצר (2 משפטים) לכרטיס הבלוג.
 5. הערך מספר דקות קריאה (4–7).
 6. הגדר 8-10 מילות מפתח SEO רלוונטיות למאמר — שילוב של עברית ואנגלית, ממוקדות בנושא המאמר הספציפי. כלול שמות כלים (Make, Monday, Zapier וכו') רק אם קשורים ישירות.
+7. הגדר slug קצר באנגלית לURL — 3-5 מילים עם מקפים, ללא תאריך (לדוגמה: "crm-for-small-business", "monday-automation-tips").
 
 החזר JSON בלבד, ללא markdown fences:
 {
   "title": "כותרת המאמר",
+  "slug": "short-english-url-slug",
   "category": "make|ai|monday|whatsapp|tips",
   "excerpt": "תקציר 2 משפטים",
   "readTime": 5,
