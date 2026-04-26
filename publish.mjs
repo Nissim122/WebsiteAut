@@ -319,7 +319,7 @@ async function main() {
     year: 'numeric', month: 'long', day: 'numeric',
   });
 
-  const postSlug = post.slug || dateArg;
+  const postSlug = dateArg;
   const postPath = join(POSTS_DIR, `${postSlug}.html`);
 
   // ── 1. Create post page ──────────────────────────────────────────────────────
