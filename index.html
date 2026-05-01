@@ -2943,7 +2943,7 @@
 
   <script>
     (function () {
-      var CHAT_WEBHOOK = 'https://hook.eu2.make.com/wdp5b419qpeeiiyytrn2v896y5jv1cvd';
+      var CHAT_WEBHOOK = 'https://hook.eu2.make.com/my3tajrqh7iqrt20hrpda8np3bfybw9b';
       var chatOpen = false;
       var sessionId = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
 
@@ -3134,9 +3134,11 @@
           // Dismiss keyboard immediately so viewport doesn't shift on its own
           var inp2 = document.getElementById('chat-input');
           if (inp2) inp2.blur();
-          // Remove any keyboard-override positioning
-          panel.style.removeProperty('bottom');
-          panel.style.removeProperty('top');
+          // Remove keyboard-override positioning (mobile only — desktop uses inline bottom: 6.5rem)
+          if (isMobile) {
+            panel.style.removeProperty('bottom');
+            panel.style.removeProperty('top');
+          }
           // Reset horizontal scroll after keyboard dismisses (iOS RTL shift fix)
           setTimeout(function () {
             window.scrollTo(0, window.scrollY);
@@ -3194,7 +3196,7 @@
 
         var leadData = {};
         try { leadData = JSON.parse(localStorage.getItem('clix_lead') || '{}'); } catch (_) {}
-        var chatPayload = { message: text, session_id: sessionId, conversation_id: conversationId, source: 'website_chat' };
+        var chatPayload = { message: text, session_id: sessionId, conversation_id: conversationId, source: 'website_chat', client_id: persistentUid, timestamp: new Date().toISOString() };
         if (leadData.name)  chatPayload.lead_name  = leadData.name;
         if (leadData.phone) chatPayload.lead_phone = leadData.phone;
         if (leadData.email) chatPayload.lead_email = leadData.email;
