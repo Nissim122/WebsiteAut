@@ -2,9 +2,17 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = 3000;
+
+try {
+  execSync('git pull --rebase --quiet', { cwd: __dirname, stdio: 'pipe' });
+  console.log('✅ git pull — מסונכרן עם remote');
+} catch {
+  console.warn('⚠️  git pull נכשל — ממשיך ללא עדכון');
+}
 
 const BOT_PATTERNS = [
   /python-requests/i, /python-urllib/i, /urllib/i,
