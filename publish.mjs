@@ -55,7 +55,7 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
   <meta property="og:url" content="https://clix-automations.com/posts/${postSlug}.html" />
   <meta property="og:title" content="${post.title}" />
   <meta property="og:description" content="${post.excerpt}" />
-  <meta property="og:image" content="https://clix-automations.com/images/blog/${imageSlug}.jpg" />
+  <meta property="og:image" content="https://clix-automations.com/images/blog/${imageSlug}.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="article:published_time" content="${datePart}T00:00:00+03:00" />
@@ -67,7 +67,7 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
   <meta name="twitter:site" content="@ClixAutomations" />
   <meta name="twitter:title" content="${post.title}" />
   <meta name="twitter:description" content="${post.excerpt}" />
-  <meta name="twitter:image" content="https://clix-automations.com/images/blog/${imageSlug}.jpg" />
+  <meta name="twitter:image" content="https://clix-automations.com/images/blog/${imageSlug}.png" />
 
   <script type="application/ld+json">
   {
@@ -75,7 +75,7 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
     "@type": "BlogPosting",
     "headline": "${post.title.replace(/"/g, '\\"')}",
     "description": "${post.excerpt.replace(/"/g, '\\"')}",
-    "image": "https://clix-automations.com/images/blog/${imageSlug}.jpg",
+    "image": "https://clix-automations.com/images/blog/${imageSlug}.png",
     "datePublished": "${datePart}T00:00:00+03:00",
     "dateModified": "${datePart}T00:00:00+03:00",
     "author": {

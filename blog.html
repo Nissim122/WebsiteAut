@@ -838,12 +838,47 @@
   }
 
   // Newsletter
-  function handleNewsletterSubmit(e) {
+  async function handleNewsletterSubmit(e) {
     e.preventDefault();
+    const emailInput = document.getElementById('nl-email');
     const msg = document.getElementById('nl-msg');
-    msg.textContent = '✓ נרשמת בהצלחה! נשלח לך את הפוסט הבא.';
+    const btn = e.target.querySelector('button[type="submit"]');
+    const email = emailInput.value.trim();
+
+    if (!email) {
+      msg.style.color = '#f87171';
+      msg.textContent = 'יש להזין כתובת מייל כדי להירשם.';
+      msg.style.display = 'block';
+      emailInput.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    msg.style.color = 'rgba(255,255,255,0.6)';
+    msg.textContent = 'שולח...';
     msg.style.display = 'block';
-    document.getElementById('nl-email').value = '';
+
+    try {
+      await fetch('https://hook.eu2.make.com/msakcxxy3eotcvt0fnvxx0tpdkf3uf1c', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([{
+          form: 'contact',
+          email: email,
+          newsletter: true,
+          to_email: 'nisimelec77@gmail.com',
+          source: 'Clix Automations Website'
+        }])
+      });
+      msg.style.color = '#2196b0';
+      msg.textContent = '✓ נרשמת בהצלחה! נשלח לך את הפוסט הבא.';
+      emailInput.value = '';
+    } catch {
+      msg.style.color = '#f87171';
+      msg.textContent = 'שגיאה בשליחה, נסה שנית.';
+    } finally {
+      btn.disabled = false;
+    }
   }
 </script>
 </body>
