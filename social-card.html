@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+    background: #0e1628;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* Grain texture */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* Radial gradients for depth */
+  .bg-glow-pink {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,23,107,0.18) 0%, transparent 70%);
+    top: -100px;
+    right: -50px;
+    z-index: 0;
+  }
+  .bg-glow-blue {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(33,150,176,0.12) 0%, transparent 70%);
+    bottom: -150px;
+    left: 100px;
+    z-index: 0;
+  }
+
+  /* Content area */
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 60px 0 0;
+  }
+
+  /* Left text side */
+  .text-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 20px;
+  }
+
+  .logo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(33,150,176,0.15);
+    border: 1px solid rgba(33,150,176,0.35);
+    border-radius: 100px;
+    padding: 6px 18px;
+    width: fit-content;
+  }
+  .logo-pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2196b0;
+  }
+  .logo-pill-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #5dc8e0;
+    letter-spacing: 0.04em;
+  }
+
+  .headline {
+    font-size: 68px;
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+  }
+  .headline-accent {
+    color: #e0176b;
+  }
+
+  .tagline {
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.65);
+    max-width: 480px;
+  }
+
+  .cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #e0176b 0%, #c0125a 100%);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    padding: 12px 28px;
+    border-radius: 100px;
+    width: fit-content;
+    box-shadow: 0 4px 24px rgba(224,23,107,0.35), 0 2px 8px rgba(224,23,107,0.2);
+  }
+
+  .domain-line {
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  /* Right photo side */
+  .photo-side {
+    flex-shrink: 0;
+    width: 380px;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .photo-side::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #0e1628 0%, transparent 35%);
+    z-index: 2;
+  }
+
+  .photo-side::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, #0e1628 0%, transparent 20%);
+    z-index: 2;
+  }
+
+  .photo-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,23,107,0.2) 0%, transparent 70%);
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .profile-img {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-glow-pink"></div>
+  <div class="bg-glow-blue"></div>
+
+  <div class="content">
+    <div class="text-side">
+      <div class="logo-pill">
+        <div class="logo-pill-dot"></div>
+        <span class="logo-pill-text">clix-automations.com</span>
+      </div>
+
+      <div class="headline">
+        אוטומציות<br>
+        <span class="headline-accent">חכמות</span><br>
+        לעסק שלך
+      </div>
+
+      <div class="tagline">
+        חיסכון בזמן, פחות טעויות, יותר הכנסה —<br>
+        עם Make, WhatsApp ו-CRM חכם.
+      </div>
+
+      <div class="cta-badge">
+        ✦ קליקס אוטומציות
+      </div>
+
+      <div class="domain-line">clix-automations.com</div>
+    </div>
+
+    <div class="photo-side">
+      <div class="photo-glow"></div>
+      <img class="profile-img" src="brand_assets/profile_pic_2_nobg.webp" alt="ניסים בנגייב" />
+    </div>
+  </div>
+</body>
+</html>
