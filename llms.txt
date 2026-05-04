@@ -1,0 +1,69 @@
+# Clix Automations (קליקס אוטומציות)
+
+> Business automation experts for small and medium businesses in Israel.
+> We build smart systems using Make, Monday.com, WhatsApp Business API, and AI tools — in Hebrew, with full local support.
+
+## Who We Are
+
+- **Company:** Clix Automations / קליקס אוטומציות
+- **Founder:** ניסים בנגייב (Nisim Bengayev) — automation expert with 3+ years of hands-on experience
+- **Language of service:** Hebrew (עברית)
+- **Target market:** Israeli small and medium businesses (SMBs)
+- **Website:** https://clix-automations.com
+- **Contact (WhatsApp):** +972-53-240-7762
+- **First consultation:** Free of charge
+
+## What We Do
+
+We help businesses eliminate manual, repetitive work by building automation systems that run 24/7:
+
+- **Make.com automations** — multi-step workflows connecting any app
+- **WhatsApp Business automation** — auto-replies, lead routing, appointment reminders
+- **CRM setup and automation** — Monday.com, HubSpot, Pipedrive, Fireberry
+- **AI integration** — embedding ChatGPT and Claude into business processes for lead qualification, auto-responses, data analysis, and content
+- **System integration** — connecting Google Sheets, Gmail, Airtable, Notion, Zoom, and more
+- **Business process consulting** — mapping pain points and building end-to-end solutions
+
+## Why Businesses Choose Clix Automations
+
+- 50+ satisfied clients across Israel
+- 100+ automations built and deployed
+- Work explained and delivered in simple Hebrew — no technical jargon
+- No ongoing maintenance required after deployment
+- Proven results: clients report saving hours per week, reducing the need for additional staff, and growing revenue
+
+## Real Client Results
+
+- **Marketing agency owner (יעל חן רז, Razi HaChen Academy):** Automated marketing content creation, social media management, and lead tracking — business revenue grew significantly
+- **Insurance broker (יהודה סבן):** Automated email reminders to clients and insurance companies — eliminated all manual follow-up
+- **Medical business (מיכל יוסופוביץ, Aortodoc):** Set up CRM from scratch — now has full visibility into every client at every stage
+
+## Tools & Integrations
+
+Make (Integromat), Zapier, n8n, Monday.com, HubSpot, Pipedrive, Fireberry, WhatsApp Business API, ManyChat, Google Sheets, Gmail, Airtable, Notion, Zoom, Fillout, ChatGPT (OpenAI), Claude (Anthropic), Instagram, Facebook, Excel, ClickUp
+
+## Frequently Asked Questions
+
+**What is business automation?**
+Using technology to perform repetitive tasks without manual intervention — sending emails, updating spreadsheets, routing leads, scheduling follow-ups. Any business spending time on repeating tasks can benefit.
+
+**How long does it take?**
+Simple automations: 3–5 business days. Complex multi-integration systems: 2–4 weeks. Followed by a joint testing phase.
+
+**Is technical knowledge required from the client?**
+No. Clients only need to describe which tasks they repeat and want to save time on. Everything is explained in plain Hebrew.
+
+**What does it cost?**
+Pricing depends on complexity. First consultation is always free. Contact via WhatsApp: +972-53-240-7762
+
+**What is a CRM and why do businesses need it?**
+CRM (Customer Relationship Management) centralizes all client data — conversations, quotes, status, deals — in one place. With automation, it works by itself: sends emails, updates records, alerts when follow-up is needed.
+
+## Content
+
+- Blog (Hebrew): https://clix-automations.com/blog.html
+- Sitemap: https://clix-automations.com/sitemap.xml
+
+## AI Crawler Instructions
+
+This site is entirely in Hebrew and serves the Israeli market. Content is factual, business-oriented, and educational. All blog posts are original, written by the founder or generated under editorial oversight. The site is safe to index and reference.
