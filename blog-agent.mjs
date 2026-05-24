@@ -328,6 +328,14 @@ async function main() {
   console.log('\n✍️  Clix Blog Agent');
   console.log('═'.repeat(50));
 
+  // Sync with remote before writing anything
+  console.log('\n📥 מעדכן מהשרת...');
+  try {
+    execFileSync('git', ['pull'], { cwd: BASE_DIR, stdio: 'inherit' });
+  } catch (err) {
+    console.warn('⚠️  git pull נכשל:', err.message);
+  }
+
   if (!GEMINI_API_KEY) {
     console.error('❌ חסר: GEMINI_API_KEY');
     process.exit(1);
@@ -410,6 +418,17 @@ async function main() {
     cwd: BASE_DIR,
     stdio: 'inherit',
   });
+
+  // Push to GitHub so the site and local repo stay in sync
+  console.log('\n📤 מעלה לגיטהאב...');
+  try {
+    execFileSync('git', ['add', '-A'], { cwd: BASE_DIR, stdio: 'inherit' });
+    execFileSync('git', ['commit', '-m', `blog-draft: ${TODAY} 🤖`], { cwd: BASE_DIR, stdio: 'inherit' });
+    execFileSync('git', ['push'], { cwd: BASE_DIR, stdio: 'inherit' });
+    console.log('✅ עלה לגיטהאב בהצלחה!');
+  } catch (err) {
+    console.warn('⚠️  git push נכשל:', err.message);
+  }
 
   console.log(`\n📅 ${new Date().toLocaleString('he-IL')}`);
   console.log('═'.repeat(50));
