@@ -6,6 +6,7 @@
   "dependencies": {
     "@google-analytics/data": "^6.0.0",
     "@imgly/background-removal-node": "^1.4.5",
+    "googleapis": "^172.0.0",
     "jimp": "^1.6.1",
     "puppeteer": "^24.40.0",
     "sharp": "^0.34.5",
