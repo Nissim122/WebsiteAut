@@ -1648,16 +1648,16 @@
           <div class="form-grid-2">
             <div>
               <label for="contact-name" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">שם מלא *</label>
-              <input id="contact-name" type="text" class="form-input" placeholder="ישראל ישראלי" required autocomplete="name" />
+              <input id="contact-name" type="text" class="form-input" required autocomplete="name" />
             </div>
             <div>
               <label for="contact-phone" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">טלפון *</label>
-              <input id="contact-phone" type="tel" class="form-input" placeholder="050-0000000" inputmode="numeric" minlength="9" maxlength="15" pattern="[0-9+\-\s]*" autocomplete="tel" required oninput="this.value=this.value.replace(/[^\d+\-\s]/g,'')" />
+              <input id="contact-phone" type="tel" class="form-input" inputmode="numeric" minlength="9" maxlength="15" pattern="[0-9+\-\s]*" autocomplete="tel" required oninput="this.value=this.value.replace(/[^\d+\-\s]/g,'')" />
             </div>
           </div>
           <div style="margin-bottom: 1rem;">
             <label for="contact-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">אימייל *</label>
-            <input id="contact-email" type="email" class="form-input" placeholder="you@company.com" required autocomplete="email"
+            <input id="contact-email" type="email" class="form-input" required autocomplete="email"
               oninput="this.style.direction='ltr'; this.style.textAlign='left';"
               onblur="if(!this.value){this.style.direction='';this.style.textAlign='';}" />
           </div>
@@ -2801,10 +2801,14 @@
     " onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
       <!-- Chat icon -->
       <svg id="chat-icon-open" width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="transition: opacity 0.2s, transform 0.2s;">
-        <path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/>
-        <circle cx="8.5" cy="11.5" r="1.2" fill="#e0176b"/>
-        <circle cx="12" cy="11.5" r="1.2" fill="#e0176b"/>
-        <circle cx="15.5" cy="11.5" r="1.2" fill="#e0176b"/>
+        <circle cx="12" cy="2.2" r="1.3" fill="white"/>
+        <rect x="11.25" y="3.3" width="1.5" height="2.4" rx="0.75" fill="white"/>
+        <rect x="2.5" y="5.7" width="19" height="13.5" rx="4" fill="white"/>
+        <rect x="6.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+        <rect x="13.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+        <circle cx="8.5" cy="11" r="1" fill="white"/>
+        <circle cx="15.5" cy="11" r="1" fill="white"/>
+        <rect x="8" y="15.2" width="8" height="1.6" rx="0.8" fill="#e0176b" opacity="0.5"/>
       </svg>
       <!-- Close icon -->
       <svg id="chat-icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute; opacity:0; transition: opacity 0.2s, transform 0.2s; transform: rotate(-90deg);">
@@ -2873,13 +2877,22 @@
         flex-shrink: 0;
         box-shadow: 0 2px 12px rgba(224,23,107,0.35);
       ">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="2.2" r="1.3" fill="white"/>
+          <rect x="11.25" y="3.3" width="1.5" height="2.4" rx="0.75" fill="white"/>
+          <rect x="2.5" y="5.7" width="19" height="13.5" rx="4" fill="white"/>
+          <rect x="6.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+          <rect x="13.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+          <circle cx="8.5" cy="11" r="1" fill="white"/>
+          <circle cx="15.5" cy="11" r="1" fill="white"/>
+          <rect x="8" y="15.2" width="8" height="1.6" rx="0.8" fill="#e0176b" opacity="0.5"/>
+        </svg>
       </div>
       <div style="flex:1; min-width:0;">
         <div style="font-family:'Heebo',sans-serif; font-weight:700; font-size:0.93rem; color:#fff;">Clix Assistant</div>
         <div style="display:flex; align-items:center; gap:0.35rem; margin-top:1px;">
           <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.7);display:inline-block;"></span>
-          <span style="font-family:'Heebo',sans-serif; font-size:0.76rem; color:rgba(255,255,255,0.45);">מחובר · עונה בשניות</span>
+          <span style="font-family:'Heebo',sans-serif; font-size:0.76rem; color:rgba(255,255,255,0.45);">מחובר</span>
         </div>
       </div>
       <button onclick="toggleChat()" aria-label="סגור" class="chat-close-btn" style="
@@ -2916,7 +2929,16 @@
           display: flex; align-items: center; justify-content: center;
           flex-shrink: 0;
         ">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.144 2 11.25c0 2.07.717 3.98 1.916 5.51L2.5 21l4.57-1.36A10.08 10.08 0 0012 20.5c5.523 0 10-4.144 10-9.25S17.523 2 12 2z" fill="white"/></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="2.2" r="1.3" fill="white"/>
+            <rect x="11.25" y="3.3" width="1.5" height="2.4" rx="0.75" fill="white"/>
+            <rect x="2.5" y="5.7" width="19" height="13.5" rx="4" fill="white"/>
+            <rect x="6.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+            <rect x="13.5" y="9.5" width="4" height="3" rx="1.2" fill="#e0176b"/>
+            <circle cx="8.5" cy="11" r="1" fill="white"/>
+            <circle cx="15.5" cy="11" r="1" fill="white"/>
+            <rect x="8" y="15.2" width="8" height="1.6" rx="0.8" fill="#e0176b" opacity="0.5"/>
+          </svg>
         </div>
         <div style="
           background: rgba(255,255,255,0.06);
@@ -2934,6 +2956,36 @@
           text-align: right;
           unicode-bidi: plaintext;
         ">היי אני העוזר AI של צוות Clix automations<br>איך אפשר לעזור ?</div>
+      </div>
+
+      <!-- Quick questions -->
+      <div id="chat-quick-btns" style="
+        display:flex; flex-direction:column; gap:0.55rem;
+        margin: 0 0.25rem 0.25rem;
+        padding: 0.65rem 0.7rem 0.6rem;
+        background: linear-gradient(135deg, rgba(224,23,107,0.07) 0%, rgba(33,150,176,0.07) 100%);
+        border: 1px solid rgba(255,255,255,0.07);
+        border-radius: 14px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      ">
+        <div style="font-size:0.72rem; font-family:'Heebo',sans-serif; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.05em;">שאלות שלקוחות שואלים:</div>
+
+        <!-- Featured / hot questions -->
+        <div style="display:flex; flex-wrap:wrap; gap:0.38rem;">
+          <button class="quick-chip quick-chip-hot" onclick="quickReply('מה העלות של אוטומציה לעסק?','q1')">מה העלות של אוטומציה לעסק?</button>
+          <button class="quick-chip quick-chip-hot" onclick="quickReply('אני לא מבין בטכנולוגיה — זה עדיין יכול להתאים לי?','q2')">אני לא מבין בטכנולוגיה — זה עדיין יכול להתאים לי?</button>
+          <button class="quick-chip quick-chip-hot" onclick="quickReply('כמה עולה שיחת אפיון ראשונית?','q3')">כמה עולה שיחת אפיון ראשונית?</button>
+        </div>
+
+        <!-- Divider -->
+        <div style="height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);"></div>
+
+        <!-- Regular questions -->
+        <div style="display:flex; flex-wrap:wrap; gap:0.35rem;">
+          <button class="quick-chip" onclick="quickReply('אתם עובדים גם עם מערכות AI?','q4')">אתם עובדים גם עם מערכות AI?</button>
+          <button class="quick-chip" onclick="quickReply('מה קורה אם משהו מפסיק לעבוד?','q5')">מה קורה אם משהו מפסיק לעבוד?</button>
+          <button class="quick-chip" onclick="quickReply('מה העלות של אוטומציה לעסק?','q1')">מה העלות של אוטומציה לעסק?</button>
+        </div>
       </div>
     </div>
 
@@ -2993,6 +3045,49 @@
     #chat-messages::-webkit-scrollbar { width: 4px; }
     #chat-messages::-webkit-scrollbar-track { background: transparent; }
     #chat-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+    .quick-chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 20px;
+      padding: 0.34rem 0.78rem;
+      font-family: 'Heebo', sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      transition: background 0.18s, border-color 0.18s, color 0.18s, transform 0.15s, box-shadow 0.18s;
+      white-space: nowrap;
+      direction: rtl;
+    }
+    .quick-chip:hover {
+      background: rgba(33,150,176,0.16);
+      border-color: rgba(33,150,176,0.4);
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 10px rgba(33,150,176,0.15);
+    }
+    .quick-chip:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    .quick-chip:focus-visible {
+      outline: 2px solid rgba(33,150,176,0.6);
+      outline-offset: 2px;
+    }
+    .quick-chip-hot {
+      background: linear-gradient(135deg, rgba(224,23,107,0.14) 0%, rgba(180,15,85,0.08) 100%);
+      border: 1px solid rgba(224,23,107,0.28);
+      color: rgba(255,255,255,0.88);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(224,23,107,0.10);
+    }
+    .quick-chip-hot:hover {
+      background: linear-gradient(135deg, rgba(224,23,107,0.28) 0%, rgba(180,15,85,0.18) 100%);
+      border-color: rgba(224,23,107,0.55);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(224,23,107,0.25);
+    }
 
     @keyframes chatDotPulse {
       0%, 100% { transform: scale(1); opacity: 0.6; }
@@ -3279,10 +3374,40 @@
         }
       };
 
+      window.quickAsk = function (text) {
+        var qqb = document.getElementById('chat-quick-btns');
+        if (qqb) { qqb.style.opacity = '0'; qqb.style.transition = 'opacity 0.2s'; setTimeout(function(){ qqb.style.display = 'none'; }, 200); }
+        var input = document.getElementById('chat-input');
+        if (input) { input.value = text; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 96) + 'px'; }
+        sendChatMessage();
+      };
+
+      var CLIX_CTA = '\n\nרוצה לבדוק אילו תהליכים אפשר לחסוך ולהפוך לאוטומטיים בעסק שלך?\nקבע שיחת אפיון ללא עלות כאן:\nhttps://forms.fillout.com/t/nt2oT7MZyBus?lead_source=social';
+      var CLIX_QUICK_ANSWERS = {
+        q1: 'העלות משתנה בהתאם למורכבות התהליך, הכלים שמתחברים אליו והצרכים של העסק שלך.\nלכן לפני שנותנים הצעת מחיר, אנחנו עושים שיחת אפיון קצרה ללא עלות כדי להבין בדיוק מה צריך לבנות.' + CLIX_CTA,
+        q2: 'כן, לגמרי.\nהמערכות נבנות כדי לחסוך לך עבודה — לא לסבך אותך. אנחנו מלווים אותך לאורך כל הדרך, מסבירים בצורה פשוטה ודואגים שתוכל להשתמש במערכת בקלות ביום־יום.' + CLIX_CTA,
+        q3: 'שיחת האפיון הראשונית כרגע ללא עלות.\nבמהלך השיחה נכיר את העסק שלך, נזהה איפה מתבזבז זמן על פעולות ידניות, ונציע מספר תהליכים שאפשר להפוך לאוטומטיים כדי לחסוך זמן ולעבוד בצורה יעילה יותר.' + CLIX_CTA,
+        q4: 'כן.\nאנחנו משלבים פתרונות AI כמו ChatGPT ו-Claude בתוך תהליכים עסקיים — לדוגמה מענה אוטומטי ללקוחות, סינון לידים, ניתוח מידע, סיכום שיחות ועוד.\nהמטרה היא לחסוך זמן וליצור עבודה חכמה ואוטומטית יותר.' + CLIX_CTA,
+        q5: 'אנחנו לא נעלמים אחרי ההתקנה 🙂\nיש תקופת אחריות וליווי מלא, כולל בדיקות, תיקונים ותמיכה במקרה הצורך — כדי לוודא שהמערכת עובדת בצורה יציבה גם אחרי העלייה לאוויר.' + CLIX_CTA
+      };
+
+      window.quickReply = function(question, key) {
+        var answer = CLIX_QUICK_ANSWERS[key];
+        if (!answer) return;
+        var qqb = document.getElementById('chat-quick-btns');
+        if (qqb) { qqb.style.opacity = '0'; qqb.style.transition = 'opacity 0.2s'; setTimeout(function(){ qqb.style.display = 'none'; }, 200); }
+        appendUserMessage(question);
+        appendBotMessage(answer);
+        scrollChatToBottom();
+      };
+
       window.sendChatMessage = function () {
         var input = document.getElementById('chat-input');
         var text = input ? input.value.trim() : '';
         if (!text) return;
+
+        var qqb = document.getElementById('chat-quick-btns');
+        if (qqb && qqb.style.display !== 'none') { qqb.style.display = 'none'; }
 
         if (isBlocked()) {
           appendBotMessage(BLOCKED_MSG);
@@ -3430,8 +3555,18 @@
       var panel = document.getElementById('chat-panel');
       if (!panel) return;
 
+      function restoreDesktopPanelBottom() {
+        if (panel.style.bottom) return;
+        var banner = document.getElementById('cookie-banner');
+        var bannerH = (banner && banner.style.display !== 'none' && banner.offsetHeight > 0) ? banner.offsetHeight : 0;
+        panel.style.bottom = bannerH > 0 ? (bannerH + 4.75 * 16 + 12) + 'px' : '6.5rem';
+      }
+
       function adjustForKeyboard() {
-        if (window.innerWidth > 600) return;
+        if (window.innerWidth > 600) {
+          restoreDesktopPanelBottom();
+          return;
+        }
         var vv = window.visualViewport;
         if (!vv) return;
         var kbHeight = window.innerHeight - vv.height - vv.offsetTop;
@@ -3450,6 +3585,9 @@
           window.scrollBy(-vv.offsetLeft, 0);
         }
       }
+
+      // Also catch plain window resize (e.g. DevTools responsive mode toggle)
+      window.addEventListener('resize', restoreDesktopPanelBottom);
 
       if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', adjustForKeyboard);
