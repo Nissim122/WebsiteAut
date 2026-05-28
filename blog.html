@@ -1021,7 +1021,7 @@
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
   // Category filter
-  function filterPosts(btn) {
+  function filterPosts(btn, skipHistory) {
     document.querySelectorAll('#filter-bar .cat-pill').forEach(p => p.classList.remove('active'));
     btn.classList.add('active');
 
@@ -1037,7 +1037,21 @@
     });
 
     document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+
+    if (!skipHistory) {
+      const url = new URL(window.location.href);
+      if (cat === 'all') { url.searchParams.delete('q'); } else { url.searchParams.set('q', cat); }
+      history.replaceState(null, '', url.toString());
+    }
   }
+
+  // On load: activate filter from ?q= param
+  (function initFilter() {
+    const q = new URLSearchParams(window.location.search).get('q');
+    if (!q) return;
+    const btn = document.querySelector(`#filter-bar .cat-pill[data-cat="${q}"]`);
+    if (btn) filterPosts(btn, true);
+  })();
 
   // Newsletter
   async function handleNewsletterSubmit(e) {
