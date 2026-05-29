@@ -58,7 +58,7 @@
     /* ── Progress bar ── */
     .prog-bar {
       display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-bottom: 20px;
+      gap: 0; margin-top: 66px; margin-bottom: 32px;
     }
     .prog-seg {
       width: 34px; height: 34px; border-radius: 50%;
@@ -71,7 +71,7 @@
       transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
     }
     .prog-conn {
-      width: 36px; height: 2px;
+      width: 72px; height: 2px;
       background: rgba(255,255,255,0.1);
       flex-shrink: 0;
       transition: background 0.4s ease;
@@ -85,6 +85,9 @@
     .screen.active {
       display: flex;
       animation: fadeUp 0.38s cubic-bezier(0.16,1,0.3,1);
+    }
+    #screen-1.active, #screen-2.active {
+      min-height: calc(100vh - 80px);
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
@@ -185,7 +188,7 @@
     }
     .pain-card:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
     .pain-card:active { transform: translateY(-1px); }
-    .pain-card:last-child { grid-column: 1 / -1; flex-direction: row; text-align: right; padding: 12px 18px; gap: 12px; justify-content: flex-start; }
+    .pain-card:last-child { }
     .pain-title { font-weight: 700; font-size: 14px; }
     .pain-desc  { color: rgba(255,255,255,0.42); font-size: 11px; }
 
@@ -554,15 +557,9 @@
     <!-- ───────────────────────────────── SCREEN 2: Pain ── -->
     <div class="screen active" id="screen-2">
 
-      <div class="screen-hook">
-        <span class="hook-dot"></span>
-        <span>עסקים ישראליים מאבדים בממוצע <strong>14 שעות/שבוע</strong> על משימות שאפשר לאוטמט — גלה כמה אתה</span>
-      </div>
-
       <h1 class="h1">מה הכי מפריע לך בעסק?</h1>
       <p class="subtitle">בחר — נבנה עבורך מפת אוטומציה מותאמת אישית</p>
 
-      <div class="time-badge">⏱&nbsp; 2 שאלות בלבד · דקה וחצי</div>
 
       <div class="pain-list">
         <div class="pain-card" tabindex="0" data-pain="leads" onclick="pickPain('leads')" onkeydown="if(event.key==='Enter')pickPain('leads')">
@@ -601,7 +598,7 @@
           <div class="sp-avatar" style="background:#e0176b;">מ</div>
           <div class="sp-avatar" style="background:#2196b0;">נ</div>
         </div>
-        <span><strong>217 עסקים</strong> ניתחו השבוע</span>
+        <span><strong>54 עסקים</strong> גילו איפה הם מפסידים כסף</span>
       </div>
 
     </div>
