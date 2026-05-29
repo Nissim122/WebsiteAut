@@ -444,19 +444,7 @@
     }
     .s4-unlock-sub { font-size: 11px; color: rgba(255,255,255,0.32); margin-top: 8px; }
 
-    /* ── Narrative + Sticky CTA ── */
-    .s4-narrative { font-size: 12px; color: var(--muted); line-height: 1.65; text-align: center; padding: 0 6px; }
-    .s4-sticky-cta {
-      position: fixed; bottom: 0;
-      left: 50%; transform: translateX(-50%);
-      width: 100%; max-width: 784px;
-      background: linear-gradient(to top, var(--bg) 72%, transparent);
-      padding: 10px 8px;
-      z-index: 10;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-    }
+
 
     /* Lead form */
     .form-input {
@@ -790,15 +778,6 @@
         <p class="s4-unlock-sub">כולל המלצות מותאמות לעסק שלך</p>
       </div>
 
-      <!-- 6. Narrative -->
-      <p id="narrative" class="s4-narrative"></p>
-
-      <!-- 7. Sticky CTA -->
-      <div class="s4-sticky-cta">
-        <button class="btn-p" onclick="openLeadModal()" style="width:100%; justify-content:center; font-size:15px; padding:13px 24px;">
-          קבל דו"ח אוטומציה מותאם לעסק שלך ←
-        </button>
-      </div>
 
     </div>
 
@@ -1064,10 +1043,10 @@
     { id:'gmail',     lbl:'Gmail',     svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(234,67,53,0.13);border:1.5px solid rgba(234,67,53,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg></div>' },
     { id:'outlook',   lbl:'Outlook', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,114,198,0.13);border:1.5px solid rgba(0,114,198,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="5" width="13" height="14" rx="2" fill="#0072C6"/><rect x="10" y="3" width="13" height="18" rx="2" fill="#0078D4"/><rect x="12" y="7" width="9" height="2" rx="0.5" fill="white" opacity="0.9"/><rect x="12" y="11" width="9" height="2" rx="0.5" fill="white" opacity="0.9"/><rect x="12" y="15" width="6" height="2" rx="0.5" fill="white" opacity="0.9"/><text x="7" y="15.5" font-size="7" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">O</text></svg></div>' },
     { id:'mailchimp', lbl:'Mailchimp', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,224,27,0.13);border:1.5px solid rgba(255,224,27,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="#FFE01B"/><path fill="none" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="round" d="M2 8l10 6.5L22 8"/></svg></div>' },
-    { id:'smoove',    lbl:'Smoove',    svg:'<div style="width:36px;height:36px;border-radius:50%;background:transparent;border:1.5px solid rgba(91,47,200,0.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:27px;height:27px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="SMOOVE.png" width="20" height="20" style="object-fit:contain;" /></div></div>' },
+    { id:'smoove',    lbl:'Smoove',    svg:'<div style="width:36px;height:36px;border-radius:50%;background:transparent;border:1.5px solid rgba(91,47,200,0.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:27px;height:27px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/smoove.png" width="20" height="20" style="object-fit:contain;" /></div></div>' },
     { id:'whatsapp',  lbl:'WhatsApp',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(37,211,102,0.13);border:1.5px solid rgba(37,211,102,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></div>' },
     { id:'telegram',  lbl:'Telegram',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(44,165,224,0.13);border:1.5px solid rgba(44,165,224,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#2CA5E0" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div>' },
-    { id:'manychat',  lbl:'ManyChat', svg:'<div style="width:36px;height:36px;border-radius:50%;background:transparent;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:27px;height:27px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;"><img src="MANYCHAT.png" width="17" height="17" style="object-fit:contain;filter:invert(1);" /></div></div>' },
+    { id:'manychat',  lbl:'ManyChat', svg:'<div style="width:36px;height:36px;border-radius:50%;background:transparent;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:27px;height:27px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;"><img src="brand_assets/icons/manychat.png" width="17" height="17" style="object-fit:contain;filter:invert(1);" /></div></div>' },
     { id:'slack',     lbl:'Slack',     svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(54,197,240,0.13);border:1.5px solid rgba(54,197,240,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#36C5F0" d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"/><path fill="#E01E5A" d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"/><path fill="#2EB67D" d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"/><path fill="#ECB22E" d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg></div>' },
     { id:'instagram', lbl:'Instagram', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(225,48,108,0.13);border:1.5px solid rgba(225,48,108,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ig-g" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F77737"/><stop offset="40%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig-g)" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></div>' },
     { id:'facebook',  lbl:'Facebook',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(24,119,242,0.13);border:1.5px solid rgba(24,119,242,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>' },
@@ -1127,12 +1106,6 @@
     else if (tools.includes('gmail')) outputs.push('Gmail');
     else outputs.push('הודעה אוטומטית');
 
-    const narratives = {
-      leads:   'העסק שלך מאבד לידים כל יום בגלל תגובה איטית — האוטומציה שלנו מוזילה את הזמן ל-30 שניות.',
-      sales:   'אתה משאיר כסף על השולחן — פולואפים שלא יוצאים בזמן מאבדים עסקאות שכבר היו שלך.',
-      service: 'כל דקת עיכוב בשירות עולה לך לקוח — אוטומציית תיוג תחסוך לך את רוב הנזק.',
-      time:    'שעות יקרות מתבזבזות על משימות שחוזרות — נחזיר לך אותן תוך ימים.',
-    };
     const proofs = {
       leads:   'מתאים במיוחד לעסקים שמקבלים לידים מ-WhatsApp ואינסטגרם',
       sales:   'מיועד לעסקים שמאבדים עסקאות בגלל פולואפ לא עקבי',
@@ -1145,7 +1118,7 @@
       flows,
       metrics: { hours: totalHours.toFixed(1), procs: flows.length, total: 8, risk: riskHigh ? 'גבוה' : 'בינוני' },
       inputs, outputs,
-      narrative: narratives[intent] || narratives.leads,
+
       proof: proofs[intent] || proofs.leads,
       lostN: Math.floor(score / 12) + 3,
     };
@@ -1164,16 +1137,10 @@
     if (!lockScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('prog-bar').style.marginBottom = (id === 4) ? '14px' : '';
 
-    const cta = document.querySelector('.s4-sticky-cta');
     if (id === 4) {
       const s4 = document.getElementById('screen-4');
       s4.scrollTop = 0;
-      cta.style.opacity = '0';
-      cta.style.pointerEvents = 'none';
       setTimeout(animateMap, 220);
-    } else {
-      cta.style.opacity = '0';
-      cta.style.pointerEvents = 'none';
     }
 
     saveState();
@@ -1313,7 +1280,6 @@
   // ═══════════════════════════════════════════════════════════════
   function renderResults() {
     const c = S.ctx;
-    document.getElementById('narrative').textContent = c.narrative;
     trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
     renderNewMap(c);
     renderPreview(c.flows[0]);
@@ -1473,16 +1439,6 @@
 
     trackEvent('scanner_start');
 
-    document.getElementById('screen-4').addEventListener('scroll', function() {
-      const cta = this.querySelector('.s4-sticky-cta');
-      if (this.scrollTop > 80) {
-        cta.style.opacity = '1';
-        cta.style.pointerEvents = '';
-      } else {
-        cta.style.opacity = '0';
-        cta.style.pointerEvents = 'none';
-      }
-    });
   });
   </script>
 </body>
