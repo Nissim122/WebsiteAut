@@ -14,11 +14,12 @@ import { join } from 'path';
 
 const DRY_RUN = process.argv.includes('--dry-run');
 const BASE_DIR = process.cwd();
-const INDEX_PATH = join(BASE_DIR, 'index.html');
-const BLOG_PATH  = join(BASE_DIR, 'blog.html');
-const POSTS_DIR   = join(BASE_DIR, 'posts');
+const INDEX_PATH   = join(BASE_DIR, 'index.html');
+const BLOG_PATH    = join(BASE_DIR, 'blog.html');
+const SCANNER_PATH = join(BASE_DIR, 'scanner.html');
+const POSTS_DIR    = join(BASE_DIR, 'posts');
 const SITEMAP_PATH = join(BASE_DIR, 'sitemap.xml');
-const CONFIG_PATH = join(BASE_DIR, 'seo-config.json');
+const CONFIG_PATH  = join(BASE_DIR, 'seo-config.json');
 
 // ─── HTML helpers ─────────────────────────────────────────────────────────────
 
@@ -223,6 +224,69 @@ async function updateIndexPage(config, competitorKeywords) {
   return 'https://clix-automations.com/';
 }
 
+// ─── Update scanner.html ──────────────────────────────────────────────────────
+
+async function updateScannerPage(config, competitorKeywords) {
+  const { scannerSeedKeywords, descriptionProtectTerms } = config;
+
+  if (!existsSync(SCANNER_PATH)) {
+    console.warn('  ⚠️  scanner.html לא נמצא');
+    return null;
+  }
+
+  let html = await readFile(SCANNER_PATH, 'utf8');
+  const originalHtml = html;
+
+  // מילות מפתח: scanner seeds ראשונים + מתחרים — focus על intent של "בדיקת אוטומציה"
+  const finalKeywords = mergeKeywords(
+    scannerSeedKeywords,
+    competitorKeywords.filter(kw => /אוטומ|כלי|ניהול|תהליך|עסק|חיבור|שיווק|לידים/i.test(kw)),
+    25
+  );
+
+  html = upsertKeywordsTag(html, finalKeywords.join(', '));
+
+  // Description — מוגן אם מכיל מונחי מותג, אחרת בונה description ממוקד-כוונה
+  const currentDesc = extractMeta(html, 'description') || '';
+  if (!shouldProtectDescription(currentDesc, descriptionProtectTerms)) {
+    const topHebrew = finalKeywords.filter(w => /[א-ת]/.test(w)).slice(0, 5);
+    const newDesc = `${topHebrew.slice(0, 2).join(', ')} — `
+      + `ענה על 3 שאלות קצרות וגלה אילו תהליכים בעסק שלך ניתנים לאוטומציה. `
+      + `${topHebrew.slice(2, 5).join(', ')}. קליקס אוטומציות, ללא עלות.`;
+
+    const updatedDesc = updateMetaTag(html, 'description', newDesc);
+    if (updatedDesc) { html = updatedDesc; }
+
+    const updatedOgDesc = updateOgTag(html, 'og:description', newDesc);
+    if (updatedOgDesc) { html = updatedOgDesc; }
+
+    const updatedTwitterDesc = updateMetaTag(html, 'twitter:description', newDesc);
+    if (updatedTwitterDesc) { html = updatedTwitterDesc; }
+
+    console.log('  ✏️  עודכן: description');
+  } else {
+    // description מוגן — סנכרן og ו-twitter
+    const updatedOgDesc = updateOgTag(html, 'og:description', currentDesc);
+    if (updatedOgDesc) { html = updatedOgDesc; }
+    const updatedTwitterDesc = updateMetaTag(html, 'twitter:description', currentDesc);
+    if (updatedTwitterDesc) { html = updatedTwitterDesc; }
+    console.log('  🔒 description מוגן — סונכרן og ו-twitter');
+  }
+
+  if (html === originalHtml) {
+    console.log('  ℹ️  אין שינויים ב-scanner.html');
+    return null;
+  }
+
+  if (DRY_RUN) {
+    console.log('  🧪 DRY RUN — scanner.html לא נשמר');
+    return null;
+  }
+  await writeFile(SCANNER_PATH, html, 'utf8');
+  console.log('  💾 נשמר: scanner.html');
+  return 'https://clix-automations.com/scanner.html';
+}
+
 // ─── Update blog.html ─────────────────────────────────────────────────────────
 
 async function updateBlogPage(config, competitorKeywords) {
@@ -412,9 +476,12 @@ async function main() {
   console.log('\n📰 מעדכן blog.html...');
   const blogUrl = await updateBlogPage(config, competitorKeywords);
 
+  console.log('\n🔍 מעדכן scanner.html...');
+  const scannerUrl = await updateScannerPage(config, competitorKeywords);
+
   const postUrls = await updatePostPages(config, competitorKeywords);
 
-  const allModified = [indexUrl, blogUrl, ...postUrls].filter(Boolean);
+  const allModified = [indexUrl, blogUrl, scannerUrl, ...postUrls].filter(Boolean);
   await updateSitemapLastmod(allModified);
 
   console.log('\n' + '═'.repeat(50));
