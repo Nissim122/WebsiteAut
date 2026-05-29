@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Automation Scanner | Clix Automations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg:       #0e1628;
+      --bg-e:     #141d35;
+      --bg-f:     #1a2540;
+      --blue:     #2196b0;
+      --blue-l:   #2db3cd;
+      --blue-g:   rgba(33,150,176,0.28);
+      --pink:     #e0176b;
+      --pink-g:   rgba(224,23,107,0.28);
+      --border:   rgba(255,255,255,0.09);
+      --muted:    rgba(255,255,255,0.5);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ── Background ── */
+    .bg-grad {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 50% at 10% 10%, rgba(33,150,176,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 45% at 90% 85%, rgba(224,23,107,0.05) 0%, transparent 65%),
+        #0e1628;
+    }
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ── Wrapper ── */
+    .wrapper {
+      position: relative; z-index: 2;
+      width: 100%; max-width: 784px;
+      padding: 14px 16px 20px;
+    }
+
+    /* ── Progress bar ── */
+    .prog-bar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 20px;
+    }
+    .prog-seg {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; font-family: 'Inter', sans-serif;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.25);
+      flex-shrink: 0;
+      transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+    }
+    .prog-conn {
+      width: 36px; height: 2px;
+      background: rgba(255,255,255,0.1);
+      flex-shrink: 0;
+      transition: background 0.4s ease;
+    }
+    .prog-conn.done  { background: var(--blue); }
+    .prog-seg.done   { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .prog-seg.active { background: transparent; border-color: var(--blue-l); color: var(--blue-l); }
+
+    /* ── Screen system ── */
+    .screen { display: none; flex-direction: column; width: 100%; }
+    .screen.active {
+      display: flex;
+      animation: fadeUp 0.38s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Typography ── */
+    .h1 {
+      font-size: clamp(22px,5.5vw,34px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    /* ── Intent cards ── */
+    .intent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .intent-card {
+      background: var(--bg-e);
+      border: 1.5px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 18px;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      user-select: none;
+    }
+    .intent-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 10px 36px rgba(0,0,0,0.28);
+    }
+    .intent-card.sel {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-g), 0 8px 28px rgba(33,150,176,0.15);
+    }
+    .intent-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .intent-card:active { transform: translateY(-1px); }
+    .intent-emoji { font-size: 28px; margin-bottom: 10px; }
+    .intent-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+    .intent-desc  { color: rgba(255,255,255,0.45); font-size: 12px; line-height: 1.5; }
+
+    /* ── Tools grid ── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .tool-card {
+      background: var(--bg-e);
+      border: 1.5px solid var(--border);
+      border-radius: 13px;
+      padding: 11px 6px 9px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      user-select: none;
+    }
+    .tool-card:hover { transform: scale(1.04); }
+    .tool-card.sel {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px var(--blue-g), 0 4px 18px rgba(33,150,176,0.18);
+      transform: scale(1.05);
+    }
+    .tool-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+    .tool-card:active { transform: scale(1.01); }
+    .tool-img { width: 32px; height: 32px; object-fit: contain; }
+    .tool-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.3; }
+
+    /* ── Pain grid — 2 columns ── */
+    .pain-list { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .pain-card {
+      background: var(--bg-e);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px 12px;
+      display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px;
+      cursor: pointer;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  border-color 0.2s ease,
+                  box-shadow 0.2s ease;
+      user-select: none;
+    }
+    .pain-card:hover { transform: translateY(-3px); }
+    .pain-card.sel {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px var(--pink-g);
+    }
+    .pain-card:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    .pain-card:active { transform: translateY(-1px); }
+    .pain-card:last-child { grid-column: 1 / -1; flex-direction: row; text-align: right; padding: 12px 18px; gap: 12px; justify-content: flex-start; }
+    .pain-title { font-weight: 700; font-size: 14px; }
+    .pain-desc  { color: rgba(255,255,255,0.42); font-size: 11px; }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; gap: 12px; justify-content: center; }
+    .btn-p {
+      background: var(--pink);
+      color: #fff;
+      font-family: 'Heebo', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      padding: 13px 30px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 7px;
+      transition: transform 0.22s cubic-bezier(0.34,1.56,0.64,1),
+                  box-shadow 0.22s ease;
+      box-shadow: 0 4px 22px rgba(224,23,107,0.3);
+    }
+    .btn-p:hover  { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(224,23,107,0.38); }
+    .btn-p:active { transform: translateY(0); }
+    .btn-p:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+    .btn-p:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-s {
+      background: transparent;
+      color: var(--muted);
+      font-family: 'Heebo', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.2s ease,
+                  color 0.2s ease,
+                  transform 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-s:hover  { border-color: rgba(255,255,255,0.28); color: #fff; transform: translateY(-1px); }
+    .btn-s:active { transform: translateY(0); }
+    .btn-s:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+    /* ── Processing ── */
+    .proc-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 87vh; gap: 36px;
+    }
+    .proc-ring {
+      position: relative; width: 308px; height: 308px;
+    }
+    .proc-center {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 95px; height: 95px;
+      background: var(--bg-f);
+      border: 2px solid var(--blue);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 28px rgba(33,150,176,0.38), 0 0 52px rgba(224,23,107,0.15);
+      z-index: 2;
+    }
+    .pnode {
+      position: absolute;
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--bg-f);
+      border: 1.5px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 25px;
+      opacity: 0;
+      transition: opacity 0.45s ease,
+                  border-color 0.45s ease,
+                  box-shadow 0.45s ease;
+    }
+    .pnode.vis { opacity: 1; }
+    .pnode.lit      { border-color: var(--blue); box-shadow: 0 0 18px var(--blue-g); }
+    .pnode.lit-pink { border-color: var(--pink); box-shadow: 0 0 18px var(--pink-g); }
+    .proc-text {
+      font-size: 22px; font-weight: 600; color: rgba(255,255,255,0.8);
+      min-height: 26px; text-align: center;
+      transition: opacity 0.28s ease;
+    }
+    .dots { display: flex; gap: 11px; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+      transition: background 0.28s ease;
+    }
+    .dot.on { background: var(--blue); }
+
+    /* ── Revelation ── */
+    .rev-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 65vh; gap: 22px; text-align: center;
+    }
+    @keyframes revUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .rev-in { opacity: 0; }
+    .rev-in.go { animation: revUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+    @keyframes blink {
+      0%,100% { opacity: 0.3; transform: scale(0.8); }
+      50%      { opacity: 1;   transform: scale(1.2); }
+    }
+    .blink-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: blink 1s infinite; }
+
+    /* ── Results ── */
+    #screen-4 { max-height: 100vh; overflow-y: auto; gap: 22px; padding-bottom: 40px; }
+    #screen-4::-webkit-scrollbar { width: 3px; }
+    #screen-4::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 2px; }
+
+    .score-wrap { text-align: center; padding: 24px 0 12px; }
+    .score-ring-bg   { stroke: rgba(255,255,255,0.07); }
+    .score-ring-fill {
+      stroke: var(--blue); stroke-linecap: round;
+      transition: stroke-dashoffset 1.6s cubic-bezier(0.16,1,0.3,1);
+      filter: drop-shadow(0 0 10px rgba(33,150,176,0.55));
+    }
+
+    .metrics-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 11px; }
+    .metric-card {
+      background: var(--bg-e);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px 10px;
+      text-align: center;
+    }
+    .metric-val { font-size: 22px; font-weight: 800; font-family: 'Inter', sans-serif; color: var(--blue); }
+    .metric-lbl { font-size: 10px; color: rgba(255,255,255,0.42); margin-top: 3px; }
+
+    /* Automation map */
+    .map-box {
+      background: var(--bg-e);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 18px;
+    }
+    .map-node {
+      background: var(--bg-f);
+      border: 1.5px solid var(--border);
+      border-radius: 11px;
+      padding: 9px 15px;
+      font-size: 13px; font-weight: 600;
+      white-space: nowrap;
+      position: relative;
+      cursor: default;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .map-node:hover { border-color: var(--blue); box-shadow: 0 0 16px var(--blue-g); }
+    .map-node.make {
+      border-color: var(--blue);
+      box-shadow: 0 0 22px var(--blue-g);
+      background: linear-gradient(135deg,#1a2d45 0%,#152335 100%);
+      display: flex; align-items: center; gap: 9px;
+    }
+    .tip {
+      position: absolute; bottom: calc(100% + 7px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-f);
+      border: 1px solid rgba(33,150,176,0.4);
+      border-radius: 8px;
+      padding: 7px 11px;
+      font-size: 12px; font-weight: 500;
+      white-space: nowrap;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.18s ease;
+      z-index: 10;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.32);
+    }
+    .map-node:hover .tip { opacity: 1; }
+    .map-arrow {
+      display: flex; justify-content: center;
+    }
+
+    /* Flow cards */
+    .flow-list { display: flex; flex-direction: column; gap: 11px; }
+    .flow-card {
+      background: var(--bg-e);
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      overflow: hidden;
+    }
+    .flow-head {
+      padding: 16px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer;
+    }
+    .flow-head:hover { background: rgba(255,255,255,0.02); }
+    .flow-badge {
+      width: 34px; height: 34px;
+      background: rgba(33,150,176,0.13);
+      border: 1px solid rgba(33,150,176,0.3);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--blue);
+      font-family: 'Inter', sans-serif; flex-shrink: 0;
+    }
+    .flow-title { font-weight: 700; font-size: 14px; }
+    .flow-save  { font-size: 11px; color: rgba(255,255,255,0.42); margin-top: 2px; }
+    .save-badge {
+      background: rgba(224,23,107,0.13);
+      border: 1px solid rgba(224,23,107,0.28);
+      color: var(--pink);
+      font-size: 11px; font-weight: 700;
+      padding: 3px 9px; border-radius: 20px; white-space: nowrap;
+    }
+    .chevron {
+      transition: transform 0.32s cubic-bezier(0.16,1,0.3,1);
+      flex-shrink: 0;
+    }
+    .flow-card.open .chevron { transform: rotate(180deg); }
+    .flow-steps {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.42s cubic-bezier(0.16,1,0.3,1);
+    }
+    .flow-card.open .flow-steps { max-height: 320px; }
+    .step-row {
+      display: flex; align-items: flex-start; gap: 10px;
+    }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(33,150,176,0.13);
+      border: 1px solid rgba(33,150,176,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; color: var(--blue);
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* Lead form */
+    .form-input {
+      width: 100%;
+      background: var(--bg-f);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 15px;
+      font-family: 'Heebo', sans-serif;
+      font-size: 15px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(33,150,176,0.22);
+    }
+    .form-input::placeholder { color: rgba(255,255,255,0.3); }
+    .form-input.err {
+      border-color: var(--pink);
+      box-shadow: 0 0 0 3px rgba(224,23,107,0.2);
+    }
+    .step-ind { width: 28px; height: 4px; border-radius: 2px; transition: background 0.3s ease; }
+
+    /* Success */
+    .success-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; min-height: 65vh; gap: 28px; text-align: center;
+    }
+    .check-circle {
+      stroke-dasharray: 226;
+      stroke-dashoffset: 226;
+      animation: drawStroke 0.65s cubic-bezier(0.65,0,0.45,1) forwards;
+    }
+    .check-tick {
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+      animation: drawStroke 0.42s cubic-bezier(0.65,0,0.45,1) 0.55s forwards;
+    }
+    @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+
+    /* ── Screen 0 enhancements ── */
+    .screen-hook {
+      display: flex; align-items: flex-start; gap: 9px;
+      font-size: 12px; color: rgba(255,255,255,0.58);
+      margin-bottom: 8px; line-height: 1.45;
+    }
+    .screen-hook strong { color: var(--blue-l); font-weight: 700; }
+    .hook-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--blue); flex-shrink: 0; margin-top: 4px;
+      animation: hookPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes hookPulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(33,150,176,0.5); }
+      50% { opacity: 0.55; transform: scale(0.72); box-shadow: 0 0 0 5px rgba(33,150,176,0); }
+    }
+
+    .time-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: rgba(33,150,176,0.09);
+      border: 1px solid rgba(33,150,176,0.22);
+      border-radius: 20px; padding: 3px 11px;
+      font-size: 11px; color: rgba(255,255,255,0.52);
+      margin-bottom: 10px;
+    }
+
+    .intent-outcome {
+      color: var(--blue-l);
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 6px;
+      opacity: 0;
+      transform: translateY(3px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .intent-card.sel .intent-outcome,
+    .intent-card:hover .intent-outcome {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .social-proof {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin-top: 22px;
+      font-size: 12px; color: rgba(255,255,255,0.42);
+    }
+    .avatar-stack { display: flex; flex-direction: row-reverse; }
+    .sp-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 800; color: #fff;
+      border: 2px solid var(--bg-e);
+      margin-left: -6px;
+    }
+    .sp-avatar:last-child { margin-left: 0; }
+    .social-proof strong { color: rgba(255,255,255,0.68); font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="bg-grad"></div>
+  <div class="grain"></div>
+
+  <div class="wrapper">
+    <!-- Resume banner -->
+    <div id="resume-banner" style="display:none; background:rgba(33,150,176,0.12); border:1px solid rgba(33,150,176,0.3); border-radius:12px; padding:11px 16px; margin-bottom:20px; align-items:center; justify-content:space-between; gap:12px;">
+      <span style="font-size:13px; color:rgba(255,255,255,0.78);">המשך מאיפה שעצרת 👋</span>
+      <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button onclick="resumeSession()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;">המשך →</button>
+        <button onclick="dismissResume()" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:20px;cursor:pointer;padding:0 4px;line-height:1;font-family:sans-serif;">×</button>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="prog-bar" id="prog-bar">
+      <div class="prog-seg active" id="ps0">1</div>
+      <div class="prog-conn" id="pc0"></div>
+      <div class="prog-seg" id="ps1">2</div>
+      <div class="prog-conn" id="pc1"></div>
+      <div class="prog-seg" id="ps2">3</div>
+    </div>
+
+    <!-- ───────────────────────────────── SCREEN 1: Tools ── -->
+    <div class="screen" id="screen-1">
+      <h1 class="h1">אילו כלים אתה משתמש?</h1>
+      <p class="subtitle">בחר את כל הכלים הרלוונטיים — ניצור חיבורים בדיוק בשבילך</p>
+
+      <div class="tools-grid" id="tools-grid"></div>
+      <div id="tools-hint" style="min-height:20px; margin-bottom:10px; font-size:12px; color:rgba(255,255,255,0.5); text-align:center; transition:opacity 0.25s ease;"></div>
+
+      <div class="btn-row">
+        <button class="btn-s" onclick="goTo(2)">← חזור</button>
+        <button class="btn-p" id="tools-btn" disabled onclick="nextTools()">המשך ←</button>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────────── SCREEN 2: Pain ── -->
+    <div class="screen active" id="screen-2">
+
+      <div class="screen-hook">
+        <span class="hook-dot"></span>
+        <span>עסקים ישראליים מאבדים בממוצע <strong>14 שעות/שבוע</strong> על משימות שאפשר לאוטמט — גלה כמה אתה</span>
+      </div>
+
+      <h1 class="h1">מה הכי מפריע לך בעסק?</h1>
+      <p class="subtitle">בחר — נבנה עבורך מפת אוטומציה מותאמת אישית</p>
+
+      <div class="time-badge">⏱&nbsp; 2 שאלות בלבד · דקה וחצי</div>
+
+      <div class="pain-list">
+        <div class="pain-card" tabindex="0" data-pain="leads" onclick="pickPain('leads')" onkeydown="if(event.key==='Enter')pickPain('leads')">
+          <span style="font-size:22px; flex-shrink:0;">📥</span>
+          <div><div class="pain-title">ניהול לידים</div><div class="pain-desc">לידים נופלים בין הכסאות</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="service" onclick="pickPain('service')" onkeydown="if(event.key==='Enter')pickPain('service')">
+          <span style="font-size:22px; flex-shrink:0;">💬</span>
+          <div><div class="pain-title">שירות לקוחות</div><div class="pain-desc">עיכובים במענה ולקוחות לא מרוצים</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="scheduling" onclick="pickPain('scheduling')" onkeydown="if(event.key==='Enter')pickPain('scheduling')">
+          <span style="font-size:22px; flex-shrink:0;">📅</span>
+          <div><div class="pain-title">תיאום פגישות</div><div class="pain-desc">הרבה הלוך ושוב לתאם שיחה</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="followup" onclick="pickPain('followup')" onkeydown="if(event.key==='Enter')pickPain('followup')">
+          <span style="font-size:22px; flex-shrink:0;">🔁</span>
+          <div><div class="pain-title">פולואפים</div><div class="pain-desc">לקוחות פוטנציאלים נשכחים</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="reports" onclick="pickPain('reports')" onkeydown="if(event.key==='Enter')pickPain('reports')">
+          <span style="font-size:22px; flex-shrink:0;">📊</span>
+          <div><div class="pain-title">דוחות ומעקב</div><div class="pain-desc">אין תמונה ברורה של הביצועים</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="sales" onclick="pickPain('sales')" onkeydown="if(event.key==='Enter')pickPain('sales')">
+          <span style="font-size:22px; flex-shrink:0;">💰</span>
+          <div><div class="pain-title">מכירות</div><div class="pain-desc">פספוס הזדמנויות עסקיות</div></div>
+        </div>
+        <div class="pain-card" tabindex="0" data-pain="tasks" onclick="pickPain('tasks')" onkeydown="if(event.key==='Enter')pickPain('tasks')">
+          <span style="font-size:22px; flex-shrink:0;">✅</span>
+          <div><div class="pain-title">ניהול משימות</div><div class="pain-desc">כאוס בין מערכות שונות</div></div>
+        </div>
+      </div>
+
+      <div class="social-proof" style="margin-top:18px;">
+        <div class="avatar-stack">
+          <div class="sp-avatar" style="background:#1a7a56;">ד</div>
+          <div class="sp-avatar" style="background:#e0176b;">מ</div>
+          <div class="sp-avatar" style="background:#2196b0;">נ</div>
+        </div>
+        <span><strong>217 עסקים</strong> ניתחו השבוע</span>
+      </div>
+
+    </div>
+
+    <!-- ─────────────────────────────── SCREEN 3: Processing ── -->
+    <div class="screen" id="screen-3">
+      <div class="proc-wrap">
+        <div class="proc-ring">
+          <!-- Center Make logo -->
+          <div class="proc-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="50" height="50">
+              <path d="M13.38 3.498c-.27 0-.511.19-.566.465L9.85 18.986a.578.578 0 0 0 .453.678l4.095.826a.58.58 0 0 0 .682-.455l2.963-15.021a.578.578 0 0 0-.453-.678l-4.096-.826a.589.589 0 0 0-.113-.012zm-5.876.098a.576.576 0 0 0-.516.318L.062 17.697a.575.575 0 0 0 .256.774l3.733 1.877a.578.578 0 0 0 .775-.258l6.926-13.781a.577.577 0 0 0-.256-.776L7.762 3.658a.571.571 0 0 0-.258-.062zm11.74.115a.576.576 0 0 0-.576.576v15.426c0 .318.258.578.576.578h4.178a.58.58 0 0 0 .578-.578V4.287a.578.578 0 0 0-.578-.576Z"/>
+            </svg>
+          </div>
+
+          <!-- 6 orbit nodes — positioned on a circle r=120px from center (154,154) -->
+          <div class="pnode" id="pn0" style="top:14px; left:122px;">📥</div>
+          <div class="pnode" id="pn1" style="top:62px; right:14px;">⚙️</div>
+          <div class="pnode" id="pn2" style="bottom:62px; right:14px;">📨</div>
+          <div class="pnode" id="pn3" style="bottom:14px; left:122px;">💾</div>
+          <div class="pnode" id="pn4" style="bottom:62px; left:14px;">🔔</div>
+          <div class="pnode" id="pn5" style="top:62px; left:14px;">🔄</div>
+        </div>
+
+        <div class="proc-text" id="proc-text">Analyzing your workflow...</div>
+
+        <div class="dots">
+          <div class="dot" id="d0"></div>
+          <div class="dot" id="d1"></div>
+          <div class="dot" id="d2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── SCREEN 3b: Revelation ── -->
+    <div class="screen" id="screen-3b">
+      <div class="rev-wrap">
+        <div class="rev-in" id="rev0" style="font-size:48px;">🔍</div>
+        <h2 class="rev-in h1" id="rev1" style="max-width:380px; text-align:center;"></h2>
+        <p class="rev-in" id="rev2" style="color:var(--muted); font-size:15px; line-height:1.65; max-width:340px;"></p>
+        <div class="rev-in" id="rev3" style="display:flex; gap:7px; margin-top:6px;">
+          <div class="blink-dot" style="animation-delay:0s;"></div>
+          <div class="blink-dot" style="animation-delay:0.18s;"></div>
+          <div class="blink-dot" style="animation-delay:0.36s;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── SCREEN 4: Results ── -->
+    <div class="screen" id="screen-4">
+      <!-- Score -->
+      <div class="score-wrap">
+        <div style="position:relative; display:inline-block;">
+          <svg width="140" height="140" style="transform:rotate(-90deg);">
+            <circle class="score-ring-bg" cx="70" cy="70" r="56" fill="none" stroke-width="9"/>
+            <circle id="score-ring" class="score-ring-fill" cx="70" cy="70" r="56" fill="none" stroke-width="9"
+              stroke-dasharray="351.86" stroke-dashoffset="351.86"/>
+          </svg>
+          <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center;">
+            <div id="score-n" style="font-size:36px; font-weight:800; letter-spacing:-0.03em; font-family:'Inter',sans-serif; color:var(--blue);">0</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.38);">/ 100</div>
+          </div>
+        </div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.4); letter-spacing:0.06em; text-transform:uppercase; margin-top:8px;">Automation Potential</div>
+        <div id="benchmark" style="font-size:11px; color:rgba(255,255,255,0.32); margin-top:5px;"></div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div style="font-size:20px; margin-bottom:5px;">⏱</div>
+          <div class="metric-val" id="m-hours">0</div>
+          <div class="metric-lbl">שעות/שבוע</div>
+        </div>
+        <div class="metric-card">
+          <div style="font-size:20px; margin-bottom:5px;">⚙️</div>
+          <div class="metric-val" id="m-proc">0</div>
+          <div class="metric-lbl">תהליכים</div>
+        </div>
+        <div class="metric-card">
+          <div style="font-size:20px; margin-bottom:5px;">⚠️</div>
+          <div class="metric-val" id="m-risk" style="color:var(--pink); font-size:16px;">—</div>
+          <div class="metric-lbl">סיכון לידים</div>
+        </div>
+      </div>
+
+      <!-- Map -->
+      <div class="map-box">
+        <div style="font-size:13px; font-weight:700; color:rgba(255,255,255,0.7); margin-bottom:18px;">מפת האוטומציה שלך</div>
+        <div id="auto-map" style="display:flex; flex-direction:column; align-items:center; gap:10px;"></div>
+      </div>
+
+      <!-- Flows -->
+      <div class="flow-list" id="flow-list"></div>
+
+      <!-- CTA -->
+      <div style="text-align:center; padding-top:4px;">
+        <p id="narrative" style="color:var(--muted); font-size:14px; line-height:1.7; margin-bottom:18px;"></p>
+        <button class="btn-p" onclick="openLeadModal()" style="width:100%; justify-content:center; font-size:16px; padding:15px 24px;">
+          קבל את הניתוח המלא ←
+        </button>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── SCREEN 5: Lead Capture ── -->
+    <div class="screen" id="screen-5">
+      <!-- Social proof -->
+      <div id="proof-bar" style="background:rgba(33,150,176,0.1); border:1px solid rgba(33,150,176,0.22); border-radius:12px; padding:11px 15px; font-size:13px; color:rgba(255,255,255,0.65); text-align:center; margin-bottom:24px;"></div>
+
+      <!-- Step indicators -->
+      <div style="display:flex; gap:8px; justify-content:center; margin-bottom:28px;">
+        <div class="step-ind" id="si1" style="background:var(--blue);"></div>
+        <div class="step-ind" id="si2" style="background:rgba(255,255,255,0.18);"></div>
+      </div>
+
+      <!-- Step 1 -->
+      <div id="lstep1">
+        <h1 class="h1">לאן לשלוח את הניתוח?</h1>
+        <p class="subtitle">שנייה אחת — ונשלח לך את מפת האוטומציה</p>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם מלא *</label>
+            <input type="text" id="f-name" class="form-input" placeholder="ישראל ישראלי">
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מספר טלפון *</label>
+            <input type="tel" id="f-phone" class="form-input" placeholder="050-0000000" dir="ltr">
+          </div>
+        </div>
+        <button class="btn-p" onclick="toStep2()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">המשך ←</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="lstep2" style="display:none;">
+        <h1 class="h1">כמעט סיימנו 🎯</h1>
+        <p class="subtitle">עוד פרט אחד כדי להתאים את הניתוח לעסק שלך</p>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק *</label>
+            <input type="text" id="f-biz" class="form-input" placeholder="קפה שלי בע&quot;מ">
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל (אופציונלי)</label>
+            <input type="email" id="f-email" class="form-input" placeholder="you@business.com" dir="ltr">
+          </div>
+        </div>
+        <button class="btn-p" id="sub-btn" onclick="submitLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח ←</button>
+      </div>
+    </div>
+
+    <!-- ─────────────────────────────── SCREEN 6: Success ── -->
+    <div class="screen" id="screen-6">
+      <div class="success-wrap">
+        <svg width="80" height="80" viewBox="0 0 80 80">
+          <circle class="check-circle" cx="40" cy="40" r="36" fill="none" stroke="var(--blue)" stroke-width="4"/>
+          <path class="check-tick" d="M25 40 l11 11 l20-22" fill="none" stroke="var(--blue)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+          <h2 style="font-size:clamp(22px,5.5vw,32px); font-weight:800; letter-spacing:-0.03em; margin-bottom:10px;">
+            מפת האוטומציה שלך בדרך 🎯
+          </h2>
+          <p style="color:var(--muted); font-size:15px; line-height:1.7; max-width:340px; margin:0 auto;">
+            ניסים יחזור אליך תוך 24 שעות עם ניתוח מותאם אישית לעסק שלך
+          </p>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:11px; width:100%;">
+          <a href="https://wa.me/972505050505" class="btn-p" style="justify-content:center; text-decoration:none; font-size:15px;">
+            💬 קבל בוואטסאפ
+          </a>
+          <button class="btn-s" onclick="goTo(4)" style="width:100%; justify-content:center;">← חזור לתוצאות</button>
+          <button onclick="resetScanner()" style="background:none;border:none;color:rgba(255,255,255,0.28);font-size:12px;font-family:'Heebo',sans-serif;cursor:pointer;padding:8px;margin-top:2px;transition:color 0.2s ease;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">נסה עם הגדרות שונות ↺</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- /wrapper -->
+
+  <!-- ─────────────────────────────── LEAD MODAL ── -->
+  <div id="lead-modal" onclick="if(event.target===this)closeLeadModal()" style="display:none; position:fixed; inset:0; z-index:200; background:rgba(10,16,32,0.9); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:16px;">
+    <div style="background:var(--bg-e); border:1px solid rgba(33,150,176,0.28); border-radius:22px; width:100%; max-width:440px; max-height:92vh; overflow-y:auto; padding:28px 24px 24px; position:relative; box-shadow:0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(33,150,176,0.12);">
+      <!-- Close -->
+      <button onclick="closeLeadModal()" aria-label="סגור" style="position:absolute; top:14px; left:14px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:rgba(255,255,255,0.55); font-size:19px; width:32px; height:32px; cursor:pointer; display:flex; align-items:center; justify-content:center; font-family:sans-serif; line-height:1; transition:background 0.2s ease, color 0.2s ease;" onmouseover="this.style.background='rgba(255,255,255,0.13)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.07)';this.style.color='rgba(255,255,255,0.55)'">×</button>
+
+      <!-- Social proof -->
+      <div id="modal-proof-bar" style="background:rgba(33,150,176,0.1); border:1px solid rgba(33,150,176,0.22); border-radius:10px; padding:9px 13px; font-size:12px; color:rgba(255,255,255,0.65); text-align:center; margin-bottom:20px;"></div>
+
+      <!-- Step indicators -->
+      <div style="display:flex; gap:8px; justify-content:center; margin-bottom:22px;">
+        <div class="step-ind" id="msi1" style="background:var(--blue);"></div>
+        <div class="step-ind" id="msi2" style="background:rgba(255,255,255,0.18);"></div>
+      </div>
+
+      <!-- Step 1 -->
+      <div id="mlstep1">
+        <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">לאן לשלוח את הניתוח?</h2>
+        <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">שנייה אחת — ונשלח לך את מפת האוטומציה</p>
+        <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם מלא *</label>
+            <input type="text" id="mf-name" class="form-input" placeholder="ישראל ישראלי">
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מספר טלפון *</label>
+            <input type="tel" id="mf-phone" class="form-input" placeholder="050-0000000" dir="ltr">
+          </div>
+        </div>
+        <button class="btn-p" onclick="modalToStep2()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">המשך ←</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="mlstep2" style="display:none;">
+        <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">כמעט סיימנו 🎯</h2>
+        <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">עוד פרט אחד כדי להתאים את הניתוח לעסק שלך</p>
+        <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק *</label>
+            <input type="text" id="mf-biz" class="form-input" placeholder="קפה שלי בע&quot;מ">
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל (אופציונלי)</label>
+            <input type="email" id="mf-email" class="form-input" placeholder="you@business.com" dir="ltr">
+          </div>
+        </div>
+        <button class="btn-p" id="msub-btn" onclick="submitModalLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח ←</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // ═══════════════════════════════════════════════════════════════
+  //  STATE
+  // ═══════════════════════════════════════════════════════════════
+  const S = { intent: 'leads', tools: [], pain: null, ctx: null, selectedFlow: null };
+
+  // ── Analytics ──
+  function trackEvent(name, params = {}) {
+    if (typeof gtag !== 'undefined') gtag('event', name, params);
+  }
+
+  // ── localStorage persistence ──
+  function saveState() {
+    try {
+      const cur = document.querySelector('.screen.active')?.id?.replace('screen-','') || '0';
+      if (!['2','1','4'].includes(String(cur))) return;
+      localStorage.setItem('clix_scanner', JSON.stringify({ intent:S.intent, tools:S.tools, pain:S.pain, screen:String(cur) }));
+    } catch(_) {}
+  }
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem('clix_scanner') || 'null'); } catch(_) { return null; }
+  }
+  function clearState() {
+    try { localStorage.removeItem('clix_scanner'); } catch(_) {}
+  }
+
+  function resumeSession() {
+    const saved = loadState();
+    if (!saved) return;
+    S.pain   = saved.pain   || null;
+    S.intent = S.pain ? painToIntent(S.pain) : 'leads';
+    S.tools  = saved.tools  || [];
+    document.getElementById('resume-banner').style.display = 'none';
+    if (S.pain) {
+      document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
+      const pc = document.querySelector('[data-pain="' + S.pain + '"]');
+      if (pc) pc.classList.add('sel');
+    }
+    if (saved.screen === '4' && S.pain) {
+      S.ctx = buildContext(S.intent, S.tools, S.pain);
+      goTo(4); renderResults();
+    } else {
+      goTo(saved.screen === '4' && !S.pain ? '2' : saved.screen);
+    }
+  }
+  function dismissResume() {
+    document.getElementById('resume-banner').style.display = 'none';
+    clearState();
+  }
+
+  // ── Tool unlock hints ──
+  function updateUnlockHint() {
+    const hint = document.getElementById('tools-hint');
+    if (!hint) return;
+    if (!S.tools.length) {
+      hint.innerHTML = '<span style="opacity:0.5">בחר כלים כדי לראות אילו אוטומציות ייפתחו</span>';
+      return;
+    }
+    const unlocked = FLOWS.filter(f => f.needs.some(n => S.tools.includes(n)));
+    const locked   = FLOWS.filter(f => f.needs.length && f.needs.every(n => !S.tools.includes(n)));
+    const toolCounts = {};
+    locked.forEach(f => f.needs.forEach(n => { toolCounts[n] = (toolCounts[n]||0) + 1; }));
+    const top = Object.entries(toolCounts).sort((a,b) => b[1]-a[1])[0];
+    const suggestName = top && !S.tools.includes(top[0]) ? (TOOLS.find(t => t.id===top[0])?.lbl || top[0]) : null;
+    let html = `<span style="color:var(--blue);">✓ פתחת ${unlocked.length} אוטומציות</span>`;
+    if (suggestName) html += ` <span style="opacity:0.5">| הוסף ${suggestName} לעוד ${top[1]}</span>`;
+    hint.innerHTML = html;
+  }
+
+  // ── Lead modal ──
+  function openLeadModal() {
+    document.getElementById('mlstep1').style.display = 'block';
+    document.getElementById('mlstep2').style.display = 'none';
+    document.getElementById('msi1').style.background = 'var(--blue)';
+    document.getElementById('msi2').style.background = 'rgba(255,255,255,0.18)';
+    const msubBtn = document.getElementById('msub-btn');
+    if (msubBtn) { msubBtn.textContent = 'שלח לי את הניתוח ←'; msubBtn.disabled = false; }
+    if (S.ctx) {
+      document.getElementById('modal-proof-bar').textContent = '🎯 ' + S.ctx.proof;
+      trackEvent('scanner_lead_form_opened', { score: S.ctx.score, flow: S.selectedFlow });
+    }
+    const modal = document.getElementById('lead-modal');
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLeadModal() {
+    document.getElementById('lead-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  function modalToStep2() {
+    const name  = document.getElementById('mf-name').value.trim();
+    const phone = document.getElementById('mf-phone').value.trim();
+    let ok = true;
+    [['mf-name', name], ['mf-phone', phone]].forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (!val) { el.classList.add('err'); ok = false; setTimeout(() => el.classList.remove('err'), 2000); }
+    });
+    if (!ok) return;
+    document.getElementById('mlstep1').style.display = 'none';
+    document.getElementById('mlstep2').style.display = 'block';
+    document.getElementById('msi1').style.background = 'rgba(33,150,176,0.35)';
+    document.getElementById('msi2').style.background = 'var(--blue)';
+  }
+
+  async function submitModalLead() {
+    const biz = document.getElementById('mf-biz').value.trim();
+    if (!biz) {
+      const el = document.getElementById('mf-biz');
+      el.classList.add('err');
+      setTimeout(() => el.classList.remove('err'), 2000);
+      return;
+    }
+    const btn = document.getElementById('msub-btn');
+    btn.textContent = 'שולח...';
+    btn.disabled = true;
+    const payload = {
+      name:     document.getElementById('mf-name').value.trim(),
+      phone:    document.getElementById('mf-phone').value.trim(),
+      business: biz,
+      email:    document.getElementById('mf-email').value.trim(),
+      source:   'scanner',
+      intent:   S.intent,
+      tools:    S.tools,
+      pain:     S.pain,
+      score:    S.ctx?.score,
+      flow:     S.selectedFlow,
+    };
+    try {
+      await fetch('https://hook.eu2.make.com/REPLACE_WITH_WEBHOOK', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (_) {}
+    trackEvent('scanner_lead_submitted', { score: S.ctx?.score, flow: S.selectedFlow });
+    clearState();
+    closeLeadModal();
+    goTo(6);
+  }
+
+  // ── Reset scanner ──
+  function resetScanner() {
+    closeLeadModal();
+    S.intent = 'leads'; S.tools = []; S.pain = null; S.ctx = null; S.selectedFlow = null;
+    clearState();
+    ['mf-name','mf-phone','mf-biz','mf-email'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
+    goTo(2);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  TOOLS DATA
+  // ═══════════════════════════════════════════════════════════════
+  const TOOLS = [
+    { id:'whatsapp',  lbl:'WhatsApp',  svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>' },
+    { id:'gmail',     lbl:'Gmail',     svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#EA4335" d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>' },
+    { id:'sheets',    lbl:'Sheets',    svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#34A853" d="M11.318 12.545H7.91v-1.909h3.41v1.91zM14.728 0v6h6l-6-6zm1.363 10.636h-3.41v1.91h3.41v-1.91zm0 3.273h-3.41v1.91h3.41v-1.91zM20.727 6.5v15.864c0 .904-.732 1.636-1.636 1.636H4.909a1.636 1.636 0 0 1-1.636-1.636V1.636C3.273.732 4.005 0 4.909 0h9.318v6.5h6.5zm-3.273 2.773H6.545v7.909h10.91v-7.91zm-6.136 4.636H7.91v1.91h3.41v-1.91z"/></svg>' },
+    { id:'monday',    lbl:'Monday',    svg:'<svg viewBox="0 0 48 17" width="36" height="13" xmlns="http://www.w3.org/2000/svg"><ellipse cx="8.5" cy="8.5" rx="8.5" ry="8" fill="#FF3D57"/><ellipse cx="24" cy="8.5" rx="8.5" ry="8" fill="#FFCB00"/><ellipse cx="39.5" cy="8.5" rx="8.5" ry="8" fill="#00CA72"/></svg>' },
+    { id:'excel',     lbl:'Excel',     svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#217346" d="M23 1.5q.41 0 .7.3.3.29.3.7v19q0 .41-.3.7-.29.3-.7.3H7q-.41 0-.7-.3-.3-.29-.3-.7V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h5V2.5q0-.41.3-.7.29-.3.7-.3zM6 13.28l1.42 2.66h2.14l-2.38-3.87 2.34-3.8H7.46l-1.3 2.4-.05.08-.04.09-.64-1.28-.66-1.29H2.59l2.27 3.82-2.48 3.85h2.16zM14.25 21v-3H7.5v3zm0-4.5v-3.75H12v3.75zm0-5.25V7.5H12v3.75zm0-5.25V3H7.5v3zm8.25 15v-3h-6.75v3zm0-4.5v-3.75h-6.75v3.75zm0-5.25V7.5h-6.75v3.75zm0-5.25V3h-6.75v3Z"/></svg>' },
+    { id:'make',      lbl:'Make',      svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#9B59FF" d="M13.38 3.498c-.27 0-.511.19-.566.465L9.85 18.986a.578.578 0 0 0 .453.678l4.095.826a.58.58 0 0 0 .682-.455l2.963-15.021a.578.578 0 0 0-.453-.678l-4.096-.826a.589.589 0 0 0-.113-.012zm-5.876.098a.576.576 0 0 0-.516.318L.062 17.697a.575.575 0 0 0 .256.774l3.733 1.877a.578.578 0 0 0 .775-.258l6.926-13.781a.577.577 0 0 0-.256-.776L7.762 3.658a.571.571 0 0 0-.258-.062zm11.74.115a.576.576 0 0 0-.576.576v15.426c0 .318.258.578.576.578h4.178a.58.58 0 0 0 .578-.578V4.287a.578.578 0 0 0-.578-.576Z"/></svg>' },
+    { id:'airtable',  lbl:'Airtable',  svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#FCB400" d="M11.992 1.966c-.434 0-.87.086-1.28.257L1.779 5.917c-.503.208-.49.908.012 1.116l8.982 3.558a3.266 3.266 0 0 0 2.454 0l8.982-3.558c.503-.196.503-.908.012-1.116l-8.957-3.694a3.255 3.255 0 0 0-1.272-.257zM23.4 8.056a.589.589 0 0 0-.222.045l-10.012 3.877a.612.612 0 0 0-.38.564v8.896a.6.6 0 0 0 .821.552L23.62 18.1a.583.583 0 0 0 .38-.551V8.653a.6.6 0 0 0-.6-.596zM.676 8.095a.644.644 0 0 0-.48.19C.086 8.396 0 8.53 0 8.69v8.355c0 .442.515.737.908.54l6.27-3.006.307-.147 2.969-1.436c.466-.22.43-.908-.061-1.092L.883 8.138a.57.57 0 0 0-.207-.044z"/></svg>' },
+    { id:'instagram', lbl:'Instagram', svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="ig-g" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F77737"/><stop offset="40%" stop-color="#E1306C"/><stop offset="100%" stop-color="#833AB4"/></linearGradient></defs><path fill="url(#ig-g)" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg>' },
+    { id:'hubspot',   lbl:'HubSpot',   svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#FF7A59" d="M18.164 7.93V5.084a2.198 2.198 0 001.267-1.978v-.067A2.2 2.2 0 0017.238.845h-.067a2.2 2.2 0 00-2.193 2.193v.067a2.196 2.196 0 001.252 1.973l.013.006v2.852a6.22 6.22 0 00-2.969 1.31l.012-.01-7.828-6.095A2.497 2.497 0 104.3 4.656l-.012.006 7.697 5.991a6.176 6.176 0 00-1.038 3.446c0 1.343.425 2.588 1.147 3.607l-.013-.02-2.342 2.343a1.968 1.968 0 00-.58-.095h-.002a2.033 2.033 0 102.033 2.033 1.978 1.978 0 00-.1-.595l.005.014 2.317-2.317a6.247 6.247 0 104.782-11.134l-.036-.005zm-.964 9.378a3.206 3.206 0 113.215-3.207v.002a3.206 3.206 0 01-3.207 3.207z"/></svg>' },
+    { id:'slack',     lbl:'Slack',     svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#36C5F0" d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"/><path fill="#E01E5A" d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"/><path fill="#2EB67D" d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"/><path fill="#ECB22E" d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg>' },
+    { id:'calendly',  lbl:'Calendly',  svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><path fill="#006BFF" d="M19.655 14.262c.281 0 .557.023.828.064 0 .005-.005.01-.005.014-.105.267-.234.534-.381.786l-1.219 2.106c-1.112 1.936-3.177 3.127-5.411 3.127h-2.432c-2.23 0-4.294-1.191-5.412-3.127l-1.218-2.106a6.251 6.251 0 0 1 0-6.252l1.218-2.106C6.736 4.832 8.8 3.641 11.035 3.641h2.432c2.23 0 4.294 1.191 5.411 3.127l1.219 2.106c.147.252.271.519.381.786 0 .004.005.009.005.014-.267.041-.543.064-.828.064-1.816 0-2.501-.607-3.291-1.306-.764-.676-1.711-1.517-3.44-1.517h-1.029c-1.251 0-2.387.455-3.2 1.278-.796.805-1.233 1.904-1.233 3.099v1.411c0 1.196.437 2.295 1.233 3.099.813.823 1.949 1.278 3.2 1.278h1.034c1.729 0 2.676-.841 3.439-1.517.791-.703 1.471-1.306 3.287-1.301Zm.005-3.237c.399 0 .794-.036 1.179-.11-.002-.004-.002-.01-.002-.014-.073-.414-.193-.823-.349-1.218.731-.12 1.407-.396 1.986-.819 0-.004-.005-.013-.005-.018-.331-1.085-.832-2.101-1.489-3.03-.649-.915-1.435-1.719-2.331-2.395-1.867-1.398-4.088-2.138-6.428-2.138-1.448 0-2.855.28-4.175.841-1.273.543-2.423 1.315-3.407 2.299S2.878 6.552 2.341 7.83c-.557 1.324-.842 2.726-.842 4.175 0 1.448.281 2.855.842 4.174.542 1.274 1.314 2.423 2.298 3.407s2.129 1.761 3.407 2.299c1.324.556 2.727.841 4.175.841 2.34 0 4.561-.74 6.428-2.137a10.815 10.815 0 0 0 2.331-2.396c.652-.929 1.158-1.949 1.489-3.03 0-.004.005-.014.005-.018-.579-.423-1.255-.699-1.986-.819.161-.395.276-.804.349-1.218.005-.009.005-.014.005-.023.869.166 1.692.506 2.404 1.035.685.505.552 1.075.446 1.416C22.184 20.437 17.619 24 12.221 24c-6.625 0-12-5.375-12-12s5.37-12 12-12c5.398 0 9.963 3.563 11.471 8.464.106.341.239.915-.446 1.421-.717.529-1.535.873-2.404 1.034.128.716.128 1.45 0 2.166-.387-.074-.782-.11-1.182-.11-4.184 0-3.968 2.823-6.736 2.823h-1.029c-1.899 0-3.15-1.357-3.15-3.095v-1.411c0-1.738 1.251-3.094 3.15-3.094h1.034c2.768 0 2.552 2.823 6.731 2.827Z"/></svg>' },
+    { id:'fillout',   lbl:'טופס אתר', svg:'<svg viewBox="0 0 24 24" width="32" height="32" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="1" width="18" height="22" rx="3" fill="none" stroke="#FFCB45" stroke-width="1.8"/><rect x="7" y="6" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="10.5" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="15" width="6" height="2" rx="1" fill="#FFCB45"/></svg>' },
+  ];
+
+  // ═══════════════════════════════════════════════════════════════
+  //  buildContext() — ENGINE
+  // ═══════════════════════════════════════════════════════════════
+  const FLOWS = [
+    { id:'wa-lead',   title:'לכידת לידים מ-WhatsApp',    steps:['ליד שולח הודעה ב-WhatsApp','Make.com מזהה ומחלץ פרטים','נוצרת רשומה ב-CRM אוטומטית','הודעת תודה נשלחת תוך 30 שניות'], save:3,   needs:['whatsapp'],               tip:'70% מהלידים נאבדים כאן' },
+    { id:'followup',  title:'מנוע פולואפ אוטומטי',        steps:['ליד לא ענה 48 שעות','Make.com מזהה חוסר תגובה','הודעת פולואפ נשלחת ב-WhatsApp','הסטטוס מתעדכן אוטומטית'],             save:4,   needs:['whatsapp','gmail','monday'], tip:'כאן נאבדות רוב העסקאות' },
+    { id:'form-lead', title:'לכידת לידים מטופס אתר',      steps:['טופס מולא באתר','Make.com מקבל webhook','פרטים נשמרים ב-CRM','מייל ברוך הבא יוצא אוטומטית'],                          save:2,   needs:['fillout','gmail'],          tip:'חיבור מיידי לכל ליד חדש' },
+    { id:'ig-lead',   title:'לכידת לידים מ-Instagram',    steps:['DM נכנס ב-Instagram','Make.com מזהה הודעה ראשונה','פרטים נשמרים + תגובה אוטומטית','ליד עולה ל-CRM'],                  save:2.5, needs:['instagram'],               tip:'Instagram = מקור לידים #1' },
+    { id:'crm',       title:'סנכרון CRM אוטומטי',          steps:['עדכון פרטי לקוח','Make.com מסנכרן בין מערכות','Monday/HubSpot מתעדכנים','התראה לצוות בזמן אמת'],                     save:2,   needs:['monday','hubspot','airtable'],tip:'נתונים תמיד מדויקים' },
+    { id:'report',    title:'דוח שבועי אוטומטי',           steps:['ראשון בבוקר — טריגר אוטומטי','Make.com מאסף נתונים','Google Sheets מתעדכן','דוח נשלח למייל'],                       save:1.5, needs:['sheets','excel','gmail'],   tip:'חוסך 6 שעות חישוב בחודש' },
+    { id:'schedule',  title:'אוטומציית תיאום פגישות',      steps:['לקוח בוחר שעה ב-Calendly','Make.com מאשר ושולח הכנה','תזכורת 24 שעות לפני','פולואפ אחרי הפגישה'],                   save:3,   needs:['calendly'],                tip:'ביטולים יורדים ב-60%' },
+    { id:'triage',    title:'תיוג שירות לקוחות',           steps:['הודעה נכנסת ב-WhatsApp/Gmail','Make.com מסווג לפי נושא','מועבר לנציג המתאים','תגובה ראשונית אוטומטית'],             save:3.5, needs:['whatsapp','gmail','slack'], tip:'מענה ראשוני תוך 30 שניות' },
+  ];
+
+  function buildContext(intent, tools, pain) {
+    const base = { leads:72, service:65, scheduling:60, followup:68, reports:55, sales:70, tasks:58 };
+    const aff  = { whatsapp:8, gmail:5, sheets:4, monday:7, make:10, airtable:6, instagram:6, hubspot:9, slack:5, calendly:7, fillout:5, excel:3 };
+    const ib   = { leads:5, sales:4, service:3, time:2 };
+
+    let score = base[pain] || 65;
+    tools.forEach(t => { score += (aff[t] || 0) * 0.5; });
+    score += ib[intent] || 0;
+    score = Math.min(95, Math.round(score));
+
+    // Rank flows
+    const ranked = FLOWS.map(f => {
+      let s = f.needs.filter(n => tools.includes(n)).length * 10;
+      if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
+      if (pain === 'followup' && f.id === 'followup') s += 8;
+      if (pain === 'service'  && f.id === 'triage')   s += 8;
+      if (pain === 'scheduling' && f.id === 'schedule') s += 8;
+      if (['reports','time'].includes(pain||intent) && f.id === 'report') s += 8;
+      return { ...f, _s: s };
+    }).sort((a,b) => b._s - a._s);
+
+    let flows = ranked.slice(0,2);
+    if (flows.every(f => f._s === 0)) flows = [FLOWS[0], FLOWS[1]];
+
+    const totalHours = flows.reduce((a,f) => a + f.save, 0);
+    const riskHigh   = tools.some(t => ['whatsapp','instagram'].includes(t));
+
+    const inputs  = tools.length ? tools.slice(0,2) : ['whatsapp','gmail'];
+    const outputs = [];
+    if (tools.some(t => ['monday','hubspot','airtable'].includes(t))) outputs.push('CRM');
+    else outputs.push('Google Sheets');
+    if (tools.includes('whatsapp')) outputs.push('WhatsApp');
+    else if (tools.includes('gmail')) outputs.push('Gmail');
+    else outputs.push('הודעה אוטומטית');
+
+    const narratives = {
+      leads:   'העסק שלך מאבד לידים כל יום בגלל תגובה איטית — האוטומציה שלנו מוזילה את הזמן ל-30 שניות.',
+      sales:   'אתה משאיר כסף על השולחן — פולואפים שלא יוצאים בזמן מאבדים עסקאות שכבר היו שלך.',
+      service: 'כל דקת עיכוב בשירות עולה לך לקוח — אוטומציית תיוג תחסוך לך את רוב הנזק.',
+      time:    'שעות יקרות מתבזבזות על משימות שחוזרות — נחזיר לך אותן תוך ימים.',
+    };
+    const proofs = {
+      leads:   'מתאים במיוחד לעסקים שמקבלים לידים מ-WhatsApp ואינסטגרם',
+      sales:   'מיועד לעסקים שמאבדים עסקאות בגלל פולואפ לא עקבי',
+      service: 'מיועד לעסקים עם יותר מ-20 פניות שירות ביום',
+      time:    'עסקים חוסכים עם זה בממוצע 7 שעות בשבוע',
+    };
+
+    return {
+      score,
+      flows,
+      metrics: { hours: totalHours.toFixed(1), procs: flows.length, total: 8, risk: riskHigh ? 'גבוה' : 'בינוני' },
+      inputs, outputs,
+      narrative: narratives[intent] || narratives.leads,
+      proof: proofs[intent] || proofs.leads,
+      lostN: Math.floor(score / 12) + 3,
+    };
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  NAVIGATION
+  // ═══════════════════════════════════════════════════════════════
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    updateProg(id);
+    const lockScroll = (id === 1 || id === 2);
+    document.documentElement.style.overflow = lockScroll ? 'hidden' : '';
+    document.body.style.overflow = lockScroll ? 'hidden' : '';
+    if (!lockScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    saveState();
+
+    // Restore screen-specific state on re-entry
+    if (id === 1) { renderTools(); updateToolsBtn(); updateUnlockHint(); }
+    if (id === 2 && S.pain) {
+      document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
+      const sel = document.querySelector('[data-pain="' + S.pain + '"]');
+      if (sel) sel.classList.add('sel');
+    }
+  }
+
+  function updateProg(id) {
+    const map = { 2:0, 1:1, 3:2, '3b':2, 4:2, 5:2, 6:2 };
+    const p = map[id] ?? 0;
+    for (let i = 0; i < 3; i++) {
+      const el = document.getElementById('ps' + i);
+      el.className = 'prog-seg' + (i < p ? ' done' : i === p ? ' active' : '');
+    }
+    for (let i = 0; i < 2; i++) {
+      const el = document.getElementById('pc' + i);
+      if (el) el.className = 'prog-conn' + (i < p ? ' done' : '');
+    }
+    const pb = document.getElementById('prog-bar');
+    pb.style.opacity = (id === 3 || id === '3b') ? '0' : '1';
+    pb.style.pointerEvents = (id === 3 || id === '3b') ? 'none' : '';
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 1
+  // ═══════════════════════════════════════════════════════════════
+  function renderTools() {
+    document.getElementById('tools-grid').innerHTML = TOOLS.map(t => `
+      <div class="tool-card ${S.tools.includes(t.id) ? 'sel' : ''}" tabindex="0"
+           data-tid="${t.id}"
+           onclick="toggleTool('${t.id}',this)"
+           onkeydown="if(event.key==='Enter')toggleTool('${t.id}',this)">
+        <div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
+          ${t.img
+            ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
+            : t.svg}
+        </div>
+        <span class="tool-name">${t.lbl}</span>
+      </div>
+    `).join('');
+  }
+
+  function toggleTool(id, el) {
+    if (S.tools.includes(id)) {
+      S.tools = S.tools.filter(t => t !== id);
+      el.classList.remove('sel');
+    } else {
+      S.tools.push(id);
+      el.classList.add('sel');
+    }
+    updateToolsBtn();
+    updateUnlockHint();
+  }
+
+  function updateToolsBtn() {
+    const btn = document.getElementById('tools-btn');
+    if (!btn) return;
+    const n = S.tools.length;
+    btn.textContent = n > 0 ? `המשך (${n} נבחרו) ←` : 'המשך ←';
+    btn.disabled = n === 0;
+  }
+
+  function nextTools() {
+    if (!S.tools.length) return;
+    trackEvent('scanner_tools', { count: S.tools.length, tools: S.tools.join(',') });
+    goTo(3);
+    startProc();
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 2
+  // ═══════════════════════════════════════════════════════════════
+  function painToIntent(pain) {
+    const map = { leads:'leads', followup:'leads', sales:'sales', service:'service', scheduling:'service', reports:'time', tasks:'time' };
+    return map[pain] || 'leads';
+  }
+
+  function pickPain(v) {
+    S.pain = v;
+    S.intent = painToIntent(v);
+    trackEvent('scanner_pain', { pain: v });
+    document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
+    document.querySelector('[data-pain="' + v + '"]').classList.add('sel');
+    setTimeout(() => goTo(1), 260);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 3 — Processing
+  // ═══════════════════════════════════════════════════════════════
+  let _procTimer = null;
+  function startProc() {
+    if (_procTimer) { clearTimeout(_procTimer); _procTimer = null; }
+    const msgs = ['מנתח את הכלים שלך...', 'ממפה הזדמנויות אוטומציה...', 'בונה את המערכת שלך...'];
+    const nodes = document.querySelectorAll('.pnode');
+    nodes.forEach(n => n.className = 'pnode');
+
+    const txtEl = document.getElementById('proc-text');
+    txtEl.style.opacity = '1';
+    txtEl.textContent = msgs[0];
+
+    // Show nodes one by one — alternating blue/pink
+    nodes.forEach((n, i) => {
+      setTimeout(() => {
+        n.classList.add('vis');
+        setTimeout(() => n.classList.add(i % 2 === 0 ? 'lit' : 'lit-pink'), 180);
+      }, 180 + i * 260);
+    });
+
+    // Cycle text
+    let ti = 0;
+    const tInt = setInterval(() => {
+      txtEl.style.opacity = '0';
+      setTimeout(() => {
+        ti = (ti + 1) % msgs.length;
+        txtEl.textContent = msgs[ti];
+        txtEl.style.opacity = '1';
+      }, 280);
+    }, 820);
+
+    // Dots — d0=blue, d1=pink, d2=blue
+    const dotColors = ['var(--blue)', 'var(--pink)', 'var(--blue)'];
+    let di = 0;
+    const dInt = setInterval(() => {
+      ['d0','d1','d2'].forEach((id, i) => {
+        const el = document.getElementById(id);
+        el.style.background = i === di ? dotColors[i] : 'rgba(255,255,255,0.18)';
+      });
+      di = (di + 1) % 3;
+    }, 380);
+
+    _procTimer = setTimeout(() => {
+      clearInterval(tInt); clearInterval(dInt);
+      S.ctx = buildContext(S.intent, S.tools, S.pain);
+      showRev();
+    }, 2600);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 3b — Revelation
+  // ═══════════════════════════════════════════════════════════════
+  function showRev() {
+    const revMsgs = {
+      leads:      [`מצאנו <span style="color:var(--blue);">${S.ctx.lostN}</span> נקודות שבהן לידים נופלים בין הכסאות`, 'בונים עבורך מפת לכידת לידים...'],
+      service:    [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> תרחישים של עיכובים בשירות הלקוחות`, 'בונים מערכת תיוג ומענה אוטומטי...'],
+      scheduling: [`יש לך <span style="color:var(--blue);">${S.ctx.lostN}</span> נקודות חיכוך בתיאום פגישות`, 'בונים לך מנוע תיאום אוטומטי...'],
+      followup:   [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> עסקאות שנאבדות בגלל פולואפ חלש`, 'בונים מנוע פולואפ חכם...'],
+      reports:    [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> תהליכי דיווח שאפשר לאוטמט`, 'בונים לך דשבורד אוטומטי...'],
+      sales:      [`מצאנו <span style="color:var(--blue);">${S.ctx.lostN}</span> הזדמנויות מכירה שנסגרות לאט`, 'בונים מנוע מכירות אוטומטי...'],
+      tasks:      [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> משימות חוזרות שאפשר לאוטמט`, 'בונים לך מנהל משימות אוטומטי...'],
+    };
+    const revEntry = revMsgs[S.pain] || revMsgs.leads;
+    // Use placeholder 0 then animate count-up
+    const [headTemplate, subText] = revEntry;
+    document.getElementById('rev1').innerHTML = headTemplate.replace(String(S.ctx.lostN), '<span id="rev-count">0</span>');
+    document.getElementById('rev2').textContent = subText;
+    goTo('3b');
+
+    // Count-up animation for lostN
+    const target = S.ctx.lostN;
+    let cur = 0;
+    const countIv = setInterval(() => {
+      cur++;
+      const el = document.getElementById('rev-count');
+      if (el) el.textContent = cur;
+      if (cur >= target) clearInterval(countIv);
+    }, 80);
+
+    const els = ['rev0','rev1','rev2','rev3'];
+    els.forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = el.className.replace(' go','') + ' rev-in';
+      setTimeout(() => el.classList.add('go'), 80 + i * 200);
+    });
+
+    setTimeout(() => {
+      renderResults();
+      goTo(4);
+    }, 1600);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 4 — Results
+  // ═══════════════════════════════════════════════════════════════
+  function renderResults() {
+    const c = S.ctx;
+    const C = 351.86;
+
+    // Score color based on value
+    const scoreColor = c.score >= 80 ? 'var(--blue)' : c.score >= 60 ? '#f59e0b' : 'var(--pink)';
+
+    // Score ring
+    const ring = document.getElementById('score-ring');
+    const numEl = document.getElementById('score-n');
+    ring.style.stroke = scoreColor;
+    numEl.style.color = scoreColor;
+    ring.style.strokeDashoffset = C;
+    setTimeout(() => {
+      ring.style.strokeDashoffset = C - (c.score / 100) * C;
+      let cur = 0;
+      const iv = setInterval(() => {
+        cur = Math.min(cur + c.score / 60, c.score);
+        numEl.textContent = Math.round(cur);
+        if (cur >= c.score) clearInterval(iv);
+      }, 26);
+    }, 350);
+
+    // Benchmark
+    const benchmarks = { leads:55, sales:58, service:50, time:48, followup:52, reports:47, scheduling:53, tasks:49 };
+    const bench = benchmarks[S.intent] || benchmarks[S.pain] || 52;
+    document.getElementById('benchmark').textContent = `ממוצע עסקים דומים: ${bench}`;
+
+    // Metrics
+    document.getElementById('m-hours').textContent = c.metrics.hours;
+    document.getElementById('m-proc').textContent  = c.metrics.procs + '/' + c.metrics.total;
+    document.getElementById('m-risk').textContent  = c.metrics.risk;
+    document.getElementById('narrative').textContent = c.narrative;
+
+    trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
+
+    // Map
+    renderMap(c);
+
+    // Flows
+    renderFlows(c.flows);
+  }
+
+  function renderMap(c) {
+    const tLabel = id => (TOOLS.find(t => t.id === id) || { lbl: id }).lbl;
+    document.getElementById('auto-map').innerHTML = `
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        ${c.inputs.map(n => `
+          <div class="map-node" style="background:rgba(33,150,176,0.1); border-color:rgba(33,150,176,0.35);">
+            ${tLabel(n)}
+            <div class="tip">📥 כאן נכנסים הלידים</div>
+          </div>`).join('')}
+      </div>
+      <div class="map-arrow">
+        <svg width="2" height="30" style="overflow:visible;">
+          <line x1="1" y1="0" x2="1" y2="30" stroke="rgba(33,150,176,0.45)" stroke-width="2" stroke-dasharray="4 3">
+            <animate attributeName="stroke-dashoffset" values="0;-14" dur="0.9s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+      </div>
+      <div class="map-node make">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="22" height="22">
+          <path d="M13.38 3.498c-.27 0-.511.19-.566.465L9.85 18.986a.578.578 0 0 0 .453.678l4.095.826a.58.58 0 0 0 .682-.455l2.963-15.021a.578.578 0 0 0-.453-.678l-4.096-.826a.589.589 0 0 0-.113-.012zm-5.876.098a.576.576 0 0 0-.516.318L.062 17.697a.575.575 0 0 0 .256.774l3.733 1.877a.578.578 0 0 0 .775-.258l6.926-13.781a.577.577 0 0 0-.256-.776L7.762 3.658a.571.571 0 0 0-.258-.062zm11.74.115a.576.576 0 0 0-.576.576v15.426c0 .318.258.578.576.578h4.178a.58.58 0 0 0 .578-.578V4.287a.578.578 0 0 0-.578-.576Z"/>
+        </svg>
+        <span>Make.com</span>
+        <div class="tip">⚡ כאן קורה הקסם</div>
+      </div>
+      <div class="map-arrow">
+        <svg width="2" height="30" style="overflow:visible;">
+          <line x1="1" y1="0" x2="1" y2="30" stroke="rgba(33,150,176,0.45)" stroke-width="2" stroke-dasharray="4 3">
+            <animate attributeName="stroke-dashoffset" values="0;-14" dur="0.9s" repeatCount="indefinite"/>
+          </line>
+        </svg>
+      </div>
+      <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        ${c.outputs.map(n => `
+          <div class="map-node" style="background:rgba(224,23,107,0.08); border-color:rgba(224,23,107,0.28);">
+            ${n}
+            <div class="tip">✅ הפלט האוטומטי</div>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  function renderFlows(flows) {
+    document.getElementById('flow-list').innerHTML = flows.map((f, i) => {
+      const fitPct = f.needs.length
+        ? Math.round((f.needs.filter(n => S.tools.includes(n)).length / f.needs.length) * 100)
+        : 100;
+      const fitColor = fitPct >= 80 ? 'var(--blue)' : fitPct >= 50 ? '#f59e0b' : 'rgba(255,255,255,0.3)';
+      const isGated = i > 0;
+
+      if (isGated) {
+        return `
+          <div class="flow-card" id="fc${i}" style="position:relative; overflow:hidden;">
+            <div style="position:absolute;inset:0;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:rgba(14,22,40,0.72);z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
+              <span style="font-size:12px;color:rgba(255,255,255,0.45);">🔒 אוטומציה ${i+1} מתוך ${flows.length}</span>
+              <button onclick="openLeadModal()" style="background:var(--pink);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;box-shadow:0 4px 18px rgba(224,23,107,0.32);">פתח את כל האוטומציות ←</button>
+            </div>
+            <div class="flow-head" style="pointer-events:none;opacity:0.4;">
+              <div style="display:flex;align-items:center;gap:12px;min-width:0;">
+                <div class="flow-badge">${i+1}</div>
+                <div style="min-width:0;">
+                  <div class="flow-title">${f.title}</div>
+                  <div class="flow-save">⏱ חיסכון: ${f.save} שעות/שבוע</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-right:6px;">
+                <span style="font-size:10px;font-weight:700;color:${fitColor};">${fitPct}%</span>
+                <span class="save-badge">${f.save}h</span>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      return `
+        <div class="flow-card" id="fc${i}">
+          <div class="flow-head" onclick="toggleFlow(${i})" tabindex="0" onkeydown="if(event.key==='Enter')toggleFlow(${i})">
+            <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+              <div class="flow-badge">${i+1}</div>
+              <div style="min-width:0;">
+                <div class="flow-title">${f.title}</div>
+                <div class="flow-save">⏱ חיסכון: ${f.save} שעות/שבוע</div>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; flex-shrink:0; margin-right:6px;">
+              <span style="font-size:10px; font-weight:700; color:${fitColor};">${fitPct}%</span>
+              <span class="save-badge">${f.save}h</span>
+              <svg class="chevron" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 6l4 4 4-4" stroke="rgba(255,255,255,0.38)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="flow-steps">
+            <div style="padding:14px 18px; display:flex; flex-direction:column; gap:10px; border-top:1px solid var(--border);">
+              ${f.steps.map((st, j) => `
+                <div class="step-row">
+                  <div class="step-num">${j+1}</div>
+                  <span style="font-size:13px; color:rgba(255,255,255,0.72); line-height:1.55;">${st}</span>
+                </div>`).join('')}
+              <button onclick="S.selectedFlow='${f.id}';openLeadModal()" style="background:rgba(33,150,176,0.1);border:1px solid rgba(33,150,176,0.25);color:var(--blue);border-radius:9px;padding:9px 15px;font-size:12px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;margin-top:4px;width:100%;transition:background 0.2s ease;" onmouseover="this.style.background='rgba(33,150,176,0.18)'" onmouseout="this.style.background='rgba(33,150,176,0.1)'">בנה אוטומציה זו עכשיו →</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Auto-open first flow
+    const fc0 = document.getElementById('fc0');
+    if (fc0) setTimeout(() => fc0.classList.add('open'), 450);
+  }
+
+  function toggleFlow(i) {
+    document.getElementById('fc' + i).classList.toggle('open');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  SCREEN 5 — Lead form
+  // ═══════════════════════════════════════════════════════════════
+  function renderProof() {
+    if (S.ctx) {
+      document.getElementById('proof-bar').textContent = '🎯 ' + S.ctx.proof;
+      trackEvent('scanner_lead_form_opened', { score: S.ctx.score, flow: S.selectedFlow });
+    }
+  }
+
+  function toStep2() {
+    const name  = document.getElementById('f-name').value.trim();
+    const phone = document.getElementById('f-phone').value.trim();
+    let ok = true;
+    [['f-name', name], ['f-phone', phone]].forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (!val) { el.classList.add('err'); ok = false; setTimeout(() => el.classList.remove('err'), 2000); }
+    });
+    if (!ok) return;
+    document.getElementById('lstep1').style.display = 'none';
+    document.getElementById('lstep2').style.display = 'block';
+    document.getElementById('si1').style.background = 'rgba(33,150,176,0.35)';
+    document.getElementById('si2').style.background = 'var(--blue)';
+  }
+
+  async function submitLead() {
+    const biz = document.getElementById('f-biz').value.trim();
+    if (!biz) {
+      const el = document.getElementById('f-biz');
+      el.classList.add('err');
+      setTimeout(() => el.classList.remove('err'), 2000);
+      return;
+    }
+
+    const btn = document.getElementById('sub-btn');
+    btn.textContent = 'שולח...';
+    btn.disabled = true;
+
+    const payload = {
+      name:     document.getElementById('f-name').value.trim(),
+      phone:    document.getElementById('f-phone').value.trim(),
+      business: biz,
+      email:    document.getElementById('f-email').value.trim(),
+      source:   'scanner',
+      intent:   S.intent,
+      tools:    S.tools,
+      pain:     S.pain,
+      score:    S.ctx?.score,
+      flow:     S.selectedFlow,
+    };
+
+    try {
+      await fetch('https://hook.eu2.make.com/REPLACE_WITH_WEBHOOK', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } catch (_) { /* proceed regardless */ }
+
+    trackEvent('scanner_lead_submitted', { score: S.ctx?.score, flow: S.selectedFlow });
+    clearState();
+    goTo(6);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  INIT
+  // ═══════════════════════════════════════════════════════════════
+  document.addEventListener('DOMContentLoaded', () => {
+    renderTools();
+    updateProg(2);
+    updateUnlockHint();
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+
+    trackEvent('scanner_start');
+
+    // Check for saved session (not screen 2 or success)
+    const saved = loadState();
+    if (saved && saved.screen && !['2','6'].includes(saved.screen)) {
+      const banner = document.getElementById('resume-banner');
+      banner.style.display = 'flex';
+    }
+  });
+  </script>
+</body>
+</html>
