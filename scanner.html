@@ -52,7 +52,7 @@
     .wrapper {
       position: relative; z-index: 2;
       width: 100%; max-width: 784px;
-      padding: 14px 4px 20px;
+      padding: 14px 16px 20px;
     }
 
     /* ── Progress bar ── */
@@ -71,7 +71,7 @@
       transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease;
     }
     .prog-conn {
-      width: 72px; height: 2px;
+      width: 144px; height: 2px;
       background: rgba(255,255,255,0.1);
       flex-shrink: 0;
       transition: background 0.4s ease;
@@ -138,7 +138,7 @@
     .intent-desc  { color: rgba(255,255,255,0.45); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-1 { max-height: calc(100vh - 155px); overflow: hidden; }
+    #screen-1 { max-height: calc(100vh - 155px); overflow: visible; }
     #screen-1.active { min-height: 0; }
     #tools-grid { flex: 1; min-height: 0; overflow-y: visible; margin-bottom: 0; }
     .tools-grid {
@@ -146,6 +146,7 @@
       grid-template-columns: repeat(6,1fr);
       gap: 8px;
       margin-bottom: 16px;
+      padding: 4px 2px;
     }
     .tool-card {
       background: var(--bg-e);
@@ -282,22 +283,6 @@
     }
     .dot.on { background: var(--blue); }
 
-    /* ── Revelation ── */
-    .rev-wrap {
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: center; min-height: 65vh; gap: 22px; text-align: center;
-    }
-    @keyframes revUp {
-      from { opacity: 0; transform: translateY(22px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .rev-in { opacity: 0; }
-    .rev-in.go { animation: revUp 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
-    @keyframes blink {
-      0%,100% { opacity: 0.3; transform: scale(0.8); }
-      50%      { opacity: 1;   transform: scale(1.2); }
-    }
-    .blink-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: blink 1s infinite; }
 
     /* ── Results ── */
     #screen-4 { max-height: 100vh; overflow-y: auto; gap: 22px; padding-bottom: 40px; }
@@ -649,12 +634,12 @@
           </div>
 
           <!-- 6 orbit nodes — positioned on a circle r=120px from center (154,154) -->
-          <div class="pnode" id="pn0" style="top:14px; left:122px;">📥</div>
-          <div class="pnode" id="pn1" style="top:62px; right:14px;">⚙️</div>
-          <div class="pnode" id="pn2" style="bottom:62px; right:14px;">📨</div>
-          <div class="pnode" id="pn3" style="bottom:14px; left:122px;">💾</div>
-          <div class="pnode" id="pn4" style="bottom:62px; left:14px;">🔔</div>
-          <div class="pnode" id="pn5" style="top:62px; left:14px;">🔄</div>
+          <div class="pnode" id="pn0" style="top:14px; left:122px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="pnode" id="pn1" style="top:62px; right:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/></svg></div>
+          <div class="pnode" id="pn2" style="bottom:62px; right:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/><path d="M3 7l9 6 9-6" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+          <div class="pnode" id="pn3" style="bottom:14px; left:122px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><ellipse cx="12" cy="7" rx="8" ry="3" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/><path d="M4 7v5c0 1.66 3.58 3 8 3s8-1.34 8-3V7" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/><path d="M4 12v5c0 1.66 3.58 3 8 3s8-1.34 8-3v-5" stroke="rgba(255,255,255,0.7)" stroke-width="1.8"/></svg></div>
+          <div class="pnode" id="pn4" style="bottom:62px; left:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="pnode" id="pn5" style="top:62px; left:14px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M23 4v6h-6M1 20v-6h6" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </div>
 
         <div class="proc-text" id="proc-text">Analyzing your workflow...</div>
@@ -667,19 +652,6 @@
       </div>
     </div>
 
-    <!-- ─────────────────────────────── SCREEN 3b: Revelation ── -->
-    <div class="screen" id="screen-3b">
-      <div class="rev-wrap">
-        <div class="rev-in" id="rev0" style="font-size:48px;">🔍</div>
-        <h2 class="rev-in h1" id="rev1" style="max-width:380px; text-align:center;"></h2>
-        <p class="rev-in" id="rev2" style="color:var(--muted); font-size:15px; line-height:1.65; max-width:340px;"></p>
-        <div class="rev-in" id="rev3" style="display:flex; gap:7px; margin-top:6px;">
-          <div class="blink-dot" style="animation-delay:0s;"></div>
-          <div class="blink-dot" style="animation-delay:0.18s;"></div>
-          <div class="blink-dot" style="animation-delay:0.36s;"></div>
-        </div>
-      </div>
-    </div>
 
     <!-- ─────────────────────────────── SCREEN 4: Results ── -->
     <div class="screen" id="screen-4">
@@ -703,17 +675,17 @@
       <!-- Metrics -->
       <div class="metrics-grid">
         <div class="metric-card">
-          <div style="font-size:20px; margin-bottom:5px;">⏱</div>
+          <div style="margin-bottom:5px;display:flex;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="rgba(33,150,176,0.85)" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="rgba(33,150,176,0.85)" stroke-width="1.8" stroke-linecap="round"/></svg></div>
           <div class="metric-val" id="m-hours">0</div>
           <div class="metric-lbl">שעות/שבוע</div>
         </div>
         <div class="metric-card">
-          <div style="font-size:20px; margin-bottom:5px;">⚙️</div>
+          <div style="margin-bottom:5px;display:flex;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="rgba(33,150,176,0.85)" stroke-width="1.8"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="rgba(33,150,176,0.85)" stroke-width="1.8"/></svg></div>
           <div class="metric-val" id="m-proc">0</div>
           <div class="metric-lbl">תהליכים</div>
         </div>
         <div class="metric-card">
-          <div style="font-size:20px; margin-bottom:5px;">⚠️</div>
+          <div style="margin-bottom:5px;display:flex;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="rgba(224,23,107,0.85)" stroke-width="1.8" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="rgba(224,23,107,0.85)" stroke-width="1.8" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="rgba(224,23,107,0.85)" stroke-width="2.5" stroke-linecap="round"/></svg></div>
           <div class="metric-val" id="m-risk" style="color:var(--pink); font-size:16px;">—</div>
           <div class="metric-lbl">סיכון לידים</div>
         </div>
@@ -767,7 +739,7 @@
 
       <!-- Step 2 -->
       <div id="lstep2" style="display:none;">
-        <h1 class="h1">כמעט סיימנו 🎯</h1>
+        <h1 class="h1">כמעט סיימנו</h1>
         <p class="subtitle">עוד פרט אחד כדי להתאים את הניתוח לעסק שלך</p>
         <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
           <div>
@@ -792,7 +764,7 @@
         </svg>
         <div>
           <h2 style="font-size:clamp(22px,5.5vw,32px); font-weight:800; letter-spacing:-0.03em; margin-bottom:10px;">
-            מפת האוטומציה שלך בדרך 🎯
+            מפת האוטומציה שלך בדרך
           </h2>
           <p style="color:var(--muted); font-size:15px; line-height:1.7; max-width:340px; margin:0 auto;">
             ניסים יחזור אליך תוך 24 שעות עם ניתוח מותאם אישית לעסק שלך
@@ -800,7 +772,8 @@
         </div>
         <div style="display:flex; flex-direction:column; gap:11px; width:100%;">
           <a href="https://wa.me/972505050505" class="btn-p" style="justify-content:center; text-decoration:none; font-size:15px;">
-            💬 קבל בוואטסאפ
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            קבל בוואטסאפ
           </a>
           <button class="btn-s" onclick="goTo(4)" style="width:100%; justify-content:center;">← חזור לתוצאות</button>
           <button onclick="resetScanner()" style="background:none;border:none;color:rgba(255,255,255,0.28);font-size:12px;font-family:'Heebo',sans-serif;cursor:pointer;padding:8px;margin-top:2px;transition:color 0.2s ease;" onmouseover="this.style.color='rgba(255,255,255,0.55)'" onmouseout="this.style.color='rgba(255,255,255,0.28)'">נסה עם הגדרות שונות ↺</button>
@@ -843,7 +816,7 @@
 
       <!-- Step 2 -->
       <div id="mlstep2" style="display:none;">
-        <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">כמעט סיימנו 🎯</h2>
+        <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">כמעט סיימנו</h2>
         <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">עוד פרט אחד כדי להתאים את הניתוח לעסק שלך</p>
         <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
           <div>
@@ -932,7 +905,7 @@
     const msubBtn = document.getElementById('msub-btn');
     if (msubBtn) { msubBtn.textContent = 'שלח לי את הניתוח ←'; msubBtn.disabled = false; }
     if (S.ctx) {
-      document.getElementById('modal-proof-bar').textContent = '🎯 ' + S.ctx.proof;
+      document.getElementById('modal-proof-bar').textContent = S.ctx.proof;
       trackEvent('scanner_lead_form_opened', { score: S.ctx.score, flow: S.selectedFlow });
     }
     const modal = document.getElementById('lead-modal');
@@ -1019,18 +992,19 @@
     { id:'hubspot',   lbl:'HubSpot',   svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,122,89,0.13);border:1.5px solid rgba(255,122,89,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#FF7A59" d="M18.164 7.93V5.084a2.198 2.198 0 001.267-1.978v-.067A2.2 2.2 0 0017.238.845h-.067a2.2 2.2 0 00-2.193 2.193v.067a2.196 2.196 0 001.252 1.973l.013.006v2.852a6.22 6.22 0 00-2.969 1.31l.012-.01-7.828-6.095A2.497 2.497 0 104.3 4.656l-.012.006 7.697 5.991a6.176 6.176 0 00-1.038 3.446c0 1.343.425 2.588 1.147 3.607l-.013-.02-2.342 2.343a1.968 1.968 0 00-.58-.095h-.002a2.033 2.033 0 102.033 2.033 1.978 1.978 0 00-.1-.595l.005.014 2.317-2.317a6.247 6.247 0 104.782-11.134l-.036-.005zm-.964 9.378a3.206 3.206 0 113.215-3.207v.002a3.206 3.206 0 01-3.207 3.207z"/></svg></div>' },
     { id:'slack',     lbl:'Slack',     svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(54,197,240,0.13);border:1.5px solid rgba(54,197,240,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#36C5F0" d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52zM6.313 15.165a2.527 2.527 0 0 1 2.521-2.52 2.527 2.527 0 0 1 2.521 2.52v6.313A2.528 2.528 0 0 1 8.834 24a2.528 2.528 0 0 1-2.521-2.522v-6.313z"/><path fill="#E01E5A" d="M8.834 5.042a2.528 2.528 0 0 1-2.521-2.52A2.528 2.528 0 0 1 8.834 0a2.528 2.528 0 0 1 2.521 2.522v2.52H8.834zM8.834 6.313a2.528 2.528 0 0 1 2.521 2.521 2.528 2.528 0 0 1-2.521 2.521H2.522A2.528 2.528 0 0 1 0 8.834a2.528 2.528 0 0 1 2.522-2.521h6.312z"/><path fill="#2EB67D" d="M18.956 8.834a2.528 2.528 0 0 1 2.522-2.521A2.528 2.528 0 0 1 24 8.834a2.528 2.528 0 0 1-2.522 2.521h-2.522V8.834zM17.688 8.834a2.528 2.528 0 0 1-2.523 2.521 2.527 2.527 0 0 1-2.52-2.521V2.522A2.527 2.527 0 0 1 15.165 0a2.528 2.528 0 0 1 2.523 2.522v6.312z"/><path fill="#ECB22E" d="M15.165 18.956a2.528 2.528 0 0 1 2.523 2.522A2.528 2.528 0 0 1 15.165 24a2.527 2.527 0 0 1-2.52-2.522v-2.522h2.52zM15.165 17.688a2.527 2.527 0 0 1-2.52-2.523 2.526 2.526 0 0 1 2.52-2.52h6.313A2.527 2.527 0 0 1 24 15.165a2.528 2.528 0 0 1-2.522 2.523h-6.313z"/></svg></div>' },
     { id:'calendly',  lbl:'Calendly',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,107,255,0.13);border:1.5px solid rgba(0,107,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#006BFF" d="M19.655 14.262c.281 0 .557.023.828.064 0 .005-.005.01-.005.014-.105.267-.234.534-.381.786l-1.219 2.106c-1.112 1.936-3.177 3.127-5.411 3.127h-2.432c-2.23 0-4.294-1.191-5.412-3.127l-1.218-2.106a6.251 6.251 0 0 1 0-6.252l1.218-2.106C6.736 4.832 8.8 3.641 11.035 3.641h2.432c2.23 0 4.294 1.191 5.411 3.127l1.219 2.106c.147.252.271.519.381.786 0 .004.005.009.005.014-.267.041-.543.064-.828.064-1.816 0-2.501-.607-3.291-1.306-.764-.676-1.711-1.517-3.44-1.517h-1.029c-1.251 0-2.387.455-3.2 1.278-.796.805-1.233 1.904-1.233 3.099v1.411c0 1.196.437 2.295 1.233 3.099.813.823 1.949 1.278 3.2 1.278h1.034c1.729 0 2.676-.841 3.439-1.517.791-.703 1.471-1.306 3.287-1.301Zm.005-3.237c.399 0 .794-.036 1.179-.11-.002-.004-.002-.01-.002-.014-.073-.414-.193-.823-.349-1.218.731-.12 1.407-.396 1.986-.819 0-.004-.005-.013-.005-.018-.331-1.085-.832-2.101-1.489-3.03-.649-.915-1.435-1.719-2.331-2.395-1.867-1.398-4.088-2.138-6.428-2.138-1.448 0-2.855.28-4.175.841-1.273.543-2.423 1.315-3.407 2.299S2.878 6.552 2.341 7.83c-.557 1.324-.842 2.726-.842 4.175 0 1.448.281 2.855.842 4.174.542 1.274 1.314 2.423 2.298 3.407s2.129 1.761 3.407 2.299c1.324.556 2.727.841 4.175.841 2.34 0 4.561-.74 6.428-2.137a10.815 10.815 0 0 0 2.331-2.396c.652-.929 1.158-1.949 1.489-3.03 0-.004.005-.014.005-.018-.579-.423-1.255-.699-1.986-.819.161-.395.276-.804.349-1.218.005-.009.005-.014.005-.023.869.166 1.692.506 2.404 1.035.685.505.552 1.075.446 1.416C22.184 20.437 17.619 24 12.221 24c-6.625 0-12-5.375-12-12s5.37-12 12-12c5.398 0 9.963 3.563 11.471 8.464.106.341.239.915-.446 1.421-.717.529-1.535.873-2.404 1.034.128.716.128 1.45 0 2.166-.387-.074-.782-.11-1.182-.11-4.184 0-3.968 2.823-6.736 2.823h-1.029c-1.899 0-3.15-1.357-3.15-3.095v-1.411c0-1.738 1.251-3.094 3.15-3.094h1.034c2.768 0 2.552 2.823 6.731 2.827Z"/></svg></div>' },
-    { id:'fillout',   lbl:'טופס אתר', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,203,69,0.13);border:1.5px solid rgba(255,203,69,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="1" width="18" height="22" rx="3" fill="none" stroke="#FFCB45" stroke-width="1.8"/><rect x="7" y="6" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="10.5" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="15" width="6" height="2" rx="1" fill="#FFCB45"/></svg></div>' },
+    { id:'fillout',   lbl:'Fillout', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,203,69,0.13);border:1.5px solid rgba(255,203,69,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="1" width="18" height="22" rx="3" fill="none" stroke="#FFCB45" stroke-width="1.8"/><rect x="7" y="6" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="10.5" width="10" height="2" rx="1" fill="#FFCB45"/><rect x="7" y="15" width="6" height="2" rx="1" fill="#FFCB45"/></svg></div>' },
     { id:'telegram',  lbl:'Telegram',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(44,165,224,0.13);border:1.5px solid rgba(44,165,224,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#2CA5E0" d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg></div>' },
     { id:'facebook',  lbl:'Facebook',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(24,119,242,0.13);border:1.5px solid rgba(24,119,242,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div>' },
     { id:'linkedin',  lbl:'LinkedIn',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(10,102,194,0.13);border:1.5px solid rgba(10,102,194,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#0A66C2" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div>' },
     { id:'zoom',      lbl:'Zoom',      svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(45,140,255,0.13);border:1.5px solid rgba(45,140,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#2D8CFF" d="M24 12c0 6.627-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0s12 5.373 12 12zM6.667 8.889A1.778 1.778 0 004.889 10.667v4.444c0 .982.796 1.778 1.778 1.778h7.555c.982 0 1.778-.796 1.778-1.778v-4.444c0-.982-.796-1.778-1.778-1.778H6.667zm12.444 1.333l-3.111 2.222v1.112l3.111 2.222c.356.267.889.022.889-.4v-4.755c0-.422-.533-.667-.889-.4z"/></svg></div>' },
-    { id:'zapier',    lbl:'Zapier',    svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,74,0,0.13);border:1.5px solid rgba(255,74,0,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#FF4A00" d="M21.133 9.497h-5.612l-3.97-3.98V.007A.007.007 0 0011.544 0h-2.98a.007.007 0 00-.006.007v5.51L4.588 9.497H.979A.007.007 0 00.972 9.5v2.973c0 .004.003.007.007.007h5.617l3.97 3.975v5.534c0 .004.003.007.006.007h2.98a.007.007 0 00.007-.007V16.46l3.97-3.975h5.606a.007.007 0 00.007-.007V9.504a.007.007 0 00-.007-.007z"/></svg></div>' },
     { id:'trello',    lbl:'Trello',    svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,82,204,0.13);border:1.5px solid rgba(0,82,204,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#0052CC" d="M21 0H3C1.343 0 0 1.343 0 3v18c0 1.656 1.343 3 3 3h18c1.656 0 3-1.344 3-3V3c0-1.657-1.344-3-3-3zM10.44 18.18c0 .795-.645 1.44-1.44 1.44H4.56c-.795 0-1.44-.645-1.44-1.44V4.56c0-.795.645-1.44 1.44-1.44H9c.795 0 1.44.645 1.44 1.44v13.62zm10.44-7.5c0 .795-.645 1.44-1.44 1.44H15c-.795 0-1.44-.645-1.44-1.44V4.56c0-.795.645-1.44 1.44-1.44h4.44c.795 0 1.44.645 1.44 1.44v6.12z"/></svg></div>' },
     { id:'mailchimp', lbl:'Mailchimp', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,224,27,0.13);border:1.5px solid rgba(255,224,27,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="5" width="20" height="14" rx="2.5" fill="#FFE01B"/><path fill="none" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="round" d="M2 8l10 6.5L22 8"/></svg></div>' },
-    { id:'gcal',      lbl:'G Calendar', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(66,133,244,0.13);border:1.5px solid rgba(66,133,244,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="20" height="18" rx="2" fill="white"/><rect x="2" y="4" width="20" height="6.5" rx="2" fill="#4285F4"/><rect x="2" y="9.5" width="20" height="1" fill="#4285F4"/><line x1="7" y1="4" x2="7" y2="7.5" stroke="white" stroke-width="2" stroke-linecap="round"/><line x1="17" y1="4" x2="17" y2="7.5" stroke="white" stroke-width="2" stroke-linecap="round"/><rect x="5" y="13" width="3.5" height="3" rx="0.5" fill="#FBBC04"/><rect x="10.3" y="13" width="3.5" height="3" rx="0.5" fill="#34A853"/><rect x="15.5" y="13" width="3.5" height="3" rx="0.5" fill="#EA4335"/></svg></div>' },
+    { id:'outlook',   lbl:'Outlook', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,114,198,0.13);border:1.5px solid rgba(0,114,198,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="5" width="13" height="14" rx="2" fill="#0072C6"/><rect x="10" y="3" width="13" height="18" rx="2" fill="#0078D4"/><rect x="12" y="7" width="9" height="2" rx="0.5" fill="white" opacity="0.9"/><rect x="12" y="11" width="9" height="2" rx="0.5" fill="white" opacity="0.9"/><rect x="12" y="15" width="6" height="2" rx="0.5" fill="white" opacity="0.9"/><text x="7" y="15.5" font-size="7" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">O</text></svg></div>' },
+    { id:'manychat',  lbl:'ManyChat', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(101,87,210,0.13);border:1.5px solid rgba(101,87,210,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#6557D2" d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/><path fill="white" d="M13.2 6.5l-3.8 5h2.4l-1 5 3.8-5.5h-2.3z"/></svg></div>' },
+    { id:'morning',   lbl:'Morning', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,180,100,0.13);border:1.5px solid rgba(0,180,100,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="8" height="8" rx="3" fill="#00B464"/><rect x="11" y="1" width="8" height="8" rx="3" fill="#00B464"/><rect x="1" y="11" width="8" height="8" rx="3" fill="#00B464"/><rect x="11" y="11" width="8" height="8" rx="3" fill="#00B464"/></svg></div>' },
+    { id:'fireberry', lbl:'Fireberry', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.13);border:1.5px solid rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 20 20" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11.6 5.2L6.2 10.6h5L7.4 14.8"/></svg></div>' },
     { id:'shopify',   lbl:'Shopify',   svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(150,191,72,0.13);border:1.5px solid rgba(150,191,72,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#96BF48" d="M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.117-.118-.194-.217-.194s-2.007-.136-2.007-.136a.336.336 0 00-.296-.174c-.184 0-.546.067-.906.35-.734.565-1.303 1.609-1.47 2.17L14.7 7h-1.363L12 3.86C11.535 2.742 10.646 2 9.62 2c-.15 0-.3.015-.447.044L9 2c-.596 0-1.17.327-1.638.93C6.542 3.926 5.91 5.51 5.75 7H4.16l-.408 2H2L.692 22.362 15.337 23.98zM9.63 3.2c.61 0 1.158.48 1.518 1.253L12 7H8.02c.237-1.924.9-3.8 1.61-3.8z"/></svg></div>' },
     { id:'notion',    lbl:'Notion',    svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.13);border:1.5px solid rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="rgba(255,255,255,0.85)" d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.294-.887.747-.933zM1.994 1.215L15.302.335c1.635-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.449-1.452z"/></svg></div>' },
-    { id:'salesforce', lbl:'Salesforce', svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(0,161,224,0.13);border:1.5px solid rgba(0,161,224,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#00A1E0" d="M10.05 5.97a4.03 4.03 0 013.14-1.52 4.05 4.05 0 013.65 2.3 3.3 3.3 0 011.22-.23A3.32 3.32 0 0121.38 9.83a3.32 3.32 0 01-3.32 3.32H6.63A2.9 2.9 0 013.73 10.25a2.9 2.9 0 012.9-2.9l.26.01a4.03 4.03 0 013.16-1.39z"/></svg></div>' },
     { id:'pipedrive',  lbl:'Pipedrive',  svg:'<div style="width:36px;height:36px;border-radius:50%;background:rgba(37,193,111,0.13);border:1.5px solid rgba(37,193,111,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg"><path fill="#25C16F" d="M4 4h16L13.5 13v7l-3-1.5V13z"/></svg></div>' },
   ];
 
@@ -1256,54 +1230,11 @@
     _procTimer = setTimeout(() => {
       clearInterval(tInt); clearInterval(dInt);
       S.ctx = buildContext(S.intent, S.tools, S.pain);
-      showRev();
+      renderResults();
+      goTo(4);
     }, 2600);
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  SCREEN 3b — Revelation
-  // ═══════════════════════════════════════════════════════════════
-  function showRev() {
-    const revMsgs = {
-      leads:      [`מצאנו <span style="color:var(--blue);">${S.ctx.lostN}</span> נקודות שבהן לידים נופלים בין הכסאות`, 'בונים עבורך מפת לכידת לידים...'],
-      service:    [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> תרחישים של עיכובים בשירות הלקוחות`, 'בונים מערכת תיוג ומענה אוטומטי...'],
-      scheduling: [`יש לך <span style="color:var(--blue);">${S.ctx.lostN}</span> נקודות חיכוך בתיאום פגישות`, 'בונים לך מנוע תיאום אוטומטי...'],
-      followup:   [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> עסקאות שנאבדות בגלל פולואפ חלש`, 'בונים מנוע פולואפ חכם...'],
-      reports:    [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> תהליכי דיווח שאפשר לאוטמט`, 'בונים לך דשבורד אוטומטי...'],
-      sales:      [`מצאנו <span style="color:var(--blue);">${S.ctx.lostN}</span> הזדמנויות מכירה שנסגרות לאט`, 'בונים מנוע מכירות אוטומטי...'],
-      tasks:      [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> משימות חוזרות שאפשר לאוטמט`, 'בונים לך מנהל משימות אוטומטי...'],
-      invoices:   [`זיהינו <span style="color:var(--blue);">${S.ctx.lostN}</span> תהליכי חיוב שאפשר לאוטמט לגמרי`, 'בונים לך מנוע חשבוניות אוטומטי...'],
-      marketing:  [`מצאנו <span style="color:var(--blue);">${S.ctx.lostN}</span> הזדמנויות לתוכן שיוצא בזמן`, 'בונים לך מנוע שיווק אוטומטי...'],
-    };
-    const revEntry = revMsgs[S.pain] || revMsgs.leads;
-    // Use placeholder 0 then animate count-up
-    const [headTemplate, subText] = revEntry;
-    document.getElementById('rev1').innerHTML = headTemplate.replace(String(S.ctx.lostN), '<span id="rev-count">0</span>');
-    document.getElementById('rev2').textContent = subText;
-    goTo('3b');
-
-    // Count-up animation for lostN
-    const target = S.ctx.lostN;
-    let cur = 0;
-    const countIv = setInterval(() => {
-      cur++;
-      const el = document.getElementById('rev-count');
-      if (el) el.textContent = cur;
-      if (cur >= target) clearInterval(countIv);
-    }, 80);
-
-    const els = ['rev0','rev1','rev2','rev3'];
-    els.forEach((id, i) => {
-      const el = document.getElementById(id);
-      el.className = el.className.replace(' go','') + ' rev-in';
-      setTimeout(() => el.classList.add('go'), 80 + i * 200);
-    });
-
-    setTimeout(() => {
-      renderResults();
-      goTo(4);
-    }, 1600);
-  }
 
   // ═══════════════════════════════════════════════════════════════
   //  SCREEN 4 — Results
@@ -1358,7 +1289,7 @@
         ${c.inputs.map(n => `
           <div class="map-node" style="background:rgba(33,150,176,0.1); border-color:rgba(33,150,176,0.35);">
             ${tLabel(n)}
-            <div class="tip">📥 כאן נכנסים הלידים</div>
+            <div class="tip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-left:3px;"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> כאן נכנסים הלידים</div>
           </div>`).join('')}
       </div>
       <div class="map-arrow">
@@ -1373,7 +1304,7 @@
           <path d="M13.38 3.498c-.27 0-.511.19-.566.465L9.85 18.986a.578.578 0 0 0 .453.678l4.095.826a.58.58 0 0 0 .682-.455l2.963-15.021a.578.578 0 0 0-.453-.678l-4.096-.826a.589.589 0 0 0-.113-.012zm-5.876.098a.576.576 0 0 0-.516.318L.062 17.697a.575.575 0 0 0 .256.774l3.733 1.877a.578.578 0 0 0 .775-.258l6.926-13.781a.577.577 0 0 0-.256-.776L7.762 3.658a.571.571 0 0 0-.258-.062zm11.74.115a.576.576 0 0 0-.576.576v15.426c0 .318.258.578.576.578h4.178a.58.58 0 0 0 .578-.578V4.287a.578.578 0 0 0-.578-.576Z"/>
         </svg>
         <span>Make.com</span>
-        <div class="tip">⚡ כאן קורה הקסם</div>
+        <div class="tip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-left:3px;"><path d="M13 2L4.5 13.5H11L10 22L19.5 10.5H13L13 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg> כאן קורה הקסם</div>
       </div>
       <div class="map-arrow">
         <svg width="2" height="30" style="overflow:visible;">
@@ -1386,7 +1317,7 @@
         ${c.outputs.map(n => `
           <div class="map-node" style="background:rgba(224,23,107,0.08); border-color:rgba(224,23,107,0.28);">
             ${n}
-            <div class="tip">✅ הפלט האוטומטי</div>
+            <div class="tip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-left:3px;"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg> הפלט האוטומטי</div>
           </div>`).join('')}
       </div>`;
   }
@@ -1403,7 +1334,7 @@
         return `
           <div class="flow-card" id="fc${i}" style="position:relative; overflow:hidden;">
             <div style="position:absolute;inset:0;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);background:rgba(14,22,40,0.72);z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;">
-              <span style="font-size:12px;color:rgba(255,255,255,0.45);">🔒 אוטומציה ${i+1} מתוך ${flows.length}</span>
+              <span style="font-size:12px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:5px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>אוטומציה ${i+1} מתוך ${flows.length}</span>
               <button onclick="openLeadModal()" style="background:var(--pink);color:#fff;border:none;border-radius:10px;padding:9px 20px;font-size:13px;font-weight:700;font-family:'Heebo',sans-serif;cursor:pointer;box-shadow:0 4px 18px rgba(224,23,107,0.32);">פתח את כל האוטומציות ←</button>
             </div>
             <div class="flow-head" style="pointer-events:none;opacity:0.4;">
@@ -1411,7 +1342,7 @@
                 <div class="flow-badge">${i+1}</div>
                 <div style="min-width:0;">
                   <div class="flow-title">${f.title}</div>
-                  <div class="flow-save">⏱ חיסכון: ${f.save} שעות/שבוע</div>
+                  <div class="flow-save"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-left:3px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>חיסכון: ${f.save} שעות/שבוע</div>
                 </div>
               </div>
               <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;margin-right:6px;">
@@ -1429,7 +1360,7 @@
               <div class="flow-badge">${i+1}</div>
               <div style="min-width:0;">
                 <div class="flow-title">${f.title}</div>
-                <div class="flow-save">⏱ חיסכון: ${f.save} שעות/שבוע</div>
+                <div class="flow-save"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="vertical-align:middle;margin-left:3px;"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>חיסכון: ${f.save} שעות/שבוע</div>
               </div>
             </div>
             <div style="display:flex; align-items:center; gap:8px; flex-shrink:0; margin-right:6px;">
@@ -1467,7 +1398,7 @@
   // ═══════════════════════════════════════════════════════════════
   function renderProof() {
     if (S.ctx) {
-      document.getElementById('proof-bar').textContent = '🎯 ' + S.ctx.proof;
+      document.getElementById('proof-bar').textContent = S.ctx.proof;
       trackEvent('scanner_lead_form_opened', { score: S.ctx.score, flow: S.selectedFlow });
     }
   }
