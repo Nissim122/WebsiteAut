@@ -279,9 +279,9 @@ async function testScreen6(page, F) {
     return;
   }
 
-  // 6.2: WhatsApp button
-  const wa = await page.$('#screen-6 a[href*="wa.me"]');
-  wa ? pass('6.2: WhatsApp button') : fail(F, '6.2: WhatsApp link not found');
+  // 6.2: Schedule button
+  const schedBtn = await page.$('#screen-6 a[href*="shortlink.uk"]');
+  schedBtn ? pass('6.2: Schedule button present') : fail(F, '6.2: Schedule (shortlink) button not found');
 
   // 6.3: Back to results
   const back = await page.$('#screen-6 button[onclick*="goTo(4)"]');
@@ -291,6 +291,7 @@ async function testScreen6(page, F) {
   const reset = await page.$('#screen-6 button[onclick*="reset"], #screen-6 button[onclick*="Reset"]');
   reset ? pass('6.4: Reset button') : fail(F, '6.4: Reset button not found in screen-6');
 }
+
 
 async function testHappyPath(page, F) {
   console.log('[sanity] Happy Path (full flow)');
