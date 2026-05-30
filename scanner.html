@@ -229,8 +229,8 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-1 { max-height: calc(100vh - 155px); overflow: visible; }
-    #screen-1.active { min-height: 0; }
+    #screen-2 { max-height: calc(100vh - 155px); overflow: visible; }
+    #screen-2.active { min-height: 0; }
     #tools-grid { flex: 1; min-height: 0; overflow-y: visible; margin-bottom: 0; }
     .tools-grid {
       display: grid;
@@ -706,7 +706,7 @@
     </nav>
 
     <!-- ───────────────────────────────── SCREEN 1: Tools ── -->
-    <div class="screen" id="screen-1">
+    <div class="screen" id="screen-2">
       <h1 class="h1" tabindex="-1">באילו כלים אתה משתמש?</h1>
       <p class="subtitle">בחר את כל הכלים הרלוונטיים — ניצור חיבורים בדיוק בשבילך</p>
 
@@ -714,13 +714,13 @@
       <div id="tools-hint" style="min-height:20px; margin-bottom:10px; font-size:12px; color:rgba(255,255,255,0.5); text-align:center; transition:opacity 0.25s ease;"></div>
 
       <div class="btn-row">
-        <button class="btn-s" onclick="goTo(2)">חזור</button>
+        <button class="btn-s" onclick="goTo(1)">חזור</button>
         <button class="btn-p" id="tools-btn" disabled onclick="nextTools()">המשך</button>
       </div>
     </div>
 
     <!-- ───────────────────────────────── SCREEN 2: Pain ── -->
-    <div class="screen active" id="screen-2">
+    <div class="screen active" id="screen-1">
 
       <h1 class="h1" tabindex="-1">מה הכי מפריע לך בעסק?</h1>
       <p class="subtitle">תבחר את האתגר הכי גדול שלך — ונראה לך בדיוק אילו תהליכים אפשר לחסוך</p>
@@ -928,11 +928,11 @@
         <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
           <div>
             <label for="f-name" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם מלא *</label>
-            <input type="text" id="f-name" class="form-input" placeholder="ישראל ישראלי" autocomplete="name">
+            <input type="text" id="f-name" class="form-input" autocomplete="name">
           </div>
           <div>
             <label for="f-phone" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מספר טלפון *</label>
-            <input type="tel" id="f-phone" class="form-input" placeholder="050-0000000" dir="ltr" autocomplete="tel">
+            <input type="tel" id="f-phone" class="form-input" dir="ltr" autocomplete="tel">
           </div>
         </div>
         <button class="btn-p" onclick="toStep2()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">המשך ←</button>
@@ -945,11 +945,11 @@
         <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
           <div>
             <label for="f-biz" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק *</label>
-            <input type="text" id="f-biz" class="form-input" placeholder="קפה שלי בע&quot;מ" autocomplete="organization">
+            <input type="text" id="f-biz" class="form-input" autocomplete="organization">
           </div>
           <div>
             <label for="f-email" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל (אופציונלי)</label>
-            <input type="email" id="f-email" class="form-input" placeholder="you@business.com" dir="ltr" autocomplete="email">
+            <input type="email" id="f-email" class="form-input" dir="ltr" autocomplete="email">
           </div>
         </div>
         <button class="btn-p" id="sub-btn" onclick="submitLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח ←</button>
@@ -999,19 +999,19 @@
         <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
           <div>
             <label for="mf-name" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם מלא *</label>
-            <input type="text" id="mf-name" class="form-input" placeholder="ישראל ישראלי" autocomplete="name">
+            <input type="text" id="mf-name" class="form-input" autocomplete="name">
           </div>
           <div>
             <label for="mf-phone" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מספר טלפון *</label>
-            <input type="tel" id="mf-phone" class="form-input" placeholder="050-0000000" dir="ltr" autocomplete="tel">
+            <input type="tel" id="mf-phone" class="form-input" dir="ltr" autocomplete="tel">
           </div>
           <div>
             <label for="mf-email" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל *</label>
-            <input type="email" id="mf-email" class="form-input" placeholder="you@business.com" dir="ltr" autocomplete="email">
+            <input type="email" id="mf-email" class="form-input" dir="ltr" autocomplete="email">
           </div>
           <div>
             <label for="mf-biz" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק (אופציונלי)</label>
-            <input type="text" id="mf-biz" class="form-input" placeholder="קפה שלי בע&quot;מ" autocomplete="organization">
+            <input type="text" id="mf-biz" class="form-input" autocomplete="organization">
           </div>
         </div>
         <div style="display:flex; align-items:center; gap:10px; cursor:pointer; margin:16px 0; direction:rtl;" onclick="togglePrivacy()">
@@ -1175,7 +1175,7 @@
       if (check) check.style.display = 'none';
     }
     document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
-    goTo(2);
+    goTo(1);
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -1310,8 +1310,8 @@
     saveState();
 
     // Restore screen-specific state on re-entry
-    if (id === 1) { renderTools(); updateToolsBtn(); updateUnlockHint(); hideDecorativeSVGs(document.getElementById('screen-1')); }
-    if (id === 2 && S.pain) {
+    if (id === 2) { renderTools(); updateToolsBtn(); updateUnlockHint(); hideDecorativeSVGs(document.getElementById('screen-2')); }
+    if (id === 1 && S.pain) {
       document.querySelectorAll('.pain-card').forEach(c => { c.classList.remove('sel'); c.setAttribute('aria-pressed','false'); });
       const sel = document.querySelector('[data-pain="' + S.pain + '"]');
       if (sel) { sel.classList.add('sel'); sel.setAttribute('aria-pressed','true'); }
@@ -1319,7 +1319,7 @@
   }
 
   function updateProg(id) {
-    const map = { 2:0, 1:1, 3:2, '3b':2, 4:2, 5:2, 6:2 };
+    const map = { 1:0, 2:1, 3:2, '3b':2, 4:2, 5:2, 6:2 };
     const p = map[id] ?? 0;
     const labels = ['שלב 1 — בחירת אתגר', 'שלב 2 — בחירת כלים', 'שלב 3 — תוצאות'];
     for (let i = 0; i < 3; i++) {
@@ -1412,7 +1412,7 @@
     const card = document.querySelector('[data-pain="' + v + '"]');
     card.classList.add('sel');
     card.setAttribute('aria-pressed', 'true');
-    setTimeout(() => goTo(1), 260);
+    setTimeout(() => goTo(2), 260);
   }
 
   // ═══════════════════════════════════════════════════════════════
