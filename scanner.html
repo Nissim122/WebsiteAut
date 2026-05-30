@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>סורק אוטומציות חינמי | גלה איפה העסק שלך מבזבז זמן — Clix Automations</title>
+  <title>סורק אוטומציות חינמי | גלה איפה העסק שלך מבזבז זמן</title>
   <link rel="icon" href="favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="favicon-192.png" />
 
   <!-- SEO Core -->
-  <meta name="description" content="ענה על 3 שאלות קצרות וקבל מפת אוטומציה אישית לעסק שלך — איפה מבזבזים זמן, אילו כלים לחבר, ומה אפשר לחסוך כבר השבוע. ללא עלות." />
+  <meta name="description" content="גלה תוך 2 דקות איפה העסק שלך מדליף זמן וכסף — וכבר היום תוכל להתחיל ליצור יותר כסף עם הטכנולוגיות הקיימות שלך. חינמי, ללא התחייבות." />
   <meta name="keywords" content="סורק אוטומציות, בדיקת אוטומציה לעסק, מפת אוטומציה, כלי אוטומציה עסקי, איפה העסק מבזבז זמן, אוטומציה חינמית, Make אוטומציה, WhatsApp אוטומציה, CRM אוטומציה, Clix Automations, קליקס אוטומציות, אוטומציה לעסקים קטנים" />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="ניסים בנגייב — Clix Automations" />
@@ -21,16 +21,19 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clix-automations.com/scanner.html" />
   <meta property="og:title" content="סורק אוטומציות חינמי | גלה איפה העסק שלך מבזבז זמן" />
-  <meta property="og:description" content="ענה על 3 שאלות קצרות וקבל מפת אוטומציה אישית לעסק שלך — כלים לחבר, תהליכים לחסוך, וצעד ראשון ברור. ללא עלות, ללא התחייבות." />
-  <meta property="og:image" content="https://clix-automations.com/brand_assets/profile_pic_2_nobg.png" />
+  <meta property="og:description" content="גלה תוך 2 דקות איפה העסק שלך מדליף זמן וכסף — וכבר היום תוכל להתחיל ליצור יותר כסף עם הטכנולוגיות הקיימות שלך. חינמי, ללא התחייבות." />
+  <meta property="og:image" content="https://clix-automations.com/brand_assets/og-scanner.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
   <meta property="og:locale" content="he_IL" />
   <meta property="og:site_name" content="Clix Automations" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ClixAutomations" />
   <meta name="twitter:title" content="סורק אוטומציות חינמי | גלה איפה העסק שלך מבזבז זמן" />
-  <meta name="twitter:description" content="ענה על 3 שאלות קצרות וקבל מפת אוטומציה אישית לעסק שלך — כלים לחבר, תהליכים לחסוך, וצעד ראשון ברור. ללא עלות, ללא התחייבות." />
-  <meta name="twitter:image" content="https://clix-automations.com/brand_assets/profile_pic_2_nobg.png" />
+  <meta name="twitter:description" content="גלה תוך 2 דקות איפה העסק שלך מדליף זמן וכסף — וכבר היום תוכל להתחיל ליצור יותר כסף עם הטכנולוגיות הקיימות שלך. חינמי, ללא התחייבות." />
+  <meta name="twitter:image" content="https://clix-automations.com/brand_assets/og-scanner.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,6 +176,9 @@
     }
     #screen-1.active, #screen-2.active {
       min-height: calc(100vh - 80px);
+    }
+    #screen-3.active {
+      animation: none;
     }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
@@ -725,15 +731,6 @@
         </div>
       </div>
 
-      <div class="social-proof" style="margin-top:18px;">
-        <div class="avatar-stack">
-          <div class="sp-avatar" style="background:#1a7a56;">ד</div>
-          <div class="sp-avatar" style="background:#e0176b;">מ</div>
-          <div class="sp-avatar" style="background:#2196b0;">נ</div>
-        </div>
-        <span><strong>54 עסקים</strong> גילו איפה הם מפסידים כסף</span>
-      </div>
-
     </div>
 
     <!-- ─────────────────────────────── SCREEN 3: Processing ── -->
@@ -943,16 +940,10 @@
       <!-- Social proof -->
       <div id="modal-proof-bar" style="background:rgba(33,150,176,0.1); border:1px solid rgba(33,150,176,0.22); border-radius:10px; padding:9px 13px; font-size:12px; color:rgba(255,255,255,0.65); text-align:center; margin-bottom:20px;"></div>
 
-      <!-- Step indicators -->
-      <div style="display:flex; gap:8px; justify-content:center; margin-bottom:22px;">
-        <div class="step-ind" id="msi1" style="background:var(--blue);"></div>
-        <div class="step-ind" id="msi2" style="background:rgba(255,255,255,0.18);"></div>
-      </div>
-
-      <!-- Step 1 -->
+      <!-- Single step form -->
       <div id="mlstep1">
         <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">לאן לשלוח את הניתוח?</h2>
-        <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">שנייה אחת — ונשלח לך את מפת האוטומציה</p>
+        <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">שנייה אחת — ונשלח לך את מפת האוטומציה המלאה</p>
         <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
           <div>
             <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם מלא *</label>
@@ -962,25 +953,16 @@
             <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מספר טלפון *</label>
             <input type="tel" id="mf-phone" class="form-input" placeholder="050-0000000" dir="ltr">
           </div>
-        </div>
-        <button class="btn-p" onclick="modalToStep2()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">המשך ←</button>
-      </div>
-
-      <!-- Step 2 -->
-      <div id="mlstep2" style="display:none;">
-        <h2 style="font-size:clamp(20px,4.5vw,26px); font-weight:800; letter-spacing:-0.03em; line-height:1.2; margin-bottom:8px;">כמעט סיימנו</h2>
-        <p style="color:var(--muted); font-size:14px; line-height:1.65; margin-bottom:20px;">עוד פרט אחד כדי להתאים את הניתוח לעסק שלך</p>
-        <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
           <div>
-            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק *</label>
-            <input type="text" id="mf-biz" class="form-input" placeholder="קפה שלי בע&quot;מ">
-          </div>
-          <div>
-            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל (אופציונלי)</label>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">מייל *</label>
             <input type="email" id="mf-email" class="form-input" placeholder="you@business.com" dir="ltr">
           </div>
+          <div>
+            <label style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק (אופציונלי)</label>
+            <input type="text" id="mf-biz" class="form-input" placeholder="קפה שלי בע&quot;מ">
+          </div>
         </div>
-        <button class="btn-p" id="msub-btn" onclick="submitModalLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח ←</button>
+        <button class="btn-p" id="msub-btn" onclick="submitModalLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח המלא</button>
       </div>
     </div>
   </div>
@@ -1011,6 +993,8 @@
     try { localStorage.removeItem('clix_scanner'); } catch(_) {}
   }
 
+  let _mapScrollFn = null;
+
   // ── Tool unlock hints ──
   function updateUnlockHint() {
     const hint = document.getElementById('tools-hint');
@@ -1026,12 +1010,8 @@
 
   // ── Lead modal ──
   function openLeadModal() {
-    document.getElementById('mlstep1').style.display = 'block';
-    document.getElementById('mlstep2').style.display = 'none';
-    document.getElementById('msi1').style.background = 'var(--blue)';
-    document.getElementById('msi2').style.background = 'rgba(255,255,255,0.18)';
     const msubBtn = document.getElementById('msub-btn');
-    if (msubBtn) { msubBtn.textContent = 'שלח לי את הניתוח ←'; msubBtn.disabled = false; }
+    if (msubBtn) { msubBtn.textContent = 'שלח לי את הניתוח המלא'; msubBtn.disabled = false; }
     if (S.ctx) {
       document.getElementById('modal-proof-bar').textContent = S.ctx.proof;
       trackEvent('scanner_lead_form_opened', { score: S.ctx.score, flow: S.selectedFlow });
@@ -1046,37 +1026,25 @@
     document.body.style.overflow = '';
   }
 
-  function modalToStep2() {
+
+  async function submitModalLead() {
     const name  = document.getElementById('mf-name').value.trim();
     const phone = document.getElementById('mf-phone').value.trim();
+    const email = document.getElementById('mf-email').value.trim();
     let ok = true;
-    [['mf-name', name], ['mf-phone', phone]].forEach(([id, val]) => {
+    [['mf-name', name], ['mf-phone', phone], ['mf-email', email]].forEach(([id, val]) => {
       const el = document.getElementById(id);
       if (!val) { el.classList.add('err'); ok = false; setTimeout(() => el.classList.remove('err'), 2000); }
     });
     if (!ok) return;
-    document.getElementById('mlstep1').style.display = 'none';
-    document.getElementById('mlstep2').style.display = 'block';
-    document.getElementById('msi1').style.background = 'rgba(33,150,176,0.35)';
-    document.getElementById('msi2').style.background = 'var(--blue)';
-  }
-
-  async function submitModalLead() {
-    const biz = document.getElementById('mf-biz').value.trim();
-    if (!biz) {
-      const el = document.getElementById('mf-biz');
-      el.classList.add('err');
-      setTimeout(() => el.classList.remove('err'), 2000);
-      return;
-    }
     const btn = document.getElementById('msub-btn');
     btn.textContent = 'שולח...';
     btn.disabled = true;
     const payload = {
-      name:     document.getElementById('mf-name').value.trim(),
-      phone:    document.getElementById('mf-phone').value.trim(),
-      business: biz,
-      email:    document.getElementById('mf-email').value.trim(),
+      name,
+      phone,
+      business: document.getElementById('mf-biz').value.trim(),
+      email,
       source:   'scanner',
       intent:   S.intent,
       tools:    S.tools,
@@ -1189,7 +1157,7 @@
     const proofs = {
       leads:   'מתאים במיוחד לעסקים שמקבלים לידים מ-WhatsApp ואינסטגרם',
       sales:   'מיועד לעסקים שמאבדים עסקאות בגלל פולואפ לא עקבי',
-      service: 'מיועד לעסקים עם יותר מ-20 פניות שירות ביום',
+      service: 'פנייה בלי מענה מהיר = לקוח שהלך למתחרה',
       time:    'עסקים חוסכים עם זה בממוצע 7 שעות בשבוע',
     };
 
@@ -1220,7 +1188,7 @@
     if (id === 4) {
       const s4 = document.getElementById('screen-4');
       s4.scrollTop = 0;
-      setTimeout(animateMap, 220);
+      setTimeout(initMapScroll, 60);
     }
 
     saveState();
@@ -1394,14 +1362,24 @@
     `;
   }
 
-  function animateMap() {
+  function initMapScroll() {
+    const s4 = document.getElementById('screen-4');
     const container = document.getElementById('auto-map-new');
     if (!container) return;
+    if (_mapScrollFn) { s4.removeEventListener('scroll', _mapScrollFn); _mapScrollFn = null; }
     const steps = container.querySelectorAll('.map-step, .map-conn');
     steps.forEach(el => el.classList.remove('in'));
-    steps.forEach((el, i) => {
-      setTimeout(() => el.classList.add('in'), 60 + i * 130);
-    });
+    function onScroll() {
+      const s4Rect = s4.getBoundingClientRect();
+      const triggerY = s4Rect.top + s4Rect.height * 0.88;
+      steps.forEach(el => {
+        if (el.getBoundingClientRect().top <= triggerY) { el.classList.add('in'); }
+        else { el.classList.remove('in'); }
+      });
+    }
+    _mapScrollFn = onScroll;
+    s4.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
   }
 
   const beforeItems = {

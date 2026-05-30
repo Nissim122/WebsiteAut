@@ -95,6 +95,14 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <!-- סורק אוטומציות -->
+  <url>
+    <loc>https://clix-automations.com/scanner.html</loc>
+    <lastmod>2026-05-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
   <!-- דפים נוספים -->
   <url>
     <loc>https://clix-automations.com/accessibility.html</loc>

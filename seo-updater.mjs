@@ -225,9 +225,28 @@ async function updateIndexPage(config, competitorKeywords) {
 }
 
 // ─── Update scanner.html ──────────────────────────────────────────────────────
+//
+// לוגיקת מילות מפתח לסורק — 3 שכבות intent:
+//   1. DISCOVERY intent  — מילים שמאותתות "אני רוצה לגלות/לבדוק" (סורק, בדיקה, מפה, ניתוח)
+//   2. PAIN-POINT intent — מילים שמאותתות "אני מפסיד זמן/כסף" (זמן, כסף, חסכון, בזבוז, מדליף)
+//   3. TOOL intent       — כלים ספציפיים שמשתמשים מחפשים (Make, WhatsApp, CRM, Monday, לידים)
+//
+// descriptionProtectTerms לסורק נפרד מ-index.html:
+//   מוגדר ב-scannerDescriptionProtectTerms בקונפיג.
+//   אם הDescription מכיל אחד מהם — הוא תוצר של עריכה ידנית ולא ידרס.
+//   כשמוגן: רק keywords + og/twitter מסונכרנים.
+
+const SCANNER_KW_INTENT_RE = /אוטומ|כלי|ניהול|תהליך|עסק|חיבור|שיווק|לידים|חסכון|זמן|כסף|בדיקה|מפה|גילוי|סריקה|הזדמנות|מיפוי|ידני|שיפור|יעיל/i;
 
 async function updateScannerPage(config, competitorKeywords) {
-  const { scannerSeedKeywords, descriptionProtectTerms } = config;
+  const {
+    scannerSeedKeywords,
+    scannerDescriptionProtectTerms,
+    descriptionProtectTerms,
+  } = config;
+
+  // protect terms: עדיפות ל-scanner-ספציפיים, fallback ל-generic
+  const protectTerms = scannerDescriptionProtectTerms || descriptionProtectTerms;
 
   if (!existsSync(SCANNER_PATH)) {
     console.warn('  ⚠️  scanner.html לא נמצא');
@@ -237,22 +256,21 @@ async function updateScannerPage(config, competitorKeywords) {
   let html = await readFile(SCANNER_PATH, 'utf8');
   const originalHtml = html;
 
-  // מילות מפתח: scanner seeds ראשונים + מתחרים — focus על intent של "בדיקת אוטומציה"
-  const finalKeywords = mergeKeywords(
-    scannerSeedKeywords,
-    competitorKeywords.filter(kw => /אוטומ|כלי|ניהול|תהליך|עסק|חיבור|שיווק|לידים/i.test(kw)),
-    25
-  );
+  // מילות מפתח: scanner seeds (ראשונים) + מתחרים שמתאימות ל-3 שכבות ה-intent
+  const filteredCompetitorKws = competitorKeywords.filter(kw => SCANNER_KW_INTENT_RE.test(kw));
+  const finalKeywords = mergeKeywords(scannerSeedKeywords, filteredCompetitorKws, 25);
 
   html = upsertKeywordsTag(html, finalKeywords.join(', '));
 
-  // Description — מוגן אם מכיל מונחי מותג, אחרת בונה description ממוקד-כוונה
+  // Description — בדוק מול protect terms ספציפיים לסורק
   const currentDesc = extractMeta(html, 'description') || '';
-  if (!shouldProtectDescription(currentDesc, descriptionProtectTerms)) {
+  if (!shouldProtectDescription(currentDesc, protectTerms)) {
+    // description לא עבר עריכה ידנית — בנה description ממוקד sales + intent
     const topHebrew = finalKeywords.filter(w => /[א-ת]/.test(w)).slice(0, 5);
-    const newDesc = `${topHebrew.slice(0, 2).join(', ')} — `
-      + `ענה על 3 שאלות קצרות וגלה אילו תהליכים בעסק שלך ניתנים לאוטומציה. `
-      + `${topHebrew.slice(2, 5).join(', ')}. קליקס אוטומציות, ללא עלות.`;
+    const newDesc = `גלה תוך 2 דקות איפה העסק שלך מפסיד זמן — `
+      + `${topHebrew.slice(0, 2).join(', ')}. `
+      + `קבל מפת אוטומציה אישית וחינמית וכבר היום תתחיל לחסוך עם הכלים שיש לך. `
+      + `${topHebrew.slice(2, 5).join(', ')}.`;
 
     const updatedDesc = updateMetaTag(html, 'description', newDesc);
     if (updatedDesc) { html = updatedDesc; }
@@ -263,14 +281,14 @@ async function updateScannerPage(config, competitorKeywords) {
     const updatedTwitterDesc = updateMetaTag(html, 'twitter:description', newDesc);
     if (updatedTwitterDesc) { html = updatedTwitterDesc; }
 
-    console.log('  ✏️  עודכן: description');
+    console.log('  ✏️  עודכן: description (אוטומטי)');
   } else {
-    // description מוגן — סנכרן og ו-twitter
+    // description עודכן ידנית — שמור אותו, רק סנכרן og ו-twitter
     const updatedOgDesc = updateOgTag(html, 'og:description', currentDesc);
     if (updatedOgDesc) { html = updatedOgDesc; }
     const updatedTwitterDesc = updateMetaTag(html, 'twitter:description', currentDesc);
     if (updatedTwitterDesc) { html = updatedTwitterDesc; }
-    console.log('  🔒 description מוגן — סונכרן og ו-twitter');
+    console.log('  🔒 description מוגן (עריכה ידנית) — סונכרן og ו-twitter');
   }
 
   if (html === originalHtml) {
