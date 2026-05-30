@@ -707,7 +707,7 @@
 
     <!-- ───────────────────────────────── SCREEN 1: Tools ── -->
     <div class="screen" id="screen-1">
-      <h1 class="h1">באילו כלים אתה משתמש?</h1>
+      <h1 class="h1" tabindex="-1">באילו כלים אתה משתמש?</h1>
       <p class="subtitle">בחר את כל הכלים הרלוונטיים — ניצור חיבורים בדיוק בשבילך</p>
 
       <div class="tools-grid" id="tools-grid"></div>
@@ -722,7 +722,7 @@
     <!-- ───────────────────────────────── SCREEN 2: Pain ── -->
     <div class="screen active" id="screen-2">
 
-      <h1 class="h1">מה הכי מפריע לך בעסק?</h1>
+      <h1 class="h1" tabindex="-1">מה הכי מפריע לך בעסק?</h1>
       <p class="subtitle">תבחר את האתגר הכי גדול שלך — ונראה לך בדיוק אילו תהליכים אפשר לחסוך</p>
 
 
@@ -821,7 +821,7 @@
 
       <!-- 1. Hero -->
       <div class="s4-hero">
-<h2 class="s4-title">מצאנו איפה העסק שלך מבזבז כסף על עבודה ידנית</h2>
+<h2 class="s4-title" tabindex="-1">מצאנו איפה העסק שלך מבזבז כסף על עבודה ידנית</h2>
         <p class="s4-sub">לפי הכלים שבחרת, קיימים תהליכים שחוזרים על עצמם וניתנים לאוטומציה מלאה</p>
         <div class="s4-highlight">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18" stroke="var(--blue-l)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="17,6 23,6 23,12" stroke="var(--blue-l)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -923,7 +923,7 @@
 
       <!-- Step 1 -->
       <div id="lstep1">
-        <h1 class="h1">לאן לשלוח את הניתוח?</h1>
+        <h1 class="h1" tabindex="-1">לאן לשלוח את הניתוח?</h1>
         <p class="subtitle">שנייה אחת — ונשלח לך את מפת האוטומציה</p>
         <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:24px;">
           <div>
@@ -964,7 +964,7 @@
           <path class="check-tick" d="M25 40 l11 11 l20-22" fill="none" stroke="var(--blue)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         <div>
-          <h2 style="font-size:clamp(22px,5.5vw,32px); font-weight:800; letter-spacing:-0.03em; margin-bottom:10px;">
+          <h2 tabindex="-1" style="font-size:clamp(22px,5.5vw,32px); font-weight:800; letter-spacing:-0.03em; margin-bottom:10px;">
             מפת האוטומציה שלך בדרך
           </h2>
           <p style="color:var(--muted); font-size:15px; line-height:1.7; max-width:340px; margin:0 auto;">
@@ -1013,6 +1013,17 @@
             <label for="mf-biz" style="font-size:12px; font-weight:600; color:rgba(255,255,255,0.55); display:block; margin-bottom:6px;">שם העסק (אופציונלי)</label>
             <input type="text" id="mf-biz" class="form-input" placeholder="קפה שלי בע&quot;מ" autocomplete="organization">
           </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; cursor:pointer; margin:16px 0; direction:rtl;" onclick="togglePrivacy()">
+          <span id="mf-privacy-box" style="width:20px; height:20px; border-radius:6px; flex-shrink:0; border:1.5px solid rgba(33,150,176,0.45); background:rgba(33,150,176,0.07); display:flex; align-items:center; justify-content:center; transition:border-color 0.18s, background 0.18s, box-shadow 0.18s;">
+            <svg id="mf-privacy-check" width="11" height="9" viewBox="0 0 11 9" fill="none" style="display:none; pointer-events:none;">
+              <path d="M1 4.5L3.8 7.5L10 1" stroke="#2db3cd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <input type="checkbox" id="mf-privacy" style="display:none;">
+          <span style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.6; user-select:none;">
+            קראתי ואני מסכים/ה ל<a href="/privacy.html" target="_blank" style="color:#2db3cd; text-decoration:underline;" onclick="event.stopPropagation()">מדיניות הפרטיות</a>
+          </span>
         </div>
         <button class="btn-p" id="msub-btn" onclick="submitModalLead()" style="width:100%; justify-content:center; font-size:15px; padding:14px;">שלח לי את הניתוח המלא</button>
       </div>
@@ -1063,7 +1074,10 @@
   }
 
   // ── Lead modal ──
+  let _modalTrigger = null;
+
   function openLeadModal() {
+    _modalTrigger = document.activeElement;
     const msubBtn = document.getElementById('msub-btn');
     if (msubBtn) { msubBtn.textContent = 'שלח לי את הניתוח המלא'; msubBtn.disabled = false; }
     if (S.ctx) {
@@ -1073,15 +1087,35 @@
     const modal = document.getElementById('lead-modal');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    setTimeout(() => { const f = document.getElementById('mf-name'); if (f) f.focus(); }, 100);
   }
 
   function closeLeadModal() {
     document.getElementById('lead-modal').style.display = 'none';
     document.body.style.overflow = '';
+    if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
   }
 
 
-  async function submitModalLead() {
+  function togglePrivacy() {
+    const cb  = document.getElementById('mf-privacy');
+    const box = document.getElementById('mf-privacy-box');
+    const chk = document.getElementById('mf-privacy-check');
+    cb.checked = !cb.checked;
+    if (cb.checked) {
+      box.style.borderColor = '#2db3cd';
+      box.style.background  = 'rgba(45,179,205,0.14)';
+      box.style.boxShadow   = '0 0 0 3px rgba(45,179,205,0.12)';
+      chk.style.display     = 'block';
+    } else {
+      box.style.borderColor = 'rgba(33,150,176,0.45)';
+      box.style.background  = 'rgba(33,150,176,0.07)';
+      box.style.boxShadow   = '';
+      chk.style.display     = 'none';
+    }
+  }
+
+    async function submitModalLead() {
     const name  = document.getElementById('mf-name').value.trim();
     const phone = document.getElementById('mf-phone').value.trim();
     const email = document.getElementById('mf-email').value.trim();
@@ -1090,6 +1124,13 @@
       const el = document.getElementById(id);
       if (!val) { el.classList.add('err'); ok = false; setTimeout(() => el.classList.remove('err'), 2000); }
     });
+    if (!document.getElementById('mf-privacy').checked) {
+      const box = document.getElementById('mf-privacy-box');
+      box.style.borderColor = '#e0176b';
+      box.style.boxShadow = '0 0 0 3px rgba(224,23,107,0.2)';
+      setTimeout(() => { box.style.borderColor = 'rgba(33,150,176,0.45)'; box.style.boxShadow = ''; }, 2000);
+      ok = false;
+    }
     if (!ok) return;
     const btn = document.getElementById('msub-btn');
     btn.textContent = 'שולח...';
@@ -1125,6 +1166,14 @@
     S.intent = 'leads'; S.tools = []; S.pain = null; S.ctx = null; S.selectedFlow = null;
     clearState();
     ['mf-name','mf-phone','mf-biz','mf-email'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    const privacyCb = document.getElementById('mf-privacy');
+    if (privacyCb) {
+      privacyCb.checked = false;
+      const box = document.getElementById('mf-privacy-box');
+      const check = document.getElementById('mf-privacy-check');
+      if (box) { box.style.borderColor = 'rgba(33,150,176,0.45)'; box.style.background = 'rgba(33,150,176,0.07)'; box.style.boxShadow = ''; }
+      if (check) check.style.display = 'none';
+    }
     document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
     goTo(2);
   }
@@ -1239,7 +1288,12 @@
     _curScreen = id;
     _screenEnterTime = Date.now();
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.getElementById('screen-' + id).classList.add('active');
+    const _activeScreen = document.getElementById('screen-' + id);
+    _activeScreen.classList.add('active');
+    setTimeout(() => {
+      const h = _activeScreen.querySelector('h1[tabindex="-1"],h2[tabindex="-1"]');
+      if (h) h.focus();
+    }, 100);
     updateProg(id);
     const lockScroll = (id === 1 || id === 2 || id === 4);
     document.documentElement.style.overflow = lockScroll ? 'hidden' : '';
@@ -1256,20 +1310,28 @@
     saveState();
 
     // Restore screen-specific state on re-entry
-    if (id === 1) { renderTools(); updateToolsBtn(); updateUnlockHint(); }
+    if (id === 1) { renderTools(); updateToolsBtn(); updateUnlockHint(); hideDecorativeSVGs(document.getElementById('screen-1')); }
     if (id === 2 && S.pain) {
-      document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
+      document.querySelectorAll('.pain-card').forEach(c => { c.classList.remove('sel'); c.setAttribute('aria-pressed','false'); });
       const sel = document.querySelector('[data-pain="' + S.pain + '"]');
-      if (sel) sel.classList.add('sel');
+      if (sel) { sel.classList.add('sel'); sel.setAttribute('aria-pressed','true'); }
     }
   }
 
   function updateProg(id) {
     const map = { 2:0, 1:1, 3:2, '3b':2, 4:2, 5:2, 6:2 };
     const p = map[id] ?? 0;
+    const labels = ['שלב 1 — בחירת אתגר', 'שלב 2 — בחירת כלים', 'שלב 3 — תוצאות'];
     for (let i = 0; i < 3; i++) {
       const el = document.getElementById('ps' + i);
       el.className = 'prog-seg' + (i < p ? ' done' : i === p ? ' active' : '');
+      if (i === p) {
+        el.setAttribute('aria-current', 'step');
+        el.setAttribute('aria-label', labels[i] + ' (נוכחי)');
+      } else {
+        el.removeAttribute('aria-current');
+        el.setAttribute('aria-label', labels[i] + (i < p ? ' (הושלם)' : ''));
+      }
     }
     for (let i = 0; i < 2; i++) {
       const el = document.getElementById('pc' + i);
@@ -1286,15 +1348,16 @@
   function renderTools() {
     document.getElementById('tools-grid').innerHTML = TOOLS.map(t => `
       <div class="tool-card ${S.tools.includes(t.id) ? 'sel' : ''}" tabindex="0"
+           role="button" aria-pressed="${S.tools.includes(t.id)}" aria-label="${t.lbl}"
            data-tid="${t.id}"
            onclick="toggleTool('${t.id}',this)"
-           onkeydown="if(event.key==='Enter')toggleTool('${t.id}',this)">
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTool('${t.id}',this)}">
         <div style="width:36px; height:36px; display:flex; align-items:center; justify-content:center;">
           ${t.img
             ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
-            : t.svg}
+            : `<span aria-hidden="true">${t.svg}</span>`}
         </div>
-        <span class="tool-name">${t.lbl}</span>
+        <span class="tool-name" aria-hidden="true">${t.lbl}</span>
       </div>
     `).join('');
   }
@@ -1303,10 +1366,12 @@
     if (S.tools.includes(id)) {
       S.tools = S.tools.filter(t => t !== id);
       el.classList.remove('sel');
+      el.setAttribute('aria-pressed', 'false');
       trackEvent('scanner_tool_toggle', { tool: id, action: 'deselect' });
     } else {
       S.tools.push(id);
       el.classList.add('sel');
+      el.setAttribute('aria-pressed', 'true');
       trackEvent('scanner_tool_toggle', { tool: id, action: 'select' });
     }
     updateToolsBtn();
@@ -1340,8 +1405,13 @@
     S.pain = v;
     S.intent = painToIntent(v);
     trackEvent('scanner_pain', { pain: v });
-    document.querySelectorAll('.pain-card').forEach(c => c.classList.remove('sel'));
-    document.querySelector('[data-pain="' + v + '"]').classList.add('sel');
+    document.querySelectorAll('.pain-card').forEach(c => {
+      c.classList.remove('sel');
+      c.setAttribute('aria-pressed', 'false');
+    });
+    const card = document.querySelector('[data-pain="' + v + '"]');
+    card.classList.add('sel');
+    card.setAttribute('aria-pressed', 'true');
     setTimeout(() => goTo(1), 260);
   }
 
@@ -1356,8 +1426,10 @@
     nodes.forEach(n => n.className = 'pnode');
 
     const txtEl = document.getElementById('proc-text');
+    const liveReg = document.getElementById('aria-live-region');
     txtEl.style.opacity = '1';
     txtEl.textContent = msgs[0];
+    if (liveReg) liveReg.textContent = msgs[0];
 
     // Show nodes one by one — alternating blue/pink
     nodes.forEach((n, i) => {
@@ -1375,6 +1447,7 @@
         ti = (ti + 1) % msgs.length;
         txtEl.textContent = msgs[ti];
         txtEl.style.opacity = '1';
+        if (liveReg) liveReg.textContent = msgs[ti];
       }, 280);
     }, 820);
 
@@ -1395,6 +1468,7 @@
     trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
     renderNewMap(c);
     renderPreview(c.flows[0]);
+    hideDecorativeSVGs(document.getElementById('screen-4'));
   }
 
   function renderNewMap(c) {
@@ -1565,6 +1639,13 @@
     goTo(6);
   }
 
+  // ── Accessibility: mark all decorative SVGs ──
+  function hideDecorativeSVGs(root) {
+    (root || document).querySelectorAll('svg:not([aria-label]):not([role="img"])').forEach(s => {
+      s.setAttribute('aria-hidden', 'true');
+    });
+  }
+
   // ═══════════════════════════════════════════════════════════════
   //  INIT
   // ═══════════════════════════════════════════════════════════════
@@ -1572,6 +1653,7 @@
     renderTools();
     updateProg(2);
     updateUnlockHint();
+    hideDecorativeSVGs();
     document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
 
@@ -1581,5 +1663,7 @@
 
   });
   </script>
+  <!-- ── Accessibility live region ── -->
+  <div id="aria-live-region" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></div>
 </body>
 </html>
