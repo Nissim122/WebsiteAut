@@ -258,8 +258,86 @@ async function getArticlesReport() {
   return articles;
 }
 
+// ── שאילתה 4: סורק אוטומציות ─────────────────────────────────────────────────
+async function getScannerReport() {
+  const [pageRes, eventsRes] = await Promise.all([
+    analyticsData.properties.runReport({
+      property: `properties/${PROPERTY_ID}`,
+      requestBody: {
+        dimensions: [{ name: 'deviceCategory' }],
+        metrics: [
+          { name: 'screenPageViews' },
+          { name: 'activeUsers' },
+          { name: 'userEngagementDuration' },
+          { name: 'engagementRate' },
+          { name: 'sessions' },
+        ],
+        dimensionFilter: {
+          andGroup: {
+            expressions: [
+              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: 'scanner' } } },
+              excludeHaderaFilter,
+            ],
+          },
+        },
+        dateRanges: [{ startDate, endDate }],
+      },
+    }),
+    analyticsData.properties.runReport({
+      property: `properties/${PROPERTY_ID}`,
+      requestBody: {
+        dimensions: [{ name: 'eventName' }],
+        metrics: [{ name: 'eventCount' }],
+        dimensionFilter: {
+          andGroup: {
+            expressions: [
+              { filter: { fieldName: 'eventName', stringFilter: { matchType: 'BEGINS_WITH', value: 'scanner_' } } },
+              excludeHaderaFilter,
+            ],
+          },
+        },
+        dateRanges: [{ startDate, endDate }],
+      },
+    }),
+  ]);
+
+  let totalViews = 0, totalUsers = 0, totalSessions = 0, totalEngDuration = 0;
+  let engWeighted = 0, desktop = 0, mobile = 0, tablet = 0;
+  for (const row of pageRes.data.rows || []) {
+    const [device] = row.dimensionValues.map(d => d.value);
+    const [views, users, engDur, engRate, sessions] = row.metricValues.map(m => parseFloat(m.value));
+    totalViews       += views;
+    totalUsers       += users;
+    totalSessions    += sessions;
+    totalEngDuration += engDur;
+    engWeighted      += engRate * sessions;
+    if (device === 'desktop')     desktop += Math.round(views);
+    else if (device === 'mobile') mobile  += Math.round(views);
+    else if (device === 'tablet') tablet  += Math.round(views);
+  }
+
+  const events = {};
+  for (const row of eventsRes.data.rows || []) {
+    const [name]  = row.dimensionValues.map(d => d.value);
+    const [count] = row.metricValues.map(m => parseFloat(m.value));
+    events[name] = Math.round(count);
+  }
+
+  return {
+    page: {
+      views:       Math.round(totalViews),
+      users:       Math.round(totalUsers),
+      sessions:    Math.round(totalSessions),
+      avgDuration: totalUsers > 0 ? Math.round(totalEngDuration / totalUsers) : 0,
+      engRate:     totalSessions > 0 ? engWeighted / totalSessions : 0,
+      desktop, mobile, tablet,
+    },
+    events,
+  };
+}
+
 // ── בניית הדוח לטקסט ─────────────────────────────────────────────────────────
-function buildReport(site, sources, articles) {
+function buildReport(site, sources, articles, scanner) {
   const lines = [];
   const today = new Date().toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
@@ -371,6 +449,42 @@ function buildReport(site, sources, articles) {
     }
   }
 
+  // ── סורק אוטומציות ──
+  if (scanner) {
+    const p = scanner.page;
+    const e = scanner.events;
+    lines.push('\n\n🔍 סורק אוטומציות (scanner.html)');
+    lines.push('─'.repeat(72));
+    lines.push(`צפיות:          ${p.views}`);
+    lines.push(`משתמשים:        ${p.users}`);
+    lines.push(`ביקורים:        ${p.sessions}`);
+    lines.push(`זמן ממוצע:      ${fmtTime(p.avgDuration)}`);
+    lines.push(`מעורבות:        ${Math.round(p.engRate * 100)}%`);
+    lines.push(`מכשירים:        🖥️ ${p.desktop}  📱 ${p.mobile}  📟 ${p.tablet}`);
+
+    lines.push('\n📊 פאנל המרה:');
+    const funnel = [
+      ['scanner_start',            'כניסה לסורק'],
+      ['scanner_tools',            'בחר כלים'],
+      ['scanner_pain',             'בחר אתגר'],
+      ['scanner_results',          'ראה תוצאות'],
+      ['scanner_lead_form_opened', 'פתח טופס'],
+      ['scanner_lead_submitted',   'שלח ליד'],
+    ];
+    const base = e['scanner_start'] || 1;
+    for (const [eventName, label] of funnel) {
+      const count = e[eventName] || 0;
+      const pct   = Math.round(count / base * 100);
+      const bar   = '█'.repeat(Math.round(pct / 5)).padEnd(20);
+      lines.push(`  ${label.padEnd(22)} ${String(count).padStart(5)}  ${bar} ${pct}%`);
+    }
+
+    const toolClicks = e['scanner_tool_toggle'] || 0;
+    if (toolClicks > 0) {
+      lines.push(`\nסה"כ לחיצות על כלים:  ${toolClicks}`);
+    }
+  }
+
   return lines.join('\n');
 }
 
@@ -378,10 +492,11 @@ function buildReport(site, sources, articles) {
 async function main() {
   console.log(`⏳ שולף נתונים מ-GA4 (${startDate} → ${endDate})...`);
 
-  const [site, sources, articles] = await Promise.all([
+  const [site, sources, articles, scanner] = await Promise.all([
     getSiteWideReport(),
     getTrafficSources(),
     getArticlesReport(),
+    getScannerReport(),
   ]);
 
   if (site.totalViews === 0 && Object.keys(articles).length === 0) {
@@ -389,7 +504,7 @@ async function main() {
     return;
   }
 
-  const report = buildReport(site, sources, articles);
+  const report = buildReport(site, sources, articles, scanner);
   console.log('\n' + report);
 
   // שמירה לקובץ
