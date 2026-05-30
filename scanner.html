@@ -110,7 +110,7 @@
       --muted:    rgba(255,255,255,0.5);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; overflow-x: hidden; }
+    html { scroll-behavior: smooth; overflow-x: hidden; overscroll-behavior: none; }
     body {
       font-family: 'Heebo', sans-serif;
       background: var(--bg);
@@ -120,6 +120,8 @@
       flex-direction: column;
       align-items: center;
       overflow-x: hidden;
+      overscroll-behavior: none;
+      max-width: 100vw;
     }
 
     /* ── Background ── */
@@ -1311,7 +1313,9 @@
     updateProg(id);
     const lockScroll = (id === 1 || id === 2 || id === 4);
     document.documentElement.style.overflow = lockScroll ? 'hidden' : '';
+    document.documentElement.style.overscrollBehavior = 'none';
     document.body.style.overflow = lockScroll ? 'hidden' : '';
+    document.body.style.overscrollBehavior = 'none';
     if (!lockScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('prog-bar').style.marginBottom = (id === 4) ? '14px' : '';
 
@@ -1851,7 +1855,9 @@
     updateUnlockHint();
     hideDecorativeSVGs();
     document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.overscrollBehavior = 'none';
     document.body.style.overflow = 'hidden';
+    document.body.style.overscrollBehavior = 'none';
 
     trackEvent('scanner_start');
     _curScreen = 2;
