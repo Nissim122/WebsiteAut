@@ -1076,6 +1076,10 @@
   // ── Lead modal ──
   let _modalTrigger = null;
 
+  function _onModalEscape(e) {
+    if (e.key === 'Escape') closeLeadModal();
+  }
+
   function openLeadModal() {
     _modalTrigger = document.activeElement;
     const msubBtn = document.getElementById('msub-btn');
@@ -1087,12 +1091,14 @@
     const modal = document.getElementById('lead-modal');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', _onModalEscape);
     setTimeout(() => { const f = document.getElementById('mf-name'); if (f) f.focus(); }, 100);
   }
 
   function closeLeadModal() {
     document.getElementById('lead-modal').style.display = 'none';
     document.body.style.overflow = '';
+    document.removeEventListener('keydown', _onModalEscape);
     if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
   }
 
@@ -1147,7 +1153,8 @@
       pain:       S.pain,
       score:      S.ctx?.score,
       flow:       S.selectedFlow,
-      email_html: buildEmailHtml(name, phone, _biz, email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
+      email_html:          buildEmailHtml(name, phone, _biz, email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
+      customer_email_html: buildCustomerEmailHtml(name, S.tools, S.intent, S.pain),
     };
     try {
       await fetch('https://hook.eu2.make.com/91jl6hyz635jlh8v9lopkm02f9wr5m9i', {
@@ -1629,7 +1636,8 @@
       pain:       S.pain,
       score:      S.ctx?.score,
       flow:       S.selectedFlow,
-      email_html: buildEmailHtml(_name, _phone, biz, _email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
+      email_html:          buildEmailHtml(_name, _phone, biz, _email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
+      customer_email_html: buildCustomerEmailHtml(_name, S.tools, S.intent, S.pain),
     };
 
     try {
@@ -1725,6 +1733,79 @@
         <tr>
           <td style="padding:16px 36px 20px;text-align:center;border-top:1px solid rgba(255,255,255,0.07);">
             <div style="font-size:11px;color:rgba(255,255,255,0.25);">נשלח אוטומטית · סורק האוטומציות של Clix</div>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+  }
+
+  // ── Build customer-facing email HTML ──
+  function buildCustomerEmailHtml(name, tools, intent, pain) {
+    // Rank ALL flows for this customer (same logic as buildContext)
+    const allRanked = FLOWS.map(f => {
+      let s = f.needs.filter(n => tools.includes(n)).length * 10;
+      if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
+      if (pain === 'followup' && f.id === 'followup') s += 8;
+      if (pain === 'service'  && f.id === 'triage')   s += 8;
+      if (pain === 'scheduling' && f.id === 'schedule') s += 8;
+      if (['reports','time'].includes(pain || intent) && f.id === 'report') s += 8;
+      return { ...f, _s: s };
+    }).sort((a, b) => b._s - a._s);
+
+    const automationRows = allRanked.map((f, i) => {
+      const stepsHtml = f.steps.map((s, si) => `
+                    <div style="margin-bottom:${si < f.steps.length - 1 ? '10' : '0'}px;display:flex;align-items:flex-start;gap:0;">
+                      <span style="display:inline-block;flex-shrink:0;width:20px;height:20px;border-radius:50%;background:rgba(45,179,205,0.12);border:1px solid rgba(45,179,205,0.35);font-size:10px;font-weight:700;color:#2db3cd;text-align:center;line-height:20px;margin-left:10px;">${si+1}</span>
+                      <span style="font-size:13px;color:rgba(255,255,255,0.75);line-height:20px;">${s}</span>
+                    </div>`).join('');
+      return `
+            <table width="100%" cellpadding="0" cellspacing="0" style="background:#141d35;border-radius:12px;margin-bottom:12px;border:1px solid rgba(45,179,205,${i < 2 ? '0.25' : '0.12'});overflow:hidden;">
+              <tr><td>
+                <table width="100%" cellpadding="0" cellspacing="0">
+                  <tr><td style="background:linear-gradient(90deg,rgba(45,179,205,${i < 2 ? '0.18' : '0.08'}) 0%,rgba(45,179,205,0.02) 100%);padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <span style="display:inline-block;background:${i < 2 ? '#2db3cd' : 'rgba(45,179,205,0.3)'};color:#fff;font-size:10px;font-weight:700;border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center;margin-left:8px;">${i+1}</span>
+                    <span style="font-size:14px;font-weight:700;color:#ffffff;">${f.title}</span>
+                    <span style="float:left;background:rgba(45,179,205,0.12);border:1px solid rgba(45,179,205,0.3);border-radius:20px;padding:3px 10px;font-size:11px;color:#2db3cd;font-weight:600;">~${f.save}h/שבוע</span>
+                  </td></tr>
+                  <tr><td style="padding:12px 20px 14px;">${stepsHtml}</td></tr>
+                </table>
+              </td></tr>
+            </table>`;
+    }).join('');
+
+    const firstName = name ? name.split(' ')[0] : '';
+    return `<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#080e1c;font-family:Arial,Helvetica,sans-serif;direction:rtl;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080e1c;padding:28px 12px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#0e1628;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
+        <tr>
+          <td style="background:linear-gradient(135deg,#0e1628 0%,#141d35 100%);padding:36px 36px 30px;text-align:center;border-bottom:1px solid rgba(45,179,205,0.2);">
+            <div style="font-size:11px;color:#2db3cd;font-weight:700;letter-spacing:0.12em;margin-bottom:14px;">CLIX AUTOMATIONS</div>
+            <div style="font-size:26px;font-weight:700;color:#ffffff;margin-bottom:8px;">מפת האוטומציות שלך מוכנה${firstName ? `, ${firstName}` : ''}</div>
+            <div style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6;">ניתחנו את הכלים שלך וזיהינו את כל התהליכים שאפשר לחסוך —<br>הנה הרשימה המלאה, לפי סדר עדיפות</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:24px 36px 8px;">
+            <div style="font-size:11px;color:#2db3cd;font-weight:700;letter-spacing:0.1em;margin-bottom:16px;">האוטומציות המומלצות לעסק שלך</div>
+            ${automationRows}
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:8px 36px 32px;text-align:center;">
+            <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:18px;">רוצה ליישם? נשמח לתת לך שיחת ייעוץ חינם ולהסביר איך בדיוק זה עובד</div>
+            <a href="https://clixautomations.com" style="display:inline-block;background:#e0176b;color:#fff;font-size:15px;font-weight:700;text-decoration:none;border-radius:8px;padding:14px 36px;letter-spacing:0.02em;">קבע שיחת ייעוץ חינם ←</a>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 36px 20px;text-align:center;border-top:1px solid rgba(255,255,255,0.07);">
+            <div style="font-size:11px;color:rgba(255,255,255,0.25);">Clix Automations · clixautomations.com</div>
           </td>
         </tr>
       </table>
