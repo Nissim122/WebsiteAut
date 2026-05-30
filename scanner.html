@@ -167,6 +167,9 @@
     .prog-conn.done  { background: var(--blue); }
     .prog-seg.done   { background: var(--blue); border-color: var(--blue); color: #fff; }
     .prog-seg.active { background: transparent; border-color: var(--blue-l); color: var(--blue-l); }
+    @media (max-width: 480px) {
+      .prog-conn { width: 48px; }
+    }
 
     /* ── Screen system ── */
     .screen { display: none; flex-direction: column; width: 100%; }
