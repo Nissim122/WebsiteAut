@@ -685,6 +685,13 @@
     }
     .sp-avatar:last-child { margin-left: 0; }
     .social-proof strong { color: rgba(255,255,255,0.68); font-weight: 700; }
+
+    /* ── Mobile spacing fixes ── */
+    @media (max-width: 480px) {
+      .wrapper { padding-left: 18px; padding-right: 18px; }
+      .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      #screen-2 { overflow-x: hidden; }
+    }
   </style>
 </head>
 <body>
@@ -1763,6 +1770,17 @@
       return { ...f, _s: s };
     }).sort((a, b) => b._s - a._s);
 
+    const FLOW_BENEFIT = {
+      'wa-lead':   () => `78% מהלקוחות קונים מהעסק הראשון שענה להם — ו-63% מהעסקים לא עונים בכלל. האוטומציה הזו מבטיחה שאתה תמיד הראשון`,
+      'followup':  () => `80% מהעסקאות נסגרות רק אחרי 5 פולואפים ויותר — אבל 44% מאנשי המכירות מוותרים אחרי הראשון. האוטומציה לא מוותרת`,
+      'form-lead': () => `82% מהלידים מצפים למענה מיידי לאחר מילוי טופס — ואחרי 10 דקות ההסתברות לסגירה יורדת ב-80%`,
+      'ig-lead':   () => `49% מהדיאמים לעסקים נשארים ללא מענה — ו-73% מהם עוברים למתחרה. כל DM שמתפספס הוא ליד שנאבד`,
+      'crm':       () => `נתוני CRM שגויים עולים לעסקים 15% מהכנסותיהם לפי Gartner — עדכון ידני הוא מקור השגיאה מספר 1`,
+      'report':    () => `מנהלים מבזבזים בממוצע 8 שעות בשבוע על ריכוז נתונים ידני (Smartsheet) — 32 שעות בחודש שיכולות לחזור אליך`,
+      'schedule':  () => `23% מהפגישות מתבטלות ללא תזכורת — אוטומציית תזכורות מורידה את הנטישה ב-38% ומשאירה את הלוח שלך מלא`,
+      'triage':    () => `52% מהלקוחות מפסיקים לקנות אחרי מענה איטי אחד — ו-60% מצפים לתגובה תוך 10 דקות לכל היותר`,
+    };
+
     const topFlows = allRanked.slice(0, 4);
     const automationRows = topFlows.map((f, i) => {
       const badgeBg  = i < 2 ? '#2db3cd' : '#1b5f6e';
@@ -1771,6 +1789,7 @@
                       <span style="display:inline-block;flex-shrink:0;width:20px;height:20px;border-radius:50%;background-color:#1a3a4a;border:1px solid #2db3cd;font-size:10px;font-weight:700;color:#2db3cd;text-align:center;line-height:20px;margin-left:10px;">${si+1}</span>
                       <span style="font-size:13px;color:#c0c6d0;line-height:20px;">${s}</span>
                     </div>`).join('');
+      const benefit = (FLOW_BENEFIT[f.id] || (fl => `חוסכת ~${fl.save * 4} שעות עבודה ידנית בחודש`))(f);
       return `
             <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#141d35 !important;border-radius:12px;margin-bottom:12px;border:1px solid ${i < 2 ? '#2a4a5e' : '#1e3040'};overflow:hidden;">
               <tr><td>
@@ -1780,7 +1799,10 @@
                     <span style="font-size:14px;font-weight:700;color:#ffffff !important;">${f.title}</span>
                     <span style="float:left;background-color:#0e2a35 !important;border:1px solid #2db3cd;border-radius:20px;padding:3px 10px;font-size:11px;color:#2db3cd !important;font-weight:600;">~${f.save}h/שבוע</span>
                   </td></tr>
-                  <tr><td style="padding:12px 20px 14px;background-color:#141d35 !important;">${stepsHtml}</td></tr>
+                  <tr><td style="padding:12px 20px 10px;background-color:#141d35 !important;">${stepsHtml}</td></tr>
+                  <tr><td style="padding:0 20px 14px;background-color:#141d35 !important;">
+                    <div style="background-color:#071520 !important;border:1px solid #1a4050;border-right:3px solid #2db3cd;border-radius:6px;padding:9px 14px;font-size:12px;color:#7dd6e8 !important;line-height:1.65;">${benefit}</div>
+                  </td></tr>
                 </table>
               </td></tr>
             </table>`;
