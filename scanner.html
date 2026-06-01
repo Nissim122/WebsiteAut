@@ -1545,10 +1545,15 @@
       var dir = bx >= ax ? 1 : -1;
       var c1x = ax + dir * h, c1y = ay;
       var c2x = bx - dir * h, c2y = by;
-      // arc wraps from the side of the destination circle up to its top
-      var sweep = fromLeft ? 1 : 0;
+      // two arcs = full 360° wrap around destination circle, returning to entry point
+      // entry from left: counterclockwise half (→ right via top) then clockwise half (→ left via bottom)
+      // entry from right: clockwise half (→ left via bottom) then counterclockwise half (→ right via top)
+      var oppX = fromLeft ? b.cx + CIRCLE_R : b.cx - CIRCLE_R;
+      var s1 = fromLeft ? 0 : 1;
+      var s2 = fromLeft ? 1 : 0;
       segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by +
-                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + sweep + ' ' + b.cx + ' ' + (b.cy - CIRCLE_R));
+                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + s1 + ' ' + oppX + ' ' + b.cy +
+                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + s2 + ' ' + bx + ' ' + b.cy);
       connDots.push({ x: ax, y: ay });
       connDots.push({ x: bx, y: by });
     }
@@ -1575,23 +1580,23 @@
       var oldDots  = connDots.slice(0, -2);
       var newDots  = connDots.slice(-2);
 
-      var drawStyle = 'stroke-dasharray:1; stroke-dashoffset:1; animation: drawPath 1.5s cubic-bezier(0.22,1,0.36,1) both';
-
+      // mask that progressively reveals all layers together — same appearance during draw as after
       var animatedLayers =
-        '<path pathLength="1" d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="12" stroke-linecap="round" opacity="0.1" style="' + drawStyle + '"/>' +
-        '<path pathLength="1" d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.35" style="' + drawStyle + '"/>' +
-        '<g style="opacity:0; animation: cgFadeIn 0.25s ease 1.3s forwards">' +
-          '<path d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 5" class="conn-anim" filter="url(#cg-glow)" opacity="0.9"/>' +
-        '</g>';
-
-      var newDotsHtml = '<g style="opacity:0; animation: cgFadeIn 0.3s ease 1.4s forwards">' +
-        newDots.map(staticDot).join('') +
+        '<defs>' +
+          '<mask id="cg-draw-mask" maskUnits="userSpaceOnUse">' +
+            '<path pathLength="1" d="' + newSegD + '" stroke="white" fill="none"' +
+            ' stroke-width="24" stroke-linecap="round"' +
+            ' style="stroke-dasharray:1; stroke-dashoffset:1; animation: drawPath 1.5s cubic-bezier(0.22,1,0.36,1) both"/>' +
+          '</mask>' +
+        '</defs>' +
+        '<g mask="url(#cg-draw-mask)">' +
+          staticLayers(newSegD) +
+          newDots.map(staticDot).join('') +
         '</g>';
 
       svgInner = (oldSegsD ? staticLayers(oldSegsD) : '') +
                  animatedLayers +
-                 oldDots.map(staticDot).join('') +
-                 newDotsHtml;
+                 oldDots.map(staticDot).join('');
     } else {
       var allD = segs.join(' ');
       svgInner = staticLayers(allD) + connDots.map(staticDot).join('');
