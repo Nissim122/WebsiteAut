@@ -46,6 +46,20 @@
 - **Spacing:** Use intentional, consistent spacing tokens — not random Tailwind steps.
 - **Depth:** Surfaces should have a layering system (base → elevated → floating), not all sit at the same z-plane.
 
+## Hero Bubble Images — שינוי גודל
+- בועות הלוגואים בהירו (`bubble-tag`) משתמשות ב-`display: flex` + `overflow: hidden` לחיתוך.
+- Tailwind CDN מוסיף `max-width: 100%` + `height: auto` על כל `img`, שחוסם הגדלה מעבר לגודל הבועה.
+- **לפני שינוי גודל תמונה בבועה** — לוודא שעל `.bubble-tag img` קיים:
+  ```css
+  flex-shrink: 0;
+  max-width: none;
+  max-height: none;
+  ```
+- גודל התמונה בפועל נקבע ב-`BUBBLES` array (בסוף ה-HTML), שדות `w` ו-`h`.
+- **בועה עם תמונה אחת בלבד ב-pool לא תתחלף** — הקוד כבר מיישם זאת (`pool.length <= 1 → skip`). בעת הוספת תמונות ל-pool, לוודא שבועה "סטטית" נשארת עם פריט אחד בלבד.
+- הגדלת `w`/`h` מעבר לגודל הבועה → זום-אין (נחתך מהצדדים, ממורכז).
+- הקטנת `w`/`h` מתחת לגודל הבועה → רווח לבן סביב הלוגו.
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
 - Do not "improve" a reference design — match it
