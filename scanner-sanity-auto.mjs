@@ -47,6 +47,9 @@ const pass = msg => console.log(`  pass: ${msg}`);
 async function openPage(browser) {
   const page = await browser.newPage();
   await page.setViewport({ width: 1440, height: 900 });
+  await page.evaluateOnNewDocument(() => {
+    localStorage.setItem('clix_cookie_consent', 'yes');
+  });
   await page.setRequestInterception(true);
   page.on('request', req => {
     if (req.url().includes('make.com') || req.url().includes('google-analytics') || req.url().includes('googletagmanager')) {
