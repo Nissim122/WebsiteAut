@@ -176,7 +176,7 @@
     .screen { display: none; flex-direction: column; width: 100%; }
     .screen.active {
       display: flex;
-      animation: fadeUp 0.38s cubic-bezier(0.16,1,0.3,1);
+      animation: fadeUp 0.3s ease-out;
     }
     #screen-1.active, #screen-2.active {
       min-height: calc(100vh - 80px);
@@ -185,7 +185,7 @@
       animation: none;
     }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
+      from { opacity: 0; transform: translateY(5px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
