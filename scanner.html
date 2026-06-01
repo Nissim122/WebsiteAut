@@ -342,6 +342,14 @@
     .conn-anim {
       animation: connFlow 1.6s linear infinite;
     }
+    @keyframes drawPath {
+      from { stroke-dashoffset: 1; }
+      to   { stroke-dashoffset: 0; }
+    }
+    @keyframes cgFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
     .tool-img { width: 32px; height: 32px; object-fit: contain; }
     .tool-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.3; }
 
@@ -1472,6 +1480,7 @@
   }
 
   function toggleTool(id, el) {
+    var adding = false;
     if (S.tools.includes(id)) {
       S.tools = S.tools.filter(t => t !== id);
       el.classList.remove('sel');
@@ -1482,13 +1491,14 @@
       el.classList.add('sel');
       el.setAttribute('aria-pressed', 'true');
       trackEvent('scanner_tool_toggle', { tool: id, action: 'select' });
+      adding = true;
     }
     updateToolsBtn();
     updateUnlockHint();
-    updateConnectionPaths();
+    updateConnectionPaths(adding);
   }
 
-  function updateConnectionPaths() {
+  function updateConnectionPaths(animateNew) {
     const grid = document.getElementById('tools-grid');
     if (!grid) return;
 
@@ -1502,7 +1512,6 @@
 
     const gridRect = grid.getBoundingClientRect();
     const CIRCLE_R = 35;
-    // Circle center is at padding-top(11) + radius(35) = 46px from card top
     const pts = cards.map(function(card) {
       var r = card.getBoundingClientRect();
       return {
@@ -1516,36 +1525,77 @@
     for (var i = 0; i < pts.length - 1; i++) {
       var a = pts[i], b = pts[i + 1];
       var dx = b.cx - a.cx;
-      var ax, bx;
+      var ax, bx, fromLeft;
       if (Math.abs(dx) < 15) {
-        // Same column — arc to the closer grid edge
         var goRight = a.cx < gridRect.width / 2;
         ax = a.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
         bx = b.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
+        fromLeft = !goRight;
       } else if (dx > 0) {
-        ax = a.cx + CIRCLE_R;  // exit A from right
-        bx = b.cx - CIRCLE_R;  // enter B from left
+        ax = a.cx + CIRCLE_R;
+        bx = b.cx - CIRCLE_R;
+        fromLeft = true;
       } else {
-        ax = a.cx - CIRCLE_R;  // exit A from left
-        bx = b.cx + CIRCLE_R;  // enter B from right
+        ax = a.cx - CIRCLE_R;
+        bx = b.cx + CIRCLE_R;
+        fromLeft = false;
       }
       var ay = a.cy, by = b.cy;
       var h = Math.max(Math.abs(bx - ax) * 0.55, 50);
       var dir = bx >= ax ? 1 : -1;
       var c1x = ax + dir * h, c1y = ay;
       var c2x = bx - dir * h, c2y = by;
-      segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by);
+      // arc wraps from the side of the destination circle up to its top
+      var sweep = fromLeft ? 1 : 0;
+      segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by +
+                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + sweep + ' ' + b.cx + ' ' + (b.cy - CIRCLE_R));
       connDots.push({ x: ax, y: ay });
       connDots.push({ x: bx, y: by });
     }
-    var pathD = segs.join(' ');
 
     var w = grid.offsetWidth;
     var h2 = grid.offsetHeight;
     var p0 = pts[0], pN = pts[pts.length - 1];
-    var dotsHtml = connDots.map(function(p) {
+
+    function staticLayers(d) {
+      return '<path d="' + d + '" fill="none" stroke="url(#cg-grad)" stroke-width="12" stroke-linecap="round" opacity="0.1"/>' +
+             '<path d="' + d + '" fill="none" stroke="url(#cg-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>' +
+             '<path d="' + d + '" fill="none" stroke="url(#cg-grad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 5" class="conn-anim" filter="url(#cg-glow)" opacity="0.9"/>';
+    }
+
+    function staticDot(p) {
       return '<circle cx="' + p.x + '" cy="' + p.y + '" r="3" fill="url(#cg-grad)" filter="url(#cg-glow)" opacity="0.9"/>';
-    }).join('');
+    }
+
+    var svgInner;
+
+    if (animateNew && segs.length >= 1) {
+      var oldSegsD = segs.slice(0, -1).join(' ');
+      var newSegD  = segs[segs.length - 1];
+      var oldDots  = connDots.slice(0, -2);
+      var newDots  = connDots.slice(-2);
+
+      var drawStyle = 'stroke-dasharray:1; stroke-dashoffset:1; animation: drawPath 1.5s cubic-bezier(0.22,1,0.36,1) both';
+
+      var animatedLayers =
+        '<path pathLength="1" d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="12" stroke-linecap="round" opacity="0.1" style="' + drawStyle + '"/>' +
+        '<path pathLength="1" d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.35" style="' + drawStyle + '"/>' +
+        '<g style="opacity:0; animation: cgFadeIn 0.25s ease 1.3s forwards">' +
+          '<path d="' + newSegD + '" fill="none" stroke="url(#cg-grad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7 5" class="conn-anim" filter="url(#cg-glow)" opacity="0.9"/>' +
+        '</g>';
+
+      var newDotsHtml = '<g style="opacity:0; animation: cgFadeIn 0.3s ease 1.4s forwards">' +
+        newDots.map(staticDot).join('') +
+        '</g>';
+
+      svgInner = (oldSegsD ? staticLayers(oldSegsD) : '') +
+                 animatedLayers +
+                 oldDots.map(staticDot).join('') +
+                 newDotsHtml;
+    } else {
+      var allD = segs.join(' ');
+      svgInner = staticLayers(allD) + connDots.map(staticDot).join('');
+    }
 
     var svgNS = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(svgNS, 'svg');
@@ -1554,26 +1604,20 @@
     svg.setAttribute('width', w);
     svg.setAttribute('height', h2);
     svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;overflow:visible;';
-    svg.innerHTML = '<defs>' +
-      '<linearGradient id="cg-grad" gradientUnits="userSpaceOnUse"' +
-        ' x1="' + p0.cx + '" y1="' + p0.cy + '"' +
-        ' x2="' + pN.cx + '" y2="' + pN.cy + '">' +
-        '<stop offset="0%"   stop-color="#2db3cd" stop-opacity="0.95"/>' +
-        '<stop offset="100%" stop-color="#e0176b" stop-opacity="0.95"/>' +
-      '</linearGradient>' +
-      '<filter id="cg-glow" x="-60%" y="-60%" width="220%" height="220%">' +
-        '<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>' +
-        '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>' +
-      '</filter>' +
-    '</defs>' +
-    // Outer glow halo
-    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="12" stroke-linecap="round" opacity="0.1"/>' +
-    // Solid dim base
-    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>' +
-    // Flowing animated dashes
-    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="2.5" stroke-linecap="round"' +
-      ' stroke-dasharray="7 5" class="conn-anim" filter="url(#cg-glow)" opacity="0.9"/>' +
-    dotsHtml;
+    svg.innerHTML =
+      '<defs>' +
+        '<linearGradient id="cg-grad" gradientUnits="userSpaceOnUse"' +
+          ' x1="' + p0.cx + '" y1="' + p0.cy + '"' +
+          ' x2="' + pN.cx + '" y2="' + pN.cy + '">' +
+          '<stop offset="0%"   stop-color="#2db3cd" stop-opacity="0.95"/>' +
+          '<stop offset="100%" stop-color="#e0176b" stop-opacity="0.95"/>' +
+        '</linearGradient>' +
+        '<filter id="cg-glow" x="-60%" y="-60%" width="220%" height="220%">' +
+          '<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>' +
+          '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+        '</filter>' +
+      '</defs>' +
+      svgInner;
 
     grid.insertBefore(svg, grid.firstChild);
   }
