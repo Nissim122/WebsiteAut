@@ -233,7 +233,12 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-2 { max-height: calc(100vh - 155px); overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+    #screen-2 {
+      height: calc(100vh - 146px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
     #screen-2.active { min-height: 0; }
     #tools-grid { flex: 1; min-height: 0; margin-bottom: 0; }
     #screen-2 .btn-row {
@@ -1330,7 +1335,7 @@
       if (h) h.focus();
     }, 100);
     updateProg(id);
-    const lockScroll = (id === 1 || id === 2 || id === 4);
+    const lockScroll = (id === 1 || id === 4);
     document.documentElement.style.overflow = lockScroll ? 'hidden' : '';
     document.documentElement.style.overscrollBehavior = 'none';
     document.body.style.overflow = lockScroll ? 'hidden' : '';
