@@ -1872,7 +1872,7 @@
   // ═══════════════════════════════════════════════════════════════
   document.addEventListener('DOMContentLoaded', () => {
     renderTools();
-    updateProg(2);
+    updateProg(1);
     updateUnlockHint();
     hideDecorativeSVGs();
     document.documentElement.style.overflow = 'hidden';
@@ -1881,8 +1881,48 @@
     document.body.style.overscrollBehavior = 'none';
 
     trackEvent('scanner_start');
-    _curScreen = 2;
+    _curScreen = 1;
     _screenEnterTime = Date.now();
+
+    // Cookie-banner guard: if banner appears (testing / first visit),
+    // constrain screen-1's height to the visible area above the banner
+    // and make it internally scrollable so all pain cards are reachable.
+    function applyCookieBannerPadding() {
+      var banner = document.getElementById('clix-cookie-wrap');
+      var s1 = document.getElementById('screen-1');
+      if (!s1) return;
+      if (banner) {
+        var h = banner.getBoundingClientRect().height || 0;
+        // Override min-height so max-height can actually constrain the element
+        s1.style.minHeight = '0';
+        s1.style.height = 'calc(100vh - 80px - ' + h + 'px)';
+        s1.style.overflowY = 'auto';
+        s1.style.paddingBottom = '12px';
+      } else {
+        s1.style.minHeight = '';
+        s1.style.height = '';
+        s1.style.overflowY = '';
+        s1.style.paddingBottom = '';
+      }
+    }
+
+    var _bannerObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        m.addedNodes.forEach(function(n) {
+          if (n.id === 'clix-cookie-wrap') {
+            // Give the banner one rAF to paint so getBoundingClientRect is accurate
+            requestAnimationFrame(function() { applyCookieBannerPadding(); });
+          }
+        });
+        m.removedNodes.forEach(function(n) {
+          if (n.id === 'clix-cookie-wrap') { applyCookieBannerPadding(); }
+        });
+      });
+    });
+    _bannerObserver.observe(document.body, { childList: true });
+
+    // Banner may already be in the DOM (showBanner ran before DOMContentLoaded fired late)
+    applyCookieBannerPadding();
 
   });
   </script>
