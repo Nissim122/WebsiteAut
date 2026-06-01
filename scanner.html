@@ -244,8 +244,8 @@
     #screen-2 .btn-row {
       position: sticky;
       bottom: 0;
-      background: linear-gradient(to bottom, transparent 0%, var(--bg) 28%);
-      padding-top: 18px;
+      background: var(--bg);
+      padding-top: 10px;
       padding-bottom: 10px;
       margin-top: 4px;
     }
@@ -741,7 +741,7 @@
       <p class="subtitle">בחר את כל הכלים הרלוונטיים — ניצור חיבורים בדיוק בשבילך</p>
 
       <div class="tools-grid" id="tools-grid"></div>
-      <div id="tools-hint" style="min-height:20px; margin-bottom:10px; font-size:12px; color:rgba(255,255,255,0.5); text-align:center; transition:opacity 0.25s ease;"></div>
+      <div id="tools-hint" style="display:none;"></div>
 
       <div class="btn-row">
         <button class="btn-s" onclick="goTo(1)">חזור</button>
