@@ -242,7 +242,7 @@
     }
     #screen-2::-webkit-scrollbar { display: none; }
     #screen-2.active { min-height: 0; }
-    #tools-grid { margin-bottom: 0; }
+    #tools-grid { margin-bottom: 0; position: relative; isolation: isolate; }
     #screen-2 .btn-row {
       padding-top: 10px;
       padding-bottom: 10px;
@@ -334,6 +334,14 @@
     }
     .tool-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
     .tool-card:active { transform: scale(1.01); }
+
+    @keyframes connFlow {
+      from { stroke-dashoffset: 0; }
+      to   { stroke-dashoffset: -28; }
+    }
+    .conn-anim {
+      animation: connFlow 1.6s linear infinite;
+    }
     .tool-img { width: 32px; height: 32px; object-fit: contain; }
     .tool-name { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.7); text-align: center; line-height: 1.3; }
 
@@ -1460,6 +1468,7 @@
         <span class="tool-name" aria-hidden="true">${t.lbl}</span>
       </div>
     `).join('');
+    updateConnectionPaths();
   }
 
   function toggleTool(id, el) {
@@ -1476,6 +1485,97 @@
     }
     updateToolsBtn();
     updateUnlockHint();
+    updateConnectionPaths();
+  }
+
+  function updateConnectionPaths() {
+    const grid = document.getElementById('tools-grid');
+    if (!grid) return;
+
+    const old = document.getElementById('conn-svg');
+    if (old) old.remove();
+
+    if (S.tools.length < 2) return;
+
+    const cards = S.tools.map(id => document.querySelector('[data-tid="' + id + '"]')).filter(Boolean);
+    if (cards.length < 2) return;
+
+    const gridRect = grid.getBoundingClientRect();
+    const CIRCLE_R = 35;
+    // Circle center is at padding-top(11) + radius(35) = 46px from card top
+    const pts = cards.map(function(card) {
+      var r = card.getBoundingClientRect();
+      return {
+        cx: r.left - gridRect.left + r.width / 2,
+        cy: r.top  - gridRect.top  + 46
+      };
+    });
+
+    var segs = [];
+    var connDots = [];
+    for (var i = 0; i < pts.length - 1; i++) {
+      var a = pts[i], b = pts[i + 1];
+      var dx = b.cx - a.cx;
+      var ax, bx;
+      if (Math.abs(dx) < 15) {
+        // Same column — arc to the closer grid edge
+        var goRight = a.cx < gridRect.width / 2;
+        ax = a.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
+        bx = b.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
+      } else if (dx > 0) {
+        ax = a.cx + CIRCLE_R;  // exit A from right
+        bx = b.cx - CIRCLE_R;  // enter B from left
+      } else {
+        ax = a.cx - CIRCLE_R;  // exit A from left
+        bx = b.cx + CIRCLE_R;  // enter B from right
+      }
+      var ay = a.cy, by = b.cy;
+      var h = Math.max(Math.abs(bx - ax) * 0.55, 50);
+      var dir = bx >= ax ? 1 : -1;
+      var c1x = ax + dir * h, c1y = ay;
+      var c2x = bx - dir * h, c2y = by;
+      segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by);
+      connDots.push({ x: ax, y: ay });
+      connDots.push({ x: bx, y: by });
+    }
+    var pathD = segs.join(' ');
+
+    var w = grid.offsetWidth;
+    var h2 = grid.offsetHeight;
+    var p0 = pts[0], pN = pts[pts.length - 1];
+    var dotsHtml = connDots.map(function(p) {
+      return '<circle cx="' + p.x + '" cy="' + p.y + '" r="3" fill="url(#cg-grad)" filter="url(#cg-glow)" opacity="0.9"/>';
+    }).join('');
+
+    var svgNS = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(svgNS, 'svg');
+    svg.id = 'conn-svg';
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h2);
+    svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:-1;overflow:visible;';
+    svg.innerHTML = '<defs>' +
+      '<linearGradient id="cg-grad" gradientUnits="userSpaceOnUse"' +
+        ' x1="' + p0.cx + '" y1="' + p0.cy + '"' +
+        ' x2="' + pN.cx + '" y2="' + pN.cy + '">' +
+        '<stop offset="0%"   stop-color="#2db3cd" stop-opacity="0.95"/>' +
+        '<stop offset="100%" stop-color="#e0176b" stop-opacity="0.95"/>' +
+      '</linearGradient>' +
+      '<filter id="cg-glow" x="-60%" y="-60%" width="220%" height="220%">' +
+        '<feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/>' +
+        '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+      '</filter>' +
+    '</defs>' +
+    // Outer glow halo
+    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="12" stroke-linecap="round" opacity="0.1"/>' +
+    // Solid dim base
+    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>' +
+    // Flowing animated dashes
+    '<path d="' + pathD + '" fill="none" stroke="url(#cg-grad)" stroke-width="2.5" stroke-linecap="round"' +
+      ' stroke-dasharray="7 5" class="conn-anim" filter="url(#cg-glow)" opacity="0.9"/>' +
+    dotsHtml;
+
+    grid.insertBefore(svg, grid.firstChild);
   }
 
   function updateToolsBtn() {
