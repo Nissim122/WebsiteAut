@@ -233,9 +233,17 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-2 { max-height: calc(100vh - 155px); overflow: visible; }
+    #screen-2 { max-height: calc(100vh - 155px); overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
     #screen-2.active { min-height: 0; }
-    #tools-grid { flex: 1; min-height: 0; overflow-y: visible; margin-bottom: 0; }
+    #tools-grid { flex: 1; min-height: 0; margin-bottom: 0; }
+    #screen-2 .btn-row {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(to bottom, transparent 0%, var(--bg) 28%);
+      padding-top: 18px;
+      padding-bottom: 10px;
+      margin-top: 4px;
+    }
     .tools-grid {
       display: grid;
       grid-template-columns: repeat(6,1fr);
@@ -690,7 +698,6 @@
     @media (max-width: 480px) {
       .wrapper { padding-left: 18px; padding-right: 18px; }
       .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
-      #screen-2 { overflow-x: hidden; }
     }
   </style>
 </head>
