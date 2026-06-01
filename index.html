@@ -2947,28 +2947,40 @@
         ">היי אני העוזר AI של צוות Clix automations<br>איך אפשר לעזור ?</div>
       </div>
 
-      <!-- Quick questions -->
-      <div id="chat-quick-btns" style="
-        display:flex; flex-direction:column; gap:0.55rem;
-        margin: 0 0.25rem 0.25rem;
-        padding: 0.65rem 0.7rem 0.6rem;
-        background: linear-gradient(135deg, rgba(224,23,107,0.07) 0%, rgba(33,150,176,0.07) 100%);
-        border: 1px solid rgba(255,255,255,0.07);
-        border-radius: 14px;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-      ">
-        <div style="font-size:0.72rem; font-family:'Heebo',sans-serif; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.05em;">שאלות שלקוחות שואלים:</div>
+    </div>
 
+    <!-- Quick questions (persistent — always visible above input) -->
+    <div id="chat-quick-btns" style="
+      display:flex; flex-direction:column; gap:0.55rem;
+      margin: 0 0.5rem 0;
+      padding: 0.5rem 0.7rem 0.5rem;
+      background: linear-gradient(135deg, rgba(224,23,107,0.07) 0%, rgba(33,150,176,0.07) 100%);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    ">
+      <!-- Clickable title row -->
+      <div id="chat-quick-label" onclick="toggleQuickBtns()" style="
+        display:flex; align-items:center; justify-content:space-between;
+        cursor:pointer; user-select:none; padding:0.1rem 0;
+      ">
+        <span style="font-size:0.72rem; font-family:'Heebo',sans-serif; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.05em;">שאלות שלקוחות שואלים:</span>
+        <svg id="chat-quick-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" style="transform:rotate(180deg); transition:transform 0.25s cubic-bezier(0.34,1.4,0.64,1); flex-shrink:0;">
+          <polyline points="2,4 6,8 10,4" stroke="rgba(255,255,255,0.4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Collapsible body -->
+      <div id="chat-quick-body" style="display:flex; flex-direction:column; gap:0.45rem;">
         <!-- Featured / hot questions -->
         <div style="display:flex; flex-wrap:wrap; gap:0.38rem;">
           <button class="quick-chip quick-chip-hot" onclick="quickReply('מה העלות של אוטומציה לעסק?','q1')">מה העלות של אוטומציה לעסק?</button>
+          <button class="quick-chip quick-chip-hot" onclick="quickReply('מה עלות שיחת אפיון ?','q3')">מה עלות שיחת אפיון ?</button>
           <button class="quick-chip quick-chip-hot" onclick="quickReply('אני לא מבין בטכנולוגיה — זה עדיין יכול להתאים לי?','q2')">אני לא מבין בטכנולוגיה — זה עדיין יכול להתאים לי?</button>
-          <button class="quick-chip quick-chip-hot" onclick="quickReply('כמה עולה שיחת אפיון ראשונית?','q3')">כמה עולה שיחת אפיון ראשונית?</button>
         </div>
-
         <!-- Divider -->
         <div style="height:1px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);"></div>
-
         <!-- Regular questions -->
         <div style="display:flex; flex-wrap:wrap; gap:0.35rem;">
           <button class="quick-chip" onclick="quickReply('אתם עובדים גם עם מערכות AI?','q4')">אתם עובדים גם עם מערכות AI?</button>
@@ -3364,8 +3376,6 @@
       };
 
       window.quickAsk = function (text) {
-        var qqb = document.getElementById('chat-quick-btns');
-        if (qqb) { qqb.style.opacity = '0'; qqb.style.transition = 'opacity 0.2s'; setTimeout(function(){ qqb.style.display = 'none'; }, 200); }
         var input = document.getElementById('chat-input');
         if (input) { input.value = text; input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 96) + 'px'; }
         sendChatMessage();
@@ -3380,23 +3390,38 @@
         q5: 'אנחנו לא נעלמים אחרי ההתקנה 🙂\nיש תקופת אחריות וליווי מלא, כולל בדיקות, תיקונים ותמיכה במקרה הצורך — כדי לוודא שהמערכת עובדת בצורה יציבה גם אחרי העלייה לאוויר.' + CLIX_CTA
       };
 
+      window.toggleQuickBtns = function() {
+        var body = document.getElementById('chat-quick-body');
+        var chevron = document.getElementById('chat-quick-chevron');
+        var container = document.getElementById('chat-quick-btns');
+        if (!body) return;
+        var collapsed = body.style.display === 'none';
+        body.style.display = collapsed ? 'flex' : 'none';
+        container.style.gap = collapsed ? '0.55rem' : '0';
+        if (chevron) chevron.style.transform = collapsed ? 'rotate(180deg)' : 'rotate(0deg)';
+      };
+
       window.quickReply = function(question, key) {
         var answer = CLIX_QUICK_ANSWERS[key];
         if (!answer) return;
-        var qqb = document.getElementById('chat-quick-btns');
-        if (qqb) { qqb.style.opacity = '0'; qqb.style.transition = 'opacity 0.2s'; setTimeout(function(){ qqb.style.display = 'none'; }, 200); }
         appendUserMessage(question);
         appendBotMessage(answer);
         scrollChatToBottom();
+        // Collapse panel after first use
+        var body = document.getElementById('chat-quick-body');
+        var chevron = document.getElementById('chat-quick-chevron');
+        var container = document.getElementById('chat-quick-btns');
+        if (body && body.style.display !== 'none') {
+          body.style.display = 'none';
+          container.style.gap = '0';
+          if (chevron) chevron.style.transform = 'rotate(0deg)';
+        }
       };
 
       window.sendChatMessage = function () {
         var input = document.getElementById('chat-input');
         var text = input ? input.value.trim() : '';
         if (!text) return;
-
-        var qqb = document.getElementById('chat-quick-btns');
-        if (qqb && qqb.style.display !== 'none') { qqb.style.display = 'none'; }
 
         if (isBlocked()) {
           appendBotMessage(BLOCKED_MSG);
