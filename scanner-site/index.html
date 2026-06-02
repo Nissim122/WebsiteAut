@@ -1158,13 +1158,78 @@
   function updateUnlockHint() {
     const hint = document.getElementById('tools-hint');
     if (!hint) return;
-    if (!S.tools.length) {
+
+    if (!S.pain || !S.tools.length) {
       hint.innerHTML = '';
+      hint.style.display = 'none';
       return;
     }
-    const unlocked = FLOWS.filter(f => f.needs.some(n => S.tools.includes(n)));
-    const locked   = FLOWS.filter(f => f.needs.length && f.needs.every(n => !S.tools.includes(n)));
-    hint.innerHTML = '';
+
+    const painLabel = {
+      leads:'ניהול לידים', followup:'פולואפים', service:'שירות לקוחות',
+      scheduling:'תיאום פגישות', reports:'דוחות', sales:'מכירות',
+      tasks:'ניהול משימות', invoices:'חשבוניות', marketing:'שיווק ותוכן'
+    };
+
+    // Per pain: groups of tools — at least one from each group is needed
+    const painGroups = {
+      leads:      [['whatsapp','telegram','manychat','ravmeser','instagram','facebook','fillout'],
+                   ['hubspot','pipedrive','fireberry','monday','morning','airtable']],
+      followup:   [['whatsapp','telegram','manychat','ravmeser'],
+                   ['hubspot','pipedrive','fireberry','monday','morning','airtable'],
+                   ['gmail','outlook','mailchimp','smoove']],
+      service:    [['whatsapp','telegram','manychat','ravmeser'],
+                   ['gmail','outlook'],
+                   ['slack','monday','morning','trello','notion','clickup']],
+      scheduling: [['calendly','tor4you'],
+                   ['whatsapp','telegram','manychat','ravmeser']],
+      reports:    [['sheets','excel','airtable','notion'],
+                   ['gmail','outlook','mailchimp','smoove']],
+      sales:      [['hubspot','pipedrive','fireberry','monday','morning','airtable'],
+                   ['whatsapp','telegram','manychat','ravmeser'],
+                   ['gmail','outlook']],
+      tasks:      [['monday','morning','trello','notion','clickup','airtable']],
+      invoices:   [['rivhit'], ['gmail','outlook']],
+      marketing:  [['instagram','facebook','linkedin'],
+                   ['mailchimp','smoove','gmail']],
+    };
+
+    const groupLabels = {
+      leads:      ['WhatsApp / Instagram / טופס', 'CRM (Monday, HubSpot)'],
+      followup:   ['WhatsApp / Telegram', 'CRM (Monday, HubSpot)', 'Gmail / Outlook'],
+      service:    ['WhatsApp / Telegram', 'Gmail / Outlook', 'Monday / Slack / Trello'],
+      scheduling: ['Calendly / Tor4You', 'WhatsApp / Telegram'],
+      reports:    ['Google Sheets / Excel / Airtable', 'Gmail / Outlook'],
+      sales:      ['CRM (HubSpot, Monday)', 'WhatsApp / Telegram', 'Gmail / Outlook'],
+      tasks:      ['Monday / Trello / Notion'],
+      invoices:   ['Rivhit', 'Gmail / Outlook'],
+      marketing:  ['Instagram / Facebook', 'Mailchimp / Gmail'],
+    };
+
+    const groups = painGroups[S.pain];
+    const labels = groupLabels[S.pain];
+    if (!groups) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
+
+    const missing = groups.reduce((acc, g, i) => {
+      if (!g.some(t => S.tools.includes(t))) acc.push(labels[i]);
+      return acc;
+    }, []);
+
+    if (!missing.length) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
+
+    hint.style.display = 'block';
+    hint.innerHTML = `
+      <div style="background:rgba(33,150,176,0.08);border:1px solid rgba(33,150,176,0.22);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
+        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;">
+          <svg style="flex-shrink:0;margin-top:1px" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2db3cd" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#2db3cd" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#2db3cd" stroke-width="2.5" stroke-linecap="round"/></svg>
+          כדי לאוטמט את תהליך ה${painLabel[S.pain]} שלך, מומלץ להוסיף:
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+          ${missing.map(m => `<span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:4px 11px;font-size:12px;color:#2db3cd;font-weight:600;">${m}</span>`).join('')}
+        </div>
+        <div style="font-size:11.5px;color:rgba(255,255,255,0.38);line-height:1.5;">נשתמש <strong style="color:rgba(255,255,255,0.5);">אך ורק</strong> בכלים שבחרת — האוטומציה תותאם לארסנל הנוכחי שלך</div>
+      </div>
+    `;
   }
 
   // ── Lead modal ──
