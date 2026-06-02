@@ -1,6 +1,6 @@
 // scanner-sanity-auto.mjs — Automated sanity tests for scanner.html
 // Usage: node scanner-sanity-auto.mjs [section...]
-// Sections: screen1 screen2 screen3 screen4 modal screen6
+// Sections: screen1 screen2 screen3 screen4 modal screen6 toolhint
 // No args = happy path only
 import puppeteer from 'puppeteer';
 import http from 'http';
@@ -169,6 +169,85 @@ async function testScreen2(page, F) {
   } catch {
     fail(F, '2.6: Did not navigate to screen-3 after continue');
   }
+}
+
+async function testToolHint(page, F) {
+  console.log('[sanity] Tool Hint (updateUnlockHint)');
+
+  // helper: click tool by data-tid, scroll into view first
+  const clickTool = async (tid) => {
+    await page.evaluate(id => {
+      const el = document.querySelector(`[data-tid="${id}"]`);
+      if (el) { el.scrollIntoView({ block: 'center' }); el.click(); }
+    }, tid);
+    await sleep(150);
+  };
+
+  // Navigate to screen 2 with 'leads' pain selected
+  await goToScreen2(page);
+
+  // HT/1: No hint on entry — 0 tools, pain = leads
+  const displayOnEntry = await page.$eval('#tools-hint', el => el.style.display);
+  displayOnEntry === 'none'
+    ? pass('HT/1: No hint on entry (0 tools)')
+    : fail(F, `HT/1: Hint shown before any tools selected (display="${displayOnEntry}")`);
+
+  // HT/2: Non-relevant tool → hint appears (leads pain, 'make' not in any leads group)
+  await clickTool('make');
+  const displayAfterMake = await page.$eval('#tools-hint', el => el.style.display);
+  displayAfterMake === 'block'
+    ? pass('HT/2: Hint appears after selecting non-relevant tool')
+    : fail(F, `HT/2: Hint not shown after selecting make (display="${displayAfterMake}")`);
+
+  // HT/3: Both missing groups listed (messaging + CRM both absent)
+  const textAfterMake = await page.$eval('#tools-hint', el => el.textContent);
+  textAfterMake.includes('WhatsApp') && textAfterMake.includes('CRM')
+    ? pass('HT/3: Both missing groups shown (WhatsApp, CRM)')
+    : fail(F, `HT/3: Expected WhatsApp+CRM in hint, got: "${textAfterMake.slice(0, 120)}"`);
+
+  // HT/4: Disclaimer "אך ורק" always present when hint shows
+  textAfterMake.includes('אך ורק')
+    ? pass('HT/4: Disclaimer "אך ורק" present')
+    : fail(F, 'HT/4: Disclaimer "אך ורק" missing from hint');
+
+  // HT/5: Add messaging tool → only CRM group remains missing
+  await clickTool('whatsapp');
+  const textAfterMsg = await page.$eval('#tools-hint', el => el.textContent);
+  textAfterMsg.includes('CRM') && !textAfterMsg.includes('WhatsApp / Instagram')
+    ? pass('HT/5: After WhatsApp added — only CRM missing')
+    : fail(F, `HT/5: Expected only CRM missing, got: "${textAfterMsg.slice(0, 120)}"`);
+
+  // HT/6: Add CRM tool → hint disappears (all groups covered)
+  await clickTool('monday');
+  const stateAfterCRM = await page.$eval('#tools-hint', el => ({ display: el.style.display, html: el.innerHTML.trim() }));
+  (stateAfterCRM.display === 'none' || !stateAfterCRM.html)
+    ? pass('HT/6: Hint hidden when all groups covered')
+    : fail(F, `HT/6: Hint still visible after covering all groups (display="${stateAfterCRM.display}")`);
+
+  // HT/7: Deselect CRM → hint reappears with CRM missing
+  await clickTool('monday');
+  const displayAfterDesel = await page.$eval('#tools-hint', el => el.style.display);
+  displayAfterDesel === 'block'
+    ? pass('HT/7: Hint reappears after deselecting CRM tool')
+    : fail(F, `HT/7: Hint did not reappear after deselecting monday (display="${displayAfterDesel}")`);
+
+  // HT/8: Switch pain to 'scheduling' → hint updates to Calendly (whatsapp covers group 2)
+  await page.click('button[onclick="goTo(1)"]');
+  await page.waitForSelector('#screen-1.active', { timeout: 2000 });
+  await page.click('.pain-card[data-pain="scheduling"]');
+  await page.waitForSelector('#screen-2.active', { timeout: 2000 });
+  await sleep(120);
+  const textSched = await page.$eval('#tools-hint', el => el.textContent);
+  textSched.includes('Calendly')
+    ? pass('HT/8: Scheduling pain — Calendly hint shown')
+    : fail(F, `HT/8: Expected Calendly hint for scheduling, got: "${textSched.slice(0, 120)}"`);
+
+  // HT/9: Add Calendly → scheduling hint disappears
+  await clickTool('calendly');
+  const stateAfterCal = await page.$eval('#tools-hint', el => ({ display: el.style.display, html: el.innerHTML.trim() }));
+  (stateAfterCal.display === 'none' || !stateAfterCal.html)
+    ? pass('HT/9: Hint hidden after adding Calendly for scheduling pain')
+    : fail(F, `HT/9: Hint still visible after Calendly added (display="${stateAfterCal.display}")`);
 }
 
 async function testScreen3(page, F) {
@@ -365,12 +444,13 @@ async function testHappyPath(page, F) {
 // ── Section dispatch ──────────────────────────────────────────────────────────
 
 const SUITE = {
-  screen1: testScreen1,
-  screen2: testScreen2,
-  screen3: testScreen3,
-  screen4: testScreen4,
-  modal:   testModal,
-  screen6: testScreen6,
+  screen1:  testScreen1,
+  screen2:  testScreen2,
+  toolhint: testToolHint,
+  screen3:  testScreen3,
+  screen4:  testScreen4,
+  modal:    testModal,
+  screen6:  testScreen6,
 };
 
 function parseArgs(args) {
@@ -381,6 +461,7 @@ function parseArgs(args) {
     if (s === 'screen2' || s.includes('tool')    || s.includes('screen2') || s.includes('screen 2') || s.match(/\b2\./)) run.add('screen2');
     if (s === 'screen3' || s.includes('process') || s.includes('screen3') || s.includes('screen 3') || s.match(/\b3\./)) run.add('screen3');
     if (s === 'screen4' || s.includes('result')  || s.includes('screen4') || s.includes('screen 4') || s.match(/\b4\./)) run.add('screen4');
+    if (s === 'toolhint'|| s.includes('hint')    || s.includes('toolhint'))                                              run.add('toolhint');
     if (s === 'modal'   || s.includes('modal')   || s.includes('lead')    || s.match(/\bm\./i))                          run.add('modal');
     if (s === 'screen6' || s.includes('success') || s.includes('screen6') || s.includes('screen 6') || s.match(/\b6\./)) run.add('screen6');
   }
