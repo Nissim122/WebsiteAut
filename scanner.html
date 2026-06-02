@@ -1291,28 +1291,46 @@
       marketing:  ['Instagram / Facebook', 'Mailchimp / Gmail'],
     };
 
-    const groups = painGroups[S.pain];
-    const labels = groupLabels[S.pain];
+    const groupPurposes = {
+      leads:      ['כדי לקבל ולתעד לידים חדשים', 'כדי לנהל ולעקוב אחר הלידים'],
+      followup:   ['כדי לשלוח תזכורות ועדכונים ללקוחות', 'כדי לעדכן סטטוסים ב-CRM', 'כדי לשלוח מיילים אוטומטיים'],
+      service:    ['כדי לקבל פניות שירות מלקוחות', 'כדי לנהל תכתובות שירות במייל', 'כדי לנהל ולעקוב אחר קריאות שירות'],
+      scheduling: ['כדי לאפשר ללקוחות לקבוע תורים בעצמם', 'כדי לשלוח אישורים ותזכורות אוטומטיים'],
+      reports:    ['כדי לשלוף נתונים ולבנות את הדוח', 'כדי לשלוח דוחות אוטומטיים'],
+      sales:      ['כדי לנהל הזדמנויות מכירה', 'כדי לתקשר עם לקוחות פוטנציאליים', 'כדי לשלוח הצעות מחיר'],
+      tasks:      ['כדי לנהל ולהקצות משימות אוטומטיות'],
+      invoices:   ['כדי ליצור חשבוניות אוטומטיות', 'כדי לשלוח חשבוניות ותזכורות תשלום'],
+      marketing:  ['כדי לפרסם ולשתף תוכן אוטומטי', 'כדי לשלוח קמפיינים ועדכונים ללקוחות'],
+    };
+
+    const groups  = painGroups[S.pain];
+    const labels  = groupLabels[S.pain];
+    const purposes = groupPurposes[S.pain];
     if (!groups) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
 
     const missing = groups.reduce((acc, g, i) => {
-      if (!g.some(t => S.tools.includes(t))) acc.push(labels[i]);
+      if (!g.some(t => S.tools.includes(t))) acc.push({ label: labels[i], purpose: purposes[i] });
       return acc;
     }, []);
 
     if (!missing.length) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
 
+    const rows = missing.map(({ label, purpose }) => `
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <span style="font-size:12px;color:rgba(255,255,255,0.55);flex-shrink:0;">${purpose} —</span>
+        <span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:3px 10px;font-size:12px;color:#2db3cd;font-weight:600;white-space:nowrap;">${label}</span>
+      </div>
+    `).join('');
+
     hint.style.display = 'block';
     hint.innerHTML = `
-      <div style="background:rgba(33,150,176,0.08);border:1px solid rgba(33,150,176,0.22);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;">
-          <svg style="flex-shrink:0;margin-top:1px" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2db3cd" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#2db3cd" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#2db3cd" stroke-width="2.5" stroke-linecap="round"/></svg>
-          כדי לאוטמט את תהליך ה${painLabel[S.pain]} שלך, מומלץ להוסיף:
+      <div style="background:rgba(33,150,176,0.08);border:1px solid rgba(33,150,176,0.22);border-radius:12px;padding:12px 16px;margin-bottom:16px;">
+        <div style="font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+          <svg style="flex-shrink:0" width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2db3cd" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#2db3cd" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#2db3cd" stroke-width="2.5" stroke-linecap="round"/></svg>
+          מומלץ להוסיף לאוטומציה:
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-          ${missing.map(m => `<span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:4px 11px;font-size:12px;color:#2db3cd;font-weight:600;">${m}</span>`).join('')}
-        </div>
-        <div style="font-size:11.5px;color:rgba(255,255,255,0.38);line-height:1.5;">נשתמש <strong style="color:rgba(255,255,255,0.5);">אך ורק</strong> בכלים שבחרת — האוטומציה תותאם לארסנל הנוכחי שלך</div>
+        <div style="margin-bottom:8px;">${rows}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.32);line-height:1.5;padding-top:2px;">נשתמש <strong style="color:rgba(255,255,255,0.45);">אך ורק</strong> בכלים שבחרת — האוטומציה תותאם לארסנל הנוכחי שלך</div>
       </div>
     `;
   }
