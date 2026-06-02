@@ -1323,6 +1323,258 @@
   ];
 
   // ═══════════════════════════════════════════════════════════════
+  //  TOOL RESOLUTION HELPERS
+  // ═══════════════════════════════════════════════════════════════
+  function getToolLabel(id) { const t = TOOLS.find(x => x.id === id); return t ? t.lbl : id; }
+  function bestTool(candidates, tools, fallback) {
+    for (const c of candidates) { if (tools.includes(c)) return getToolLabel(c); }
+    return fallback;
+  }
+  function bestCRM(tools)        { return bestTool(['hubspot','pipedrive','fireberry','monday','morning','airtable'], tools, 'CRM'); }
+  function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','ravmeser'], tools, 'WhatsApp'); }
+  function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove'], tools, 'מייל'); }
+  function bestTask(tools)       { return bestTool(['monday','morning','trello','notion','clickup','airtable'], tools, 'מערכת ניהול'); }
+  function bestData(tools)       { return bestTool(['airtable','excel','notion'], tools, 'Excel'); }
+  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook'], tools, 'הודעה'); }
+  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','whatsapp'], tools, 'פנייה'); }
+  function bestScheduling(tools) { return bestTool(['calendly','tor4you'], tools, 'Calendly'); }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  PAIN MAP NODES — dynamic per pain + tools
+  // ═══════════════════════════════════════════════════════════════
+  function getPainMapNodes(pain, tools) {
+    const CYAN  = '#2db3cd';
+    const PINK  = '#e0176b';
+    const GREEN = '#28c76f';
+    const msg   = bestMessaging(tools);
+    const crm   = bestCRM(tools);
+    const email = bestEmail(tools);
+    const task  = bestTask(tools);
+    const data  = bestData(tools);
+    const notif = bestNotif(tools);
+    const src   = bestLeadSource(tools);
+    const sched = bestScheduling(tools);
+    const maps = {
+      leads: [
+        { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`פנייה נכנסת מ-${src}`,                     desc:'ליד חדש מגיע בלי שתצטרך לעשות כלום.' },
+        { conn:'מיידי' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מזהה ומעבד את הליד',               desc:'הנתונים נאספים, מסודרים ומוכנים לפעולה.', central:true },
+        { conn:'תוך שניות' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`הליד מקבל מסר ב-${msg}`,                   desc:'תגובה אישית מיידית — לפני כל מתחרה.' },
+        { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`רשומה נפתחת ב-${crm}`,                     desc:'כל פרטי הליד שמורים ומוכנים לעבודה.' },
+        { conn:'מיד אחר כך' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'הצוות מקבל התראה עם כל הפרטים',            desc:'אתה מגיע לשיחה מוכן לחלוטין.' },
+        { conn:'ברגע הנכון', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'אתה מתעסק רק בסגירת העסקה',               desc:'הלקוח כבר מכיר את העסק ומוכן לשיחה.' },
+      ],
+      followup: [
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'ליד לא ענה 48 שעות',                        desc:'Make.com מזהה חוסר תגובה אוטומטית.' },
+        { conn:'זוהה' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מפעיל מנוע הפולואפ',               desc:'ללא בדיקה ידנית ובלי להשכיח.', central:true },
+        { conn:'תוך שניות' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`הודעת פולואפ נשלחת ב-${msg}`,              desc:'הודעה אישית — לא מרגישה אוטומטית.' },
+        { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`סטטוס ב-${crm} מתעדכן`,                    desc:'כל האינטראקציות מתועדות ומסודרות.' },
+        { conn:'מיד אחר כך' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'התראה לצוות אם אין תגובה',                  desc:'אף ליד לא נופל בין הכסאות.' },
+        { conn:'במחזוריות', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'עסקאות שנאבדו — חוזרות',                   desc:'פולואפ עקבי ואוטומטי ללא מאמץ.' },
+      ],
+      service: [
+        { iconKey:'msgCircle', iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`פנייה נכנסת ב-${msg}`,                     desc:`לקוחות פונים דרך ${msg} ו-${email}.` },
+        { conn:'זוהתה' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'ChatGPT מסווג את הפנייה',                   desc:'נושא, דחיפות וסוג לקוח נקבעים אוטומטית.', central:true },
+        { conn:'מיידי' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`הפנייה מועברת לנציג הנכון ב-${task}`,      desc:'בהתאם לנושא ולזמינות — אוטומטית.' },
+        { conn:'בו זמנית', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:'תגובה ראשונית אוטומטית ללקוח',              desc:'30 שניות — הלקוח מרגיש שמטפלים בו.' },
+        { conn:'מתועד' },
+        { iconKey:'refreshCw', iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`כל פנייה מתועדת ב-${crm}`,                 desc:'היסטוריה מלאה תמיד זמינה לצוות.' },
+        { conn:'כל הזמן', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'שירות מהיר, מדויק ומרשים',                 desc:'צוות מתמקד בפתרון — לא בניהול.' },
+      ],
+      scheduling: [
+        { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'לקוח מעוניין בפגישה',                       desc:`מגיע מאתר, ${msg}, או לינק ישיר.` },
+        { conn:'מיידי' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מפעיל זרימת התיאום',               desc:'בלי הלוך ושוב של הודעות.', central:true },
+        { conn:'תוך שניות' },
+        { iconKey:'bell',      iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`לקוח בוחר זמן ב-${sched}`,                 desc:'רואה זמינות אמיתית ובוחר מה שנוח.' },
+        { conn:'מאושר', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:'אישור + פרטי הכנה נשלחים',                  desc:`הלקוח מגיע מוכן — נשלח ב-${msg}.` },
+        { conn:'24 שעות לפני' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'תזכורת אוטומטית לשני הצדדים',               desc:'ביטולים יורדים ב-60% עם תזכורות.' },
+        { conn:'אחרי הפגישה', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'פולואפ אוטומטי מחזיר לקוחות',              desc:'עסקאות נסגרות — לא נשכחות.' },
+      ],
+      reports: [
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'טריגר שבועי/חודשי אוטומטי',                desc:'ביום ובשעה שתגדיר — ללא תזכורת ידנית.' },
+        { conn:'מופעל' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`Make.com מאסף נתונים מ-${crm} ו-${data}`,  desc:'כל מקור מחובר מסונכרן אוטומטית.', central:true },
+        { conn:'מרוכז' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:'הנתונים מעובדים ומחושבים',                  desc:'KPIs, סיכומים ומגמות — הכל אוטומטי.' },
+        { conn:'מחושב', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`דוח מוכן נשלח ב-${email}`,                 desc:'מגיע ישירות לתיבה — מוכן לקריאה.' },
+        { conn:'בו זמנית' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`התראה ב-${notif} שהדוח מוכן`,              desc:'כולם יודעים, אף אחד לא מחכה.' },
+        { conn:'כל שבוע', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'החלטות מבוססות נתונים — תמיד',             desc:'6+ שעות נחסכות כל חודש.' },
+      ],
+      sales: [
+        { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`ליד נכנס מ-${src}`,                        desc:`עובר ישר ל-${crm} — בלי העתקה ידנית.` },
+        { conn:'מיידי' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מפעיל תהליך המכירה',               desc:'כל שלב במשפך מנוהל אוטומטית.', central:true },
+        { conn:'תוך שניות' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`מסר ראשוני נשלח ב-${msg}`,                desc:'תגובה מיידית — לפני המתחרים.' },
+        { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`פעילות מתועדת ב-${crm}`,                   desc:'כל שיחה, מייל והחלטה מתועדים.' },
+        { conn:'בו זמנית' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'תזכורות ומשימות נוצרות אוטומטית',           desc:'הצוות יודע בדיוק מה לעשות ומתי.' },
+        { conn:'לאורך כל הדרך', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'סגירת עסקאות ב-40% מהר יותר',              desc:'פחות ניהול — יותר מכירות.' },
+      ],
+      tasks: [
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`משימה נוצרת ב-${msg} או ${email}`,         desc:'מכל מקור — הודעה, טופס, מייל.' },
+        { conn:'זוהתה' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מנתח ומשייך את המשימה',            desc:'עדיפות, בעלים ותאריך יעד — אוטומטי.', central:true },
+        { conn:'מיידי' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`נוצרת משימה ב-${task}`,                    desc:'מסודרת, מוקצית ועם תאריך יעד ברור.' },
+        { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`הצוות מקבל הודעה ב-${notif}`,              desc:'אף אחד לא פספס משימה חשובה.' },
+        { conn:'לפני הדדליין' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'תזכורת אוטומטית לפני המועד',                desc:'משימות לא נשכחות, עומסים מתוזמנים.' },
+        { conn:'כשמסתיים', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'פחות כאוס — יותר עשייה',                   desc:'הצוות מתמקד בביצוע, לא בניהול.' },
+      ],
+      invoices: [
+        { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'עבודה הסתיימה — טריגר אוטומטי',            desc:'אין צורך לזכור, אין צורך לבקש.' },
+        { conn:'מיידי' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`Make.com מייצר חשבונית מ-${crm}`,          desc:'פרטי לקוח, סכום ותנאים — נשלפים אוטומטית.', central:true },
+        { conn:'תוך שניות' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`חשבונית נשלחת ב-${email}`,                desc:'מגיעה מיד לתיבת הלקוח — מסודרת.' },
+        { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`תשלום מעוקב ב-${data}`,                    desc:'כל חוב פתוח מסומן ומנוטר בזמן אמת.' },
+        { conn:'7 ימים' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'תזכורת תשלום אוטומטית ללקוח',               desc:'אדיבה, עקבית — לא מביכה לשלוח.' },
+        { conn:'בכל עת', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'תזרים מזומנים בריא ומסודר',                desc:'כסף מגיע בזמן — ללא מרדף.' },
+      ],
+      marketing: [
+        { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`קהל יעד מפולח ב-${crm}`,                   desc:'לפי התנהגות, סטטוס ועניין.' },
+        { conn:'מפוצל' },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'Make.com מריץ קמפיין אוטומטי',              desc:'הודעות, מיילים, ניוזלטר — הכל מנוהל.', central:true },
+        { conn:'נשלח' },
+        { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`תוכן מגיע ב-${msg} ו-${email}`,            desc:'בזמן הנכון, לאדם הנכון, בערוץ הנכון.' },
+        { conn:'נמדד', lineClr:'rgba(224,23,107,0.28)' },
+        { iconKey:'refreshCw', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`לידים חמים עולים ל-${crm} מיד`,           desc:'תגובות נאספות ומסווגות אוטומטית.' },
+        { conn:'ממשיך' },
+        { iconKey:'bell',      iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`דוח ביצועים שבועי ב-${email}`,             desc:'אתה יודע מה עובד ומה לא.' },
+        { conn:'אוטומטי', lineClr:'rgba(255,255,255,0.15)' },
+        { iconKey:'phone',     iconClr:GREEN, nodeClass:'success', iconClass:'green-i', title:'שיווק שעובד 24/7 בשבילך',                 desc:'יותר לידים, פחות עבודה ידנית.' },
+      ],
+    };
+    return maps[pain] || maps.leads;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  RESOLVE FLOW STEPS — real tool names in after-column
+  // ═══════════════════════════════════════════════════════════════
+  function resolveFlowSteps(flowId, tools) {
+    const msg   = bestMessaging(tools);
+    const crm   = bestCRM(tools);
+    const email = bestEmail(tools);
+    const task  = bestTask(tools);
+    const data  = bestData(tools);
+    const notif = bestNotif(tools);
+    const src   = bestLeadSource(tools);
+    const sched = bestScheduling(tools);
+    const steps = {
+      'wa-lead':   [`ליד שולח הודעה ב-${msg}`,            'Make.com מזהה ומחלץ פרטים',      `נוצרת רשומה ב-${crm} אוטומטית`,           `הודעת תודה נשלחת ב-${msg} תוך 30 שניות`],
+      'followup':  [`ליד לא ענה — זוהה ב-${crm}`,         'Make.com מפעיל מנוע פולואפ',      `הודעת פולואפ נשלחת ב-${msg}`,             `הסטטוס ב-${crm} מתעדכן אוטומטית`],
+      'form-lead': ['טופס מולא באתר',                      'Make.com מקבל webhook',            `פרטים נשמרים ב-${crm}`,                   `מייל ברוך הבא יוצא ב-${email}`],
+      'ig-lead':   [`DM נכנס ב-${src}`,                   'Make.com מזהה הודעה ראשונה',       'פרטים נשמרים + תגובה אוטומטית',           `ליד עולה ל-${crm}`],
+      'crm':       ['עדכון פרטי לקוח',                     'Make.com מסנכרן בין מערכות',       `${crm} מתעדכן אוטומטית`,                  `התראה לצוות ב-${notif} בזמן אמת`],
+      'report':    ['טריגר אוטומטי ביום שתגדיר',           `Make.com מאסף נתונים מ-${data}`,  `${data} מתעדכן ומחושב`,                   `דוח נשלח ב-${email}`],
+      'schedule':  [`לקוח בוחר שעה ב-${sched}`,           'Make.com מאשר ושולח הכנה',         `תזכורת 24 שעות לפני ב-${msg}`,            `פולואפ אחרי הפגישה ב-${msg}`],
+      'triage':    [`הודעה נכנסת ב-${msg} / ${email}`,    'Make.com מסווג לפי נושא',          `מועבר לנציג הנכון ב-${task}`,             'תגובה ראשונית אוטומטית תוך 30 שניות'],
+    };
+    return steps[flowId] || null;
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  RENDER PAIN CARDS — dynamic per pain + tools
+  // ═══════════════════════════════════════════════════════════════
+  function renderPainCards(pain, tools) {
+    const crm  = bestCRM(tools);
+    const msg  = bestMessaging(tools);
+    const data = bestData(tools);
+    const email = bestEmail(tools);
+    const warnSvg  = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="${c}" stroke-width="2" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+    const clockSvg = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="${c}" stroke-width="2"/><path d="M12 7v5l3 3" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const linkSvg  = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="2" x2="22" y2="22" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const barSvg   = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><line x1="18" y1="20" x2="18" y2="10" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const warnFoot  = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#e0176b" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#e0176b" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#e0176b" stroke-width="2.5" stroke-linecap="round"/></svg>`;
+    const clockFoot = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#e0176b" stroke-width="2"/><path d="M12 7v5l3 3" stroke="#e0176b" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const linkFoot  = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="#e0176b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#e0176b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const card = (ico, title, desc, footIco, footTxt) => `
+      <div class="s4-pain-card">
+        <div class="s4-pain-icon" style="background:rgba(224,23,107,0.12);border:1.5px solid rgba(224,23,107,0.28);">${ico}</div>
+        <div class="s4-pain-title">${title}</div>
+        <div class="s4-pain-desc">${desc}</div>
+        <div class="s4-pain-footer" style="color:var(--pink);">${footIco} ${footTxt}</div>
+      </div>`;
+    const P = '#e0176b';
+    const configs = {
+      leads: [
+        card(warnSvg(P),  'לידים לא מטופלים מספיק מהר',        'פנייה חדשה מגיעה ואתה לא זמין — הליד ממשיך הלאה.',         warnFoot,  'סיכון איבוד לקוחות: גבוה'),
+        card(linkSvg(P),  `מידע מפוזר — לא מגיע ל-${crm}`,    'פרטים ב-WhatsApp, ב-מייל ובגיליון — אין תמונה מלאה.',     linkFoot,  'זוהו חיבורים חסרים'),
+        card(clockSvg(P), 'תגובה מגיעה שעות אחרי הפנייה',      'כל שעה של עיכוב מורידה אחוזי המרה ב-10%.',                clockFoot, 'פוטנציאל חיסכון: גבוה'),
+      ],
+      followup: [
+        card(warnSvg(P),  'עסקאות נאבדות בגלל פולואפ איטי',   '44% מהמכירות נסגרות לאחר 5+ יצירות קשר — אין מעקב.',     warnFoot,  'עסקאות שנאבדו: גבוה'),
+        card(clockSvg(P), 'מעקב ידני בגיליון ולוחות',          `כל פולואפ נכתב ידנית — שעות אבודות ובלבול ב-${crm}.`,    clockFoot, 'זמן בזבוז: גבוה'),
+        card(linkSvg(P),  'חוסר עקביות בפנייה ללקוחות',        'חלק מקבלים פולואפ, חלק לא — תלוי בזיכרון האנושי.',        linkFoot,  'עקביות: נמוכה'),
+      ],
+      service: [
+        card(warnSvg(P),  'זמן מענה ראשוני ארוך מדי',          'לקוח שלח הודעה ומחכה — עיכוב של שעה = לקוח כועס.',        warnFoot,  'שביעות רצון: נמוכה'),
+        card(linkSvg(P),  'פניות מגיעות מכמה ערוצים',          `${msg}, מייל, אינסטגרם — הצוות לא מצליח לעקוב.`,          linkFoot,  'פניות שאבדו: גבוה'),
+        card(clockSvg(P), 'אין תיעוד היסטוריית לקוח',          'כל נציג מקבל לקוח מחדש — אין המשכיות ואין זיכרון.',        clockFoot, 'חווית לקוח: נמוכה'),
+      ],
+      scheduling: [
+        card(clockSvg(P), 'הלוך ושוב של הודעות לתיאום',        '10–20 הודעות לכל פגישה — בזבוז זמן לשני הצדדים.',         clockFoot, 'זמן בזבוז: גבוה'),
+        card(warnSvg(P),  'ביטולי דקה האחרונה',                 'לקוחות שוכחים — בלי תזכורות אוטומטיות.',                  warnFoot,  'שיעור ביטול: גבוה'),
+        card(linkSvg(P),  'אין פולואפ אחרי הפגישה',             'פגישה הסתיימה — ואין המשך אוטומטי לסגירת עסקה.',           linkFoot,  'המרה מפגישה: נמוכה'),
+      ],
+      reports: [
+        card(clockSvg(P), 'שעות על הכנת דוחות ידניים',         'כל דוח: איסוף, חישוב, עיצוב — שעות שמבוזבזות.',           clockFoot, 'זמן בזבוז: גבוה'),
+        card(warnSvg(P),  'נתונים מתיישנים עד שמגיעים',        'עד שהדוח מוכן — המספרים כבר לא מדויקים ורלוונטיים.',       warnFoot,  'עדכניות: נמוכה'),
+        card(linkSvg(P),  `מידע מפוזר — ${crm}, ${data}...`,  'אין תמונה מאוחדת — כל מקור נמצא בנפרד.',                  linkFoot,  'מהימנות נתונים: נמוכה'),
+      ],
+      sales: [
+        card(barSvg(P),   'צינור מכירות לא מנוהל',              'אין ראייה מלאה על כל ליד — עסקאות נאבדות בשקט.',           warnFoot,  'עסקאות שנאבדו: גבוה'),
+        card(clockSvg(P), 'מכירנים על עבודה אדמינית',           `עדכון ${crm}, שליחת מיילים — פחות זמן למכירות.`,           clockFoot, 'יעילות מכירות: נמוכה'),
+        card(linkSvg(P),  'אין נראות על לקוחות חמים',           'מי עומד לסגור? מי צריך פולואפ דחוף? אין תשובה.',            linkFoot,  'פוקוס צוות: נמוך'),
+      ],
+      tasks: [
+        card(warnSvg(P),  'משימות נופלות בין הכסאות',           'בלי מעקב אוטומטי — חלק מהמשימות פשוט לא מתבצעות.',        warnFoot,  'סיכון לפספוס: גבוה'),
+        card(clockSvg(P), 'ניהול ידני של תעדוף יומי',           'כל יום מתחיל בסידור ידני של רשימה — זמן שמבוזבז.',         clockFoot, 'זמן בזבוז: גבוה'),
+        card(linkSvg(P),  'אין ראייה על עומס הצוות',            'מישהו מוצף, מישהו חסר עבודה — אין תמונה ברורה.',            linkFoot,  'יעילות צוות: נמוכה'),
+      ],
+      invoices: [
+        card(clockSvg(P), 'חשבוניות נשלחות באיחור',             'כל חשבונית נוצרת ידנית — עיכוב ישיר בקבלת תשלום.',         clockFoot, 'תזרים מזומנים: נפגע'),
+        card(warnSvg(P),  'לקוחות לא משלמים בזמן',              'בלי תזכורות אוטומטיות — חובות פתוחים גדלים.',               warnFoot,  'ימי גבייה: גבוה'),
+        card(linkSvg(P),  `אין מעקב על חשבוניות ב-${data}`,   'מי חייב כמה? מתי הוגדר? אין תשובה ברורה.',                  linkFoot,  'שליטה פיננסית: נמוכה'),
+      ],
+      marketing: [
+        card(clockSvg(P), 'קמפיינים מנוהלים ידנית',             'כל הודעה ומייל נכתב ונשלח ידנית — מגביל נפח ועקביות.',     clockFoot, 'יעילות שיווק: נמוכה'),
+        card(barSvg(P),   'אין מעקב על תגובות הקמפיין',         'שלחת — ואחר כך? מי פתח? מי ענה? אין מעקב אוטומטי.',        warnFoot,  'נראות: נמוכה'),
+        card(linkSvg(P),  'לידים חמים לא מקבלים מענה מיידי',   'מי שהגיב לקמפיין ממתין עד שמישהו ייראה.',                   linkFoot,  'המרה: נמוכה'),
+      ],
+    };
+    return (configs[pain] || configs.leads).join('');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   //  buildContext() — ENGINE
   // ═══════════════════════════════════════════════════════════════
   const FLOWS = [
@@ -1715,6 +1967,7 @@
   function renderResults() {
     const c = S.ctx;
     trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
+    document.querySelector('.s4-pain-grid').innerHTML = renderPainCards(S.pain || 'leads', S.tools);
     renderNewMap(c);
     renderPreview(c.flows[0]);
     hideDecorativeSVGs(document.getElementById('screen-4'));
@@ -1723,9 +1976,6 @@
   function renderNewMap(c) {
     const ic = (paths, clr) =>
       `<svg width="20" height="20" viewBox="0 0 24 24" fill="none">${paths.replace(/SC/g, clr)}</svg>`;
-    const CYAN  = '#2db3cd';
-    const PINK  = '#e0176b';
-    const WHITE = 'rgba(255,255,255,0.78)';
     const PATHS = {
       userPlus:  `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="SC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="SC" stroke-width="2"/><line x1="19" y1="8" x2="19" y2="14" stroke="SC" stroke-width="2" stroke-linecap="round"/><line x1="22" y1="11" x2="16" y2="11" stroke="SC" stroke-width="2" stroke-linecap="round"/>`,
       zap:       `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" stroke="SC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`,
@@ -1751,18 +2001,12 @@
           </line>
         </svg>
       </div>`;
-    document.getElementById('auto-map-new').innerHTML =
-      node('userPlus',  CYAN,  'cyan',              'cyan-i',    'לקוח חדש משאיר פרטים',              'העסק שלך מקבל פניות גם כשאתה לא זמין.')        +
-      conn('מיידי')                                                                                                                                       +
-      node('zap',       CYAN,  'cyan',              'cyan-i',    'הליד נקלט ומטופל אוטומטית',          'כל המידע נאסף, מסודר ומוכן להמשך טיפול.', true) +
-      conn('תוך שניות')                                                                                                                                   +
-      node('msgCircle', PINK,  'pink',              'pink-i',    'הלקוח מקבל תגובה מיידית',            'הלקוח מרגיש שמטפלים בו כבר מהרגע הראשון.')    +
-      conn('אוטומטי',   'rgba(224,23,107,0.28)')                                                                                                         +
-      node('refreshCw', PINK,  'pink',              'pink-i',    'פולואפ אוטומטי שומר על הלקוח חם',   'הודעות ותזכורות נשלחות גם כשאתה עסוק.')        +
-      conn('לאורך כל התהליך')                                                                                                                              +
-      node('bell',      CYAN,  'cyan',              'cyan-i',    'התראה נשלחת לצוות המכירות',          'כל פרטי הליד מוכנים לשיחה.')                   +
-      conn('ברגע הנכון', 'rgba(255,255,255,0.15)')                                                                                                       +
-      node('phone',     '#28c76f', 'success', 'green-i', 'אתה מתעסק רק בסגירת העסקה',         'הלקוח כבר מכיר את העסק ומוכן לשיחה.');
+    const nodes = getPainMapNodes(S.pain || 'leads', S.tools);
+    document.getElementById('auto-map-new').innerHTML = nodes.map(n =>
+      n.conn !== undefined
+        ? conn(n.conn, n.lineClr)
+        : node(n.iconKey, n.iconClr, n.nodeClass, n.iconClass, n.title, n.desc, n.central || false)
+    ).join('');
   }
 
   function initMapScroll() {
@@ -1802,6 +2046,7 @@
 
   function renderPreview(flow) {
     const befores = beforeItems[flow.id] || beforeItems['wa-lead'];
+    const afters  = resolveFlowSteps(flow.id, S.tools) || flow.steps;
     document.getElementById('s4-preview').innerHTML = `
       <div class="s4-preview-wrap">
         <div class="s4-preview-title">אוטומציה מומלצת לעסק שלך</div>
@@ -1813,7 +2058,7 @@
           </div>
           <div class="s4-ba-col after">
             <div class="s4-ba-header" style="color:var(--blue-l);">${okSvg} אחרי</div>
-            ${flow.steps.map(s => `<div class="s4-ba-row">${okSvg}<span>${s}</span></div>`).join('')}
+            ${afters.map(s => `<div class="s4-ba-row">${okSvg}<span>${s}</span></div>`).join('')}
           </div>
         </div>
         <div class="s4-results">
