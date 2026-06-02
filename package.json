@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "deploy:scanner": "firebase deploy --only hosting:scanner"
+    "sync:scanner": "node update-scanner-site.mjs"
   },
   "dependencies": {
     "@google-analytics/data": "^6.0.0",
