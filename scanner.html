@@ -2038,9 +2038,18 @@
   function renderResults() {
     const c = S.ctx;
     trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
-    const painLabels = { leads:'ניהול לידים', service:'שירות לקוחות', scheduling:'תיאום פגישות', followup:'פולואפים', reports:'דוחות ומעקב', sales:'מכירות', tasks:'ניהול משימות', invoices:'חשבוניות ותשלומים', marketing:'שיווק ותוכן' };
-    const painLabel = painLabels[S.pain] || '';
-    document.getElementById('s4-map-title-el').textContent = painLabel ? `כך האוטומציה שלך יכולה לעבוד - ${painLabel}, ולחסוך לך..` : 'כך האוטומציה שלך יכולה לעבוד';
+    const painTitles = {
+      leads:      'כך האוטומציה שלך יכולה לעזור לך לנהל לידים בצורה חכמה יותר',
+      service:    'כך האוטומציה שלך יכולה לעזור לך לתת שירות מהיר ומדויק יותר',
+      scheduling: 'כך האוטומציה שלך יכולה לעזור לך לסיים עם הלוך ושוב על תיאומים',
+      followup:   'כך האוטומציה שלך יכולה לעזור לך לעקוב אחרי כל ליד — בלי לפספס אף אחד',
+      reports:    'כך האוטומציה שלך יכולה לעזור לך לראות תמונה ברורה של הביצועים',
+      sales:      'כך האוטומציה שלך יכולה לעזור לך למכור יותר ולפספס פחות עסקאות !',
+      tasks:      'כך האוטומציה שלך יכולה לעזור לך לנהל משימות בלי הכאוס בין מערכות',
+      invoices:   'כך האוטומציה שלך יכולה לעזור לך לשלוח חשבוניות אוטומטית ולחסוך שעות',
+      marketing:  'כך האוטומציה שלך יכולה לעזור לך לצאת בתוכן שיווקי עקבי ובזמן',
+    };
+    document.getElementById('s4-map-title-el').textContent = painTitles[S.pain] || 'כך האוטומציה שלך יכולה לעבוד';
     document.querySelector('.s4-pain-grid').innerHTML = renderPainCards(S.pain || 'leads', S.tools);
     renderNewMap(c);
     renderPreview(c.flows[0]);
