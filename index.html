@@ -2301,6 +2301,9 @@
         { id: 'contact', link: document.querySelector('[data-section="contact"]') },
       ];
 
+      var scrollLocked = false;
+      var scrollTimer = null;
+
       function setActive(id) {
         sections.forEach(function(s) {
           if (s.link) s.link.classList.toggle('nav-active', s.id === id);
@@ -2308,6 +2311,7 @@
       }
 
       const observer = new IntersectionObserver(function(entries) {
+        if (scrollLocked) return;
         entries.forEach(function(entry) {
           if (entry.isIntersecting) setActive(entry.target.id);
         });
@@ -2316,6 +2320,14 @@
       sections.forEach(function(s) {
         const el = document.getElementById(s.id);
         if (el) observer.observe(el);
+        if (s.link) {
+          s.link.addEventListener('click', function() {
+            setActive(s.id);
+            scrollLocked = true;
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(function() { scrollLocked = false; }, 1000);
+          });
+        }
       });
 
       setActive('hero');
