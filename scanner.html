@@ -233,11 +233,23 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
+    #screen-2 {
+      height: calc(100vh - 146px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    #screen-2::-webkit-scrollbar { display: none; }
     #screen-2.active { min-height: 0; }
     #tools-grid { margin-bottom: 0; position: relative; isolation: isolate; }
     #screen-2 .btn-row {
-      padding-top: 10px;
-      padding-bottom: 10px;
+      position: sticky;
+      bottom: 0;
+      z-index: 5;
+      background: linear-gradient(to top, var(--bg) 72%, transparent);
+      padding-top: 18px;
+      padding-bottom: 14px;
       margin-top: 4px;
     }
     .tools-grid {
