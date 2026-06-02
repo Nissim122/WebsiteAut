@@ -59,6 +59,7 @@
       max-width: 100%;
       width: 100%;
       position: relative;
+      padding-top: 124px;
     }
 
     /* Section dividers */
@@ -69,14 +70,18 @@
 
     /* NAV */
     nav {
-      position: sticky;
+      position: fixed;
       top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
       z-index: 100;
       background: transparent;
       padding: 0.75rem 1rem;
     }
     .nav-inner {
-      max-width: calc(80% - 2rem);
+      width: calc(75% - 2rem);
+      max-width: calc(75% - 2rem);
       margin: 0 auto;
       background: rgba(14, 16, 28, 0.55);
       backdrop-filter: blur(22px);
@@ -84,7 +89,7 @@
       border-radius: 16px;
       border: 1.5px solid rgba(255,255,255,0.10);
       padding: 0 1.25rem;
-      height: 68px;
+      height: 100px;
       overflow: visible;
       display: flex;
       align-items: center;
@@ -99,6 +104,8 @@
       transition: color 0.2s;
     }
     nav a:hover { color: #fff; }
+    nav a:link:not(.nav-active), nav a:visited:not(.nav-active) { color: rgba(255,255,255,0.75) !important; }
+    nav a.nav-active { color: #e0176b !important; font-weight: 700; }
 
     /* CTA Button */
     .btn-cta {
@@ -526,7 +533,7 @@
     /* ── Responsive ── */
     @media (max-width: 767px) {
       /* Nav */
-      .nav-inner { max-width: calc(100% - 2rem) !important; }
+      .nav-inner { max-width: calc(75% - 2rem) !important; }
       .hamburger-btn { display: flex; }
       .nav-cta-desktop { display: none !important; }
       .nav-links-desktop { display: none !important; }
@@ -621,12 +628,13 @@
     @media (max-width: 480px) {
       .hero-image-col > div > img { width: 160px !important; }
       nav { padding: 0.5rem 0.75rem !important; }
+      body { padding-top: 116px !important; }
     }
 
     /* ── Tablet breakpoint (768–1024px) ── */
     @media (min-width: 768px) and (max-width: 1024px) {
       /* Nav: widen the floating pill so content doesn't crowd */
-      .nav-inner { max-width: calc(96% - 2rem) !important; }
+      .nav-inner { max-width: calc(75% - 2rem) !important; }
 
       /* CTA Banner: collapse to column so inputs don't get crushed */
       .cta-banner-inner {
@@ -747,7 +755,7 @@
       [style*="max-width: 1100px"] { max-width: 1360px !important; }
       .hero-grid                   { max-width: 1360px !important; }
       .zz-container                { max-width: 1080px !important; }
-      .nav-inner                   { max-width: calc(82% - 2rem) !important; }
+      .nav-inner                   { max-width: calc(75% - 2rem) !important; }
       .cta-banner-inner            { max-width: 1080px !important; }
     }
 
@@ -756,7 +764,7 @@
       [style*="max-width: 1100px"] { max-width: 1540px !important; }
       .hero-grid                   { max-width: 1540px !important; }
       .zz-container                { max-width: 1160px !important; }
-      .nav-inner                   { max-width: calc(78% - 2rem) !important; }
+      .nav-inner                   { max-width: calc(75% - 2rem) !important; }
       .cta-banner-inner            { max-width: 1200px !important; }
     }
 
@@ -927,12 +935,12 @@
 
       <!-- Links (center) -->
       <div style="display: flex; gap: 2.5rem;" class="hidden md:flex nav-links-desktop">
-        <a href="#" style="color: #e0176b; font-weight: 700;">דף הבית</a>
-        <a href="#results">תוצאות</a>
-        <a href="#process">תהליך</a>
-        <a href="blog.html">בלוג</a>
-        <a href="scanner.html" style="color:#e0176b; font-weight:700;">רדאר העסק</a>
-        <a href="#contact">צרו קשר</a>
+        <a href="#" data-section="hero">דף הבית</a>
+        <a href="#results" data-section="results">תוצאות</a>
+        <a href="#process" data-section="process">תהליך</a>
+        <a href="blog.html" style="color: rgba(255,255,255,0.75);">בלוג</a>
+        <a href="scanner.html" style="color: rgba(255,255,255,0.75);">רדאר העסק</a>
+        <a href="#contact" data-section="contact">צרו קשר</a>
       </div>
 
       <!-- CTA (visual left) -->
@@ -951,11 +959,11 @@
 
   <!-- Mobile Navigation Menu -->
   <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
-    <a href="#" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 800; font-size: 1.5rem; text-decoration: none;">דף הבית</a>
+    <a href="#" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">דף הבית</a>
     <a href="#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תוצאות</a>
     <a href="#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תהליך</a>
-    <a href="blog.html" onclick="closeMobileMenu()" style="color: #2196b0; font-weight: 800; font-size: 1.5rem; text-decoration: none;">בלוג</a>
-    <a href="scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 800; font-size: 1.5rem; text-decoration: none;">רדאר העסק</a>
+    <a href="blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">בלוג</a>
+    <a href="scanner.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">רדאר העסק</a>
     <a href="#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">צרו קשר</a>
     <a href="#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 0.5rem;">
       לתיאום פגישה <span class="btn-arrow">◄</span>
@@ -968,7 +976,7 @@
   <!-- ═══════════════════════════════════
        HERO
   ═══════════════════════════════════ -->
-  <section class="hero-section" style="background: #0e1628; padding: 4rem 1.5rem 0; min-height: 92vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+  <section id="hero" class="hero-section" style="background: #0e1628; padding: 4rem 1.5rem 0; min-height: 92vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
 
     <!-- Background subtle glow -->
     <div style="position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: min(1200px, 100vw); height: 700px; background: radial-gradient(ellipse, rgba(33,150,176,0.12) 0%, transparent 65%); pointer-events: none;"></div>
@@ -2283,6 +2291,35 @@
         closeMobileMenu();
       }
     }
+
+    /* ── Active nav link by section ── */
+    (function() {
+      const sections = [
+        { id: 'hero',    link: document.querySelector('[data-section="hero"]') },
+        { id: 'results', link: document.querySelector('[data-section="results"]') },
+        { id: 'process', link: document.querySelector('[data-section="process"]') },
+        { id: 'contact', link: document.querySelector('[data-section="contact"]') },
+      ];
+
+      function setActive(id) {
+        sections.forEach(function(s) {
+          if (s.link) s.link.classList.toggle('nav-active', s.id === id);
+        });
+      }
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      }, { threshold: 0.3 });
+
+      sections.forEach(function(s) {
+        const el = document.getElementById(s.id);
+        if (el) observer.observe(el);
+      });
+
+      setActive('hero');
+    })();
 
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
@@ -3871,6 +3908,34 @@
     } else {
       init();
     }
+  })();
+  </script>
+
+  <script>
+  (function () {
+    function focusContactName() {
+      var field = document.getElementById('contact-name');
+      if (field) setTimeout(function () { field.focus(); }, 600);
+    }
+
+    function checkAndFocus() {
+      var fromExternal = sessionStorage.getItem('contact-focus') === '1';
+      if (fromExternal) sessionStorage.removeItem('contact-focus');
+      if (window.location.hash === '#contact' || fromExternal) focusContactName();
+    }
+
+    // Page load: handle both direct URL hash and sessionStorage flag (from external pages)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkAndFocus);
+    } else {
+      checkAndFocus();
+    }
+
+    // Click delegation: catches all in-page #contact links, including repeated clicks
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href="#contact"]');
+      if (a) focusContactName();
+    });
   })();
   </script>
 

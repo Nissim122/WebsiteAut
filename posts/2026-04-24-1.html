@@ -279,5 +279,10 @@
     document.body.style.overflow = '';
   }
 </script>
+<script>
+document.addEventListener('click',function(e){
+  if(e.target.closest('a[href*="#contact"]')) sessionStorage.setItem('contact-focus','1');
+});
+</script>
 </body>
 </html>
