@@ -969,7 +969,7 @@
 
       <!-- 3. Automation Map -->
       <div class="s4-map-box">
-        <div class="s4-map-title">כך האוטומציה שלך יכולה לעבוד</div>
+        <div class="s4-map-title" id="s4-map-title-el">כך האוטומציה שלך יכולה לעבוד</div>
         <div class="s4-map-sub">האוטומציה מחברת בין הכלים שאתה כבר משתמש בהם ועובדת עבורך מאחורי הקלעים.</div>
         <div id="auto-map-new" style="display:flex; flex-direction:column; align-items:center; gap:4px;"></div>
       </div>
@@ -1307,7 +1307,7 @@
     { id:'outlook',   lbl:'Outlook', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(0,114,198,0.13);border:1.5px solid rgba(0,114,198,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/OUTLOOK.png" width="24" height="16" style="object-fit:contain;" /></div></div>' },
     { id:'mailchimp', lbl:'Mailchimp', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,224,27,0.13);border:1.5px solid rgba(255,224,27,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/mailchimp.svg" width="20" height="20" style="object-fit:contain;" /></div></div>' },
     { id:'smoove',    lbl:'Smoove',    svg:'<div style="width:70px;height:70px;border-radius:50%;background:transparent;border:1.5px solid rgba(91,47,200,0.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/SMOOVE.webp" width="20" height="20" style="object-fit:contain;" /></div></div>' },
-    { id:'whatsapp',  lbl:'WhatsApp',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(37,211,102,0.13);border:1.5px solid rgba(37,211,102,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/whatsapp_logo.png" width="20" height="20" style="object-fit:contain;" /></div></div>' },
+    { id:'whatsapp',  lbl:'WhatsApp',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(37,211,102,0.13);border:1.5px solid rgba(37,211,102,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/whatsapp_logo.png" width="25" height="25" style="object-fit:contain;" /></div></div>' },
     { id:'telegram',  lbl:'Telegram',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(44,165,224,0.13);border:1.5px solid rgba(44,165,224,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/telegram.png" width="22" height="22" style="object-fit:contain;" /></div></div>' },
     { id:'manychat',  lbl:'ManyChat', svg:'<div style="width:70px;height:70px;border-radius:50%;background:transparent;border:1.5px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/manychat-mark.webp" width="18" height="18" style="object-fit:contain;" /></div></div>' },
     { id:'slack',     lbl:'Slack',     svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(54,197,240,0.13);border:1.5px solid rgba(54,197,240,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/SLACK.jpg" width="22" height="22" style="object-fit:contain;" /></div></div>' },
@@ -2038,6 +2038,9 @@
   function renderResults() {
     const c = S.ctx;
     trackEvent('scanner_results', { score: c.score, intent: S.intent, pain: S.pain });
+    const painLabels = { leads:'ניהול לידים', service:'שירות לקוחות', scheduling:'תיאום פגישות', followup:'פולואפים', reports:'דוחות ומעקב', sales:'מכירות', tasks:'ניהול משימות', invoices:'חשבוניות ותשלומים', marketing:'שיווק ותוכן' };
+    const painLabel = painLabels[S.pain] || '';
+    document.getElementById('s4-map-title-el').textContent = painLabel ? `כך האוטומציה שלך יכולה לעבוד - ${painLabel}, ולחסוך לך..` : 'כך האוטומציה שלך יכולה לעבוד';
     document.querySelector('.s4-pain-grid').innerHTML = renderPainCards(S.pain || 'leads', S.tools);
     renderNewMap(c);
     renderPreview(c.flows[0]);
