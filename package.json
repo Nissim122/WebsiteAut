@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "private": true,
+  "scripts": {
+    "deploy:scanner": "firebase deploy --only hosting:scanner"
+  },
   "dependencies": {
     "@google-analytics/data": "^6.0.0",
     "@imgly/background-removal-node": "^1.4.5",
