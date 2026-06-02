@@ -181,6 +181,7 @@
     #screen-1.active, #screen-2.active {
       min-height: calc(100vh - 80px);
     }
+    #screen-1::-webkit-scrollbar { display: none; }
     #screen-3.active {
       animation: none;
     }
@@ -2457,11 +2458,13 @@
         s1.style.minHeight = '0';
         s1.style.height = 'calc(100vh - 80px - ' + h + 'px)';
         s1.style.overflowY = 'auto';
+        s1.style.scrollbarWidth = 'none';
         s1.style.paddingBottom = '12px';
       } else {
         s1.style.minHeight = '';
         s1.style.height = '';
         s1.style.overflowY = '';
+        s1.style.scrollbarWidth = '';
         s1.style.paddingBottom = '';
       }
     }
