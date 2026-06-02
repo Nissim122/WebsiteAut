@@ -2330,7 +2330,14 @@
         }
       });
 
-      setActive('hero');
+      // If page loaded with a hash (e.g. from blog.html#contact), set active immediately
+      var hash = window.location.hash.replace('#', '');
+      var initialId = hash && sections.some(function(s) { return s.id === hash; }) ? hash : 'hero';
+      setActive(initialId);
+      if (hash) {
+        scrollLocked = true;
+        scrollTimer = setTimeout(function() { scrollLocked = false; }, 1000);
+      }
     })();
 
     function toggleMobileMenu() {
