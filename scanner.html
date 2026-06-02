@@ -1334,7 +1334,7 @@
   function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','ravmeser'], tools, 'WhatsApp'); }
   function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove'], tools, 'מייל'); }
   function bestTask(tools)       { return bestTool(['monday','morning','trello','notion','clickup','airtable'], tools, 'מערכת ניהול'); }
-  function bestData(tools)       { return bestTool(['airtable','excel','notion'], tools, 'Excel'); }
+  function bestData(tools)       { return bestTool(['sheets','airtable','excel','notion'], tools, 'Google Sheets'); }
   function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook'], tools, 'הודעה'); }
   function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','whatsapp'], tools, 'פנייה'); }
   function bestScheduling(tools) { return bestTool(['calendly','tor4you'], tools, 'Calendly'); }
@@ -1581,31 +1581,73 @@
     { id:'wa-lead',   title:'לכידת לידים מ-WhatsApp',    steps:['ליד שולח הודעה ב-WhatsApp','Make.com מזהה ומחלץ פרטים','נוצרת רשומה ב-CRM אוטומטית','הודעת תודה נשלחת תוך 30 שניות'], save:3,   needs:['whatsapp'],               tip:'70% מהלידים נאבדים כאן' },
     { id:'followup',  title:'מנוע פולואפ אוטומטי',        steps:['ליד לא ענה 48 שעות','Make.com מזהה חוסר תגובה','הודעת פולואפ נשלחת ב-WhatsApp','הסטטוס מתעדכן אוטומטית'],             save:4,   needs:['whatsapp','gmail','monday'], tip:'כאן נאבדות רוב העסקאות' },
     { id:'form-lead', title:'לכידת לידים מטופס אתר',      steps:['טופס מולא באתר','Make.com מקבל webhook','פרטים נשמרים ב-CRM','מייל ברוך הבא יוצא אוטומטית'],                          save:2,   needs:['fillout','gmail'],          tip:'חיבור מיידי לכל ליד חדש' },
-    { id:'ig-lead',   title:'לכידת לידים מ-Instagram',    steps:['DM נכנס ב-Instagram','Make.com מזהה הודעה ראשונה','פרטים נשמרים + תגובה אוטומטית','ליד עולה ל-CRM'],                  save:2.5, needs:['instagram'],               tip:'Instagram = מקור לידים #1' },
+    { id:'ig-lead',   title:'לכידת לידים מרשתות חברתיות', steps:['DM נכנס ב-Instagram','Make.com מזהה הודעה ראשונה','פרטים נשמרים + תגובה אוטומטית','ליד עולה ל-CRM'],                  save:2.5, needs:['instagram'],               tip:'רשתות חברתיות = מקור לידים #1' },
     { id:'crm',       title:'סנכרון CRM אוטומטי',          steps:['עדכון פרטי לקוח','Make.com מסנכרן בין מערכות','Monday/HubSpot מתעדכנים','התראה לצוות בזמן אמת'],                     save:2,   needs:['monday','hubspot','airtable'],tip:'נתונים תמיד מדויקים' },
     { id:'report',    title:'דוח שבועי אוטומטי',           steps:['ראשון בבוקר — טריגר אוטומטי','Make.com מאסף נתונים','Google Sheets מתעדכן','דוח נשלח למייל'],                       save:1.5, needs:['sheets','excel','gmail'],   tip:'חוסך 6 שעות חישוב בחודש' },
-    { id:'schedule',  title:'אוטומציית תיאום פגישות',      steps:['לקוח בוחר שעה ב-Calendly','Make.com מאשר ושולח הכנה','תזכורת 24 שעות לפני','פולואפ אחרי הפגישה'],                   save:3,   needs:['calendly'],                tip:'ביטולים יורדים ב-60%' },
+    { id:'schedule',  title:'אוטומציית תיאום פגישות',      steps:['לקוח בוחר שעה ב-Calendly','Make.com מאשר ושולח הכנה','תזכורת 24 שעות לפני','פולואפ אחרי הפגישה'],                   save:3,   needs:['calendly','tor4you'],       tip:'ביטולים יורדים ב-60%' },
     { id:'triage',    title:'תיוג שירות לקוחות',           steps:['הודעה נכנסת ב-WhatsApp/Gmail','Make.com מסווג לפי נושא','מועבר לנציג המתאים','תגובה ראשונית אוטומטית'],             save:3.5, needs:['whatsapp','gmail','slack'], tip:'מענה ראשוני תוך 30 שניות' },
   ];
 
+  // ── Category-based relevance: matches any equivalent tool, not exact id ──
+  function flowRelevance(flowId, tools) {
+    const hasMsg   = tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t));
+    const hasCRM   = tools.some(t => ['hubspot','pipedrive','fireberry','monday','morning','airtable'].includes(t));
+    const hasEmail = tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t));
+    const hasData  = tools.some(t => ['sheets','excel','airtable','notion'].includes(t));
+    const hasIgFb  = tools.some(t => ['instagram','facebook'].includes(t));   // DM-capable channels only
+    const hasSoc   = tools.some(t => ['instagram','facebook','linkedin'].includes(t));
+    const hasSched = tools.some(t => ['calendly','tor4you'].includes(t));
+    const hasForm  = tools.some(t => ['fillout','facebook','instagram','linkedin'].includes(t));
+    const hasTask  = tools.some(t => ['monday','morning','trello','notion','clickup','airtable'].includes(t));
+    const map = {
+      'wa-lead':   (hasMsg ? 12 : 0) + (hasCRM ? 6 : 0),                         // max 18
+      'followup':  (hasMsg ? 10 : 0) + (hasCRM ? 10 : 0) + (hasEmail ? 5 : 0),  // max 25
+      'form-lead': (hasForm ? 14 : 0) + (hasEmail ? 5 : 0),                       // max 19
+      'ig-lead':   (hasIgFb ? 15 : 0) + (hasSoc ? 3 : 0) + (hasCRM ? 4 : 0),    // max 22 — LinkedIn alone gets 3, not 15
+      'crm':       (hasCRM ? 15 : 0) + (hasTask ? 5 : 0),                         // max 20
+      'report':    (hasData ? 12 : 0) + (hasEmail ? 6 : 0),                       // max 18
+      'schedule':  (hasSched ? 15 : 0) + (hasMsg ? 4 : 0),                        // max 19
+      'triage':    (hasMsg ? 10 : 0) + (hasEmail ? 8 : 0) + (hasTask ? 5 : 0),   // max 23
+    };
+    return map[flowId] || 0;
+  }
+
   function buildContext(intent, tools, pain) {
-    const base = { leads:72, service:65, scheduling:60, followup:68, reports:55, sales:70, tasks:58 };
-    const aff  = { whatsapp:8, gmail:5, sheets:4, monday:7, make:10, airtable:6, instagram:6, hubspot:9, slack:5, calendly:7, fillout:5, excel:3 };
-    const ib   = { leads:5, sales:4, service:3, time:2 };
+    // Base automation-readiness score per pain
+    const base = { leads:72, service:65, scheduling:60, followup:68, reports:55, sales:70, tasks:58, invoices:62, marketing:68 };
+    // Affinity scores for ALL tools in TOOLS array
+    const aff = {
+      whatsapp:8, gmail:5, sheets:4, monday:7, make:10, airtable:6, instagram:6, hubspot:9,
+      slack:5, calendly:7, fillout:5, excel:3, pipedrive:8, fireberry:7, morning:6, trello:4,
+      notion:5, outlook:4, mailchimp:5, smoove:4, telegram:6, manychat:5, facebook:5,
+      linkedin:4, zoom:3, tor4you:6, chatgpt:7, ravmeser:5, rivhit:4, grow:3, clickup:5,
+    };
+    const ib = { leads:5, sales:4, service:3, time:2 };
 
     let score = base[pain] || 65;
     tools.forEach(t => { score += (aff[t] || 0) * 0.5; });
     score += ib[intent] || 0;
     score = Math.min(95, Math.round(score));
 
-    // Rank flows
+    // Rank flows — category-based relevance + pain bonus (+20) dominates
     const ranked = FLOWS.map(f => {
-      let s = f.needs.filter(n => tools.includes(n)).length * 10;
+      let s = flowRelevance(f.id, tools);
+      // Pain → flow (strong, overrides category relevance of wrong flow)
+      if (pain === 'followup'   && f.id === 'followup')  s += 20;
+      if (pain === 'service'    && f.id === 'triage')    s += 20;
+      if (pain === 'scheduling' && f.id === 'schedule')  s += 20;
+      if (pain === 'reports'    && f.id === 'report')    s += 20;
+      if (pain === 'tasks'      && f.id === 'crm')       s += 20;
+      if (pain === 'tasks'      && f.id === 'triage')    s += 15;  // secondary: triage creates tasks from messages
+      if (pain === 'invoices'   && f.id === 'crm')       s += 20;
+      if (pain === 'invoices'   && f.id === 'report')    s += 15;
+      if (pain === 'marketing'  && ['ig-lead','wa-lead'].includes(f.id)) s += 18;
+      if (pain === 'leads'      && ['wa-lead','ig-lead','form-lead'].includes(f.id)) s += 18;  // +12 → +18: beat crm natural score
+      if (pain === 'sales'      && ['wa-lead','followup','crm'].includes(f.id)) s += 12;
+      // Intent tiebreakers (weaker — used when pain bonus alone doesn't differentiate)
       if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
-      if (pain === 'followup' && f.id === 'followup') s += 8;
-      if (pain === 'service'  && f.id === 'triage')   s += 8;
-      if (pain === 'scheduling' && f.id === 'schedule') s += 8;
-      if (['reports','time'].includes(pain||intent) && f.id === 'report') s += 8;
+      if (intent === 'service'  && f.id === 'triage')    s += 5;
+      if (intent === 'time'     && f.id === 'schedule')  s += 5;
       return { ...f, _s: s };
     }).sort((a,b) => b._s - a._s);
 
@@ -1613,24 +1655,43 @@
     if (flows.every(f => f._s === 0)) flows = [FLOWS[0], FLOWS[1]];
 
     const totalHours = flows.reduce((a,f) => a + f.save, 0);
-    const riskHigh   = tools.some(t => ['whatsapp','instagram'].includes(t));
+    const riskHigh   = tools.some(t => ['whatsapp','instagram','telegram','facebook'].includes(t));
 
-    const inputs  = tools.length ? tools.slice(0,2) : ['whatsapp','gmail'];
+    // Pain-relevant inputs: pick tools that match the pain context first
+    const srcTools  = ['instagram','facebook','linkedin','fillout','whatsapp','telegram'];
+    const schedTools = ['calendly','tor4you'];
+    const dataTools  = ['sheets','excel','airtable','notion'];
+    const crmTools   = ['hubspot','pipedrive','fireberry','monday','morning','airtable'];
+    let inputPool;
+    if (['leads','sales','marketing'].includes(pain)) inputPool = srcTools;
+    else if (pain === 'scheduling')                   inputPool = [...schedTools, ...srcTools];
+    else if (pain === 'reports')                      inputPool = [...dataTools, ...crmTools];
+    else                                              inputPool = [...crmTools, ...srcTools];
+    const relevantInputs = tools.filter(t => inputPool.includes(t));
+    const inputs = (relevantInputs.length ? relevantInputs : tools).slice(0, 2);
+    if (!inputs.length) inputs.push('whatsapp', 'gmail');
+
+    // Real tool names in outputs
     const outputs = [];
-    if (tools.some(t => ['monday','hubspot','airtable'].includes(t))) outputs.push('CRM');
+    const crmLabel = bestCRM(tools);
+    const msgLabel = bestMessaging(tools);
+    const emailLabel = bestEmail(tools);
+    if (tools.some(t => crmTools.includes(t))) outputs.push(crmLabel);
     else outputs.push('Google Sheets');
-    if (tools.includes('whatsapp')) outputs.push('WhatsApp');
-    else if (tools.includes('gmail')) outputs.push('Gmail');
+    if (tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t))) outputs.push(msgLabel);
+    else if (tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t))) outputs.push(emailLabel);
     else outputs.push('הודעה אוטומטית');
 
     const proofs = {
       leads:      'לידים נכנסים — אבל לא כולם הופכים לשיחות',
-      service:    'פנייה בלי מענה מהיר = לקוח שהולך למתחרה',
-      sales:      'עסקאות לא נסגרות בגלל מחיר — אלא בגלל חוסר מעקב',
-      scheduling: 'יותר מדי זמן הולך על תיאומים והודעות',
       followup:   'רוב הלקוחות לא סוגרים בפנייה הראשונה',
+      service:    'פנייה בלי מענה מהיר = לקוח שהולך למתחרה',
+      scheduling: 'יותר מדי זמן הולך על תיאומים והודעות',
+      sales:      'עסקאות לא נסגרות בגלל מחיר — אלא בגלל חוסר מעקב',
       reports:    'בלי נתונים מסודרים קשה להבין מה עובד',
       tasks:      'משימות שנשכחות עולות כסף לעסק',
+      invoices:   'חשבוניות מאוחרות = תזרים מזומנים פגוע',
+      marketing:  'שיווק ידני מגביל נפח ועקביות',
     };
 
     return {
@@ -1638,8 +1699,7 @@
       flows,
       metrics: { hours: totalHours.toFixed(1), procs: flows.length, total: 8, risk: riskHigh ? 'גבוה' : 'בינוני' },
       inputs, outputs,
-
-      proof: proofs[intent] || proofs.leads,
+      proof: proofs[pain] || proofs[intent] || proofs.leads,
       lostN: Math.floor(score / 12) + 3,
     };
   }
@@ -2229,14 +2289,23 @@
 
   // ── Build customer-facing email HTML ──
   function buildCustomerEmailHtml(name, tools, intent, pain) {
-    // Rank ALL flows for this customer (same logic as buildContext)
+    // Rank ALL flows — same category-based logic as buildContext
     const allRanked = FLOWS.map(f => {
-      let s = f.needs.filter(n => tools.includes(n)).length * 10;
+      let s = flowRelevance(f.id, tools);
+      if (pain === 'followup'   && f.id === 'followup')  s += 20;
+      if (pain === 'service'    && f.id === 'triage')    s += 20;
+      if (pain === 'scheduling' && f.id === 'schedule')  s += 20;
+      if (pain === 'reports'    && f.id === 'report')    s += 20;
+      if (pain === 'tasks'      && f.id === 'crm')       s += 20;
+      if (pain === 'tasks'      && f.id === 'triage')    s += 15;
+      if (pain === 'invoices'   && f.id === 'crm')       s += 20;
+      if (pain === 'invoices'   && f.id === 'report')    s += 15;
+      if (pain === 'marketing'  && ['ig-lead','wa-lead'].includes(f.id)) s += 18;
+      if (pain === 'leads'      && ['wa-lead','ig-lead','form-lead'].includes(f.id)) s += 18;
+      if (pain === 'sales'      && ['wa-lead','followup','crm'].includes(f.id)) s += 12;
       if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
-      if (pain === 'followup' && f.id === 'followup') s += 8;
-      if (pain === 'service'  && f.id === 'triage')   s += 8;
-      if (pain === 'scheduling' && f.id === 'schedule') s += 8;
-      if (['reports','time'].includes(pain || intent) && f.id === 'report') s += 8;
+      if (intent === 'service'  && f.id === 'triage')    s += 5;
+      if (intent === 'time'     && f.id === 'schedule')  s += 5;
       return { ...f, _s: s };
     }).sort((a, b) => b._s - a._s);
 
