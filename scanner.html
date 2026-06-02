@@ -1643,7 +1643,7 @@
       if (pain === 'invoices'   && f.id === 'report')    s += 15;
       if (pain === 'marketing'  && ['ig-lead','wa-lead'].includes(f.id)) s += 18;
       if (pain === 'leads'      && ['wa-lead','ig-lead','form-lead'].includes(f.id)) s += 18;  // +12 → +18: beat crm natural score
-      if (pain === 'sales'      && ['wa-lead','followup','crm'].includes(f.id)) s += 12;
+      if (pain === 'sales'      && ['wa-lead','ig-lead','followup','crm'].includes(f.id)) s += 12;
       // Intent tiebreakers (weaker — used when pain bonus alone doesn't differentiate)
       if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
       if (intent === 'service'  && f.id === 'triage')    s += 5;
@@ -2302,7 +2302,7 @@
       if (pain === 'invoices'   && f.id === 'report')    s += 15;
       if (pain === 'marketing'  && ['ig-lead','wa-lead'].includes(f.id)) s += 18;
       if (pain === 'leads'      && ['wa-lead','ig-lead','form-lead'].includes(f.id)) s += 18;
-      if (pain === 'sales'      && ['wa-lead','followup','crm'].includes(f.id)) s += 12;
+      if (pain === 'sales'      && ['wa-lead','ig-lead','followup','crm'].includes(f.id)) s += 12;
       if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
       if (intent === 'service'  && f.id === 'triage')    s += 5;
       if (intent === 'time'     && f.id === 'schedule')  s += 5;
