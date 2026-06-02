@@ -1590,6 +1590,8 @@
     { id:'report',    title:'דוח שבועי אוטומטי',           steps:['ראשון בבוקר — טריגר אוטומטי','Make.com מאסף נתונים','Google Sheets מתעדכן','דוח נשלח למייל'],                       save:1.5, needs:['sheets','excel','gmail'],   tip:'חוסך 6 שעות חישוב בחודש' },
     { id:'schedule',  title:'אוטומציית תיאום פגישות',      steps:['לקוח בוחר שעה ב-Calendly','Make.com מאשר ושולח הכנה','תזכורת 24 שעות לפני','פולואפ אחרי הפגישה'],                   save:3,   needs:['calendly','tor4you'],       tip:'ביטולים יורדים ב-60%' },
     { id:'triage',    title:'תיוג שירות לקוחות',           steps:['הודעה נכנסת ב-WhatsApp/Gmail','Make.com מסווג לפי נושא','מועבר לנציג המתאים','תגובה ראשונית אוטומטית'],             save:3.5, needs:['whatsapp','gmail','slack'], tip:'מענה ראשוני תוך 30 שניות' },
+    { id:'invoice',   title:'שליחת חשבונית אוטומטית',      steps:['עסקה נסגרת ב-CRM','Make.com מייצר חשבונית בריב-הית','חשבונית נשלחת אוטומטית במייל','תזכורת תשלום אם לא שולם תוך 7 ימים'], save:2.5, needs:['rivhit','gmail','hubspot'],  tip:'חשבוניות מאוחרות = תזרים פגוע' },
+    { id:'content',   title:'תזמון תוכן שיווקי אוטומטי',   steps:['תוכן מוכן ב-Sheets/Notion','Make.com מתזמן לפי לוח שנה','פוסט מתפרסם ברשתות בזמן הנכון','סיכום ביצועים נשלח בסוף שבוע'],   save:3,   needs:['sheets','instagram','mailchimp'], tip:'עקביות בשיווק = צמיחה מדידה' },
   ];
 
   // ── Category-based relevance: matches any equivalent tool, not exact id ──
@@ -1603,15 +1605,18 @@
     const hasSched = tools.some(t => ['calendly','tor4you'].includes(t));
     const hasForm  = tools.some(t => ['fillout','facebook','instagram','linkedin'].includes(t));
     const hasTask  = tools.some(t => ['monday','morning','trello','notion','clickup','airtable'].includes(t));
+    const hasInvoice = tools.some(t => ['rivhit'].includes(t));
     const map = {
-      'wa-lead':   (hasMsg ? 12 : 0) + (hasCRM ? 6 : 0),                         // max 18
-      'followup':  (hasMsg ? 10 : 0) + (hasCRM ? 10 : 0) + (hasEmail ? 5 : 0),  // max 25
-      'form-lead': (hasForm ? 14 : 0) + (hasEmail ? 5 : 0),                       // max 19
-      'ig-lead':   (hasIgFb ? 15 : 0) + (hasSoc ? 3 : 0) + (hasCRM ? 4 : 0),    // max 22 — LinkedIn alone gets 3, not 15
-      'crm':       (hasCRM ? 15 : 0) + (hasTask ? 5 : 0),                         // max 20
-      'report':    (hasData ? 12 : 0) + (hasEmail ? 6 : 0),                       // max 18
-      'schedule':  (hasSched ? 15 : 0) + (hasMsg ? 4 : 0),                        // max 19
-      'triage':    (hasMsg ? 10 : 0) + (hasEmail ? 8 : 0) + (hasTask ? 5 : 0),   // max 23
+      'wa-lead':   (hasMsg ? 12 : 0) + (hasCRM ? 6 : 0),                                        // max 18
+      'followup':  (hasMsg ? 10 : 0) + (hasCRM ? 10 : 0) + (hasEmail ? 5 : 0),                 // max 25
+      'form-lead': (hasForm ? 14 : 0) + (hasEmail ? 5 : 0),                                      // max 19
+      'ig-lead':   (hasIgFb ? 15 : 0) + (hasSoc ? 3 : 0) + (hasCRM ? 4 : 0),                   // max 22 — LinkedIn alone gets 3, not 15
+      'crm':       (hasCRM ? 15 : 0) + (hasTask ? 5 : 0),                                        // max 20
+      'report':    (hasData ? 12 : 0) + (hasEmail ? 6 : 0),                                      // max 18
+      'schedule':  (hasSched ? 15 : 0) + (hasMsg ? 4 : 0),                                       // max 19
+      'triage':    (hasMsg ? 10 : 0) + (hasEmail ? 8 : 0) + (hasTask ? 5 : 0),                  // max 23
+      'invoice':   (hasCRM ? 10 : 0) + (hasEmail ? 8 : 0) + (hasInvoice ? 5 : 0),              // max 23
+      'content':   (hasSoc ? 12 : 0) + (hasData ? 6 : 0) + (hasEmail ? 3 : 0),                 // max 21
     };
     return map[flowId] || 0;
   }
@@ -1642,12 +1647,14 @@
       if (pain === 'scheduling' && f.id === 'schedule')  s += 20;
       if (pain === 'reports'    && f.id === 'report')    s += 20;
       if (pain === 'tasks'      && f.id === 'crm')       s += 20;
-      if (pain === 'tasks'      && f.id === 'triage')    s += 15;  // secondary: triage creates tasks from messages
-      if (pain === 'invoices'   && f.id === 'crm')       s += 20;
-      if (pain === 'invoices'   && f.id === 'report')    s += 15;
-      if (pain === 'marketing'  && ['ig-lead','wa-lead'].includes(f.id)) s += 18;
+      if (pain === 'tasks'      && f.id === 'report')    s += 12;  // secondary: data visibility helps task tracking
+      if (pain === 'invoices'   && f.id === 'invoice')   s += 20;  // dedicated invoice flow
+      if (pain === 'invoices'   && f.id === 'report')    s += 12;  // secondary: payment tracking via reports
+      if (pain === 'marketing'  && f.id === 'content')   s += 20;  // dedicated content scheduling flow
+      if (pain === 'marketing'  && f.id === 'ig-lead')   s += 10;  // secondary: social presence still relevant
       if (pain === 'leads'      && ['wa-lead','ig-lead','form-lead'].includes(f.id)) s += 18;  // +12 → +18: beat crm natural score
-      if (pain === 'sales'      && ['wa-lead','ig-lead','followup','crm'].includes(f.id)) s += 12;
+      if (pain === 'sales'      && ['followup','crm'].includes(f.id))               s += 16;  // strong: closing = followup + CRM
+      if (pain === 'sales'      && ['wa-lead','ig-lead'].includes(f.id))            s += 10;  // weaker: source matters but secondary
       // Intent tiebreakers (weaker — used when pain bonus alone doesn't differentiate)
       if (['leads','sales'].includes(intent) && ['wa-lead','form-lead','ig-lead','followup'].includes(f.id)) s += 5;
       if (intent === 'service'  && f.id === 'triage')    s += 5;
