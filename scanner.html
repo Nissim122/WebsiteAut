@@ -147,7 +147,7 @@
     /* ── Progress bar ── */
     .prog-bar {
       display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-top: 66px; margin-bottom: 32px;
+      gap: 0; margin-top: 130px; margin-bottom: 32px;
     }
     .prog-seg {
       width: 34px; height: 34px; border-radius: 50%;
@@ -781,18 +781,102 @@
       .wrapper { padding-left: 18px; padding-right: 18px; }
       .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
     }
+
+    /* ── Site-wide nav ── */
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      width: 100%; z-index: 100;
+      background: transparent; padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      width: calc(75% - 2rem); max-width: calc(75% - 2rem);
+      margin: 0 auto;
+      background: rgba(14,16,28,0.55);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px; border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem; height: 100px; overflow: visible;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    .site-nav a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 1.05rem; font-weight: 500; transition: color 0.2s;
+    }
+    .site-nav a:hover { color: #fff; }
+    .site-nav a:link:not(.nav-active),
+    .site-nav a:visited:not(.nav-active) { color: rgba(255,255,255,0.75) !important; }
+    .site-nav a.nav-active { color: #e0176b !important; font-weight: 700; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.4rem; background: #e0176b; color: #fff;
+      font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 0.9rem;
+      border-radius: 10px; border: none; cursor: pointer; text-decoration: none;
+    }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-cta:hover .btn-arrow { transform: translateX(-5px); }
+    .hamburger-btn {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 0.5rem; flex-shrink: 0;
+    }
+    .hamburger-btn span {
+      display: block; width: 22px; height: 2px; border-radius: 2px;
+      background: rgba(255,255,255,0.85);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+    }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+    @media (max-width: 767px) {
+      .nav-inner { max-width: calc(75% - 2rem) !important; }
+      .hamburger-btn { display: flex; }
+      .nav-cta-desktop { display: none !important; }
+      .nav-links-desktop { display: none !important; }
+    }
   </style>
 </head>
 <body>
   <div class="bg-grad"></div>
   <div class="grain"></div>
 
-  <!-- Logo header -->
-  <header style="position:fixed; top:0; left:0; right:0; z-index:50; height:54px; background:rgba(14,22,40,0.75); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; justify-content:center;">
-    <a href="/" aria-label="Clix Automations — דף הבית" style="text-decoration:none; display:flex; align-items:baseline; gap:0.15rem; direction:ltr;">
-      <span style="font-family:'Inter',sans-serif; font-weight:700; font-size:1.55rem; letter-spacing:-0.04em; color:#ffffff;">Clix</span><span style="font-family:'Inter',sans-serif; font-weight:400; font-size:1.2rem; letter-spacing:-0.02em; color:#e0176b;">Automations</span>
+  <!-- Main site nav -->
+  <nav class="site-nav" aria-label="תפריט ראשי">
+    <div class="nav-inner">
+      <a href="/" aria-label="Clix Automations — דף הבית" style="text-decoration: none; display: flex; align-items: baseline; gap: 0.15rem; flex-shrink: 0; direction: ltr;">
+        <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.75rem; letter-spacing: -0.04em; color: #ffffff;">Clix</span><span style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.02em; color: #e0176b;">Automations</span>
+      </a>
+      <div style="display: flex; gap: 2.5rem;" class="hidden md:flex nav-links-desktop">
+        <a href="/">דף הבית</a>
+        <a href="/#process">תהליך</a>
+        <a href="/#results">תוצאות</a>
+        <a href="/blog.html">בלוג</a>
+        <a href="/scanner.html" class="nav-active">רדאר העסק</a>
+        <a href="/#contact">צרו קשר</a>
+      </div>
+      <a href="/#contact" class="btn-cta nav-cta-desktop" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">
+        לפרטים נוספים <span class="btn-arrow">◄</span>
+      </a>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט ניווט" aria-expanded="false" aria-controls="mobile-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
+    <a href="/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">דף הבית</a>
+    <a href="/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תהליך</a>
+    <a href="/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תוצאות</a>
+    <a href="/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">בלוג</a>
+    <a href="/scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.5rem; text-decoration: none;">רדאר העסק</a>
+    <a href="/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">צרו קשר</a>
+    <a href="/#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 0.5rem;">
+      לתיאום פגישה <span class="btn-arrow">◄</span>
     </a>
-  </header>
+  </div>
 
   <div class="wrapper">
 
@@ -2552,5 +2636,48 @@
   </script>
   <!-- ── Accessibility live region ── -->
   <div id="aria-live-region" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></div>
+
+  <script>
+    const FOCUSABLE_NAV = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
+    function trapNavFocus(e) {
+      const menu = document.getElementById('mobile-menu');
+      const focusable = Array.from(menu.querySelectorAll(FOCUSABLE_NAV));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        }
+      } else if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    }
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu.classList.contains('open')) {
+        closeMobileMenu();
+      } else {
+        const btn = document.getElementById('hamburger-btn');
+        menu.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'סגור תפריט ניווט');
+        document.addEventListener('keydown', trapNavFocus);
+        const firstLink = menu.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
+    }
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn  = document.getElementById('hamburger-btn');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'פתח תפריט ניווט');
+      document.removeEventListener('keydown', trapNavFocus);
+      btn.focus();
+    }
+  </script>
 </body>
 </html>
