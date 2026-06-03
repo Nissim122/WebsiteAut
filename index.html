@@ -997,34 +997,47 @@
               <source srcset="brand_assets/profile_pic_2_nobg.webp" type="image/webp" />
               <img src="brand_assets/profile_pic_2_nobg.png" alt="ניסים בנגייב" width="180" height="240" style="width: 180px; height: auto; object-fit: contain; display: block; position: relative; z-index: 2;" />
             </picture>
-            <!-- RIGHT col: Monday → ChatGPT → Outlook → RavMeser → Rivhit (evenly spaced, clearly outside image) -->
-            <div style="position:absolute;top:0px;right:-58px;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/monday.webp" alt="Monday" style="width:42px;height:42px;object-fit:contain;" />
+            <!-- RIGHT semicircle arc: offset follows sin curve — small at top/bottom, max at middle -->
+            <!-- top:0   → right:-18px (sin 20° × 52 ≈ 18) size:38 -->
+            <div style="position:absolute;top:0px;right:-18px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/monday.webp" alt="Monday" style="width:30px;height:30px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:55px;right:-52px;width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+            <!-- top:52  → right:-46px (sin 55° × 52 ≈ 43) size:44 -->
+            <div style="position:absolute;top:52px;right:-46px;width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
               <img src="brand_assets/icons/chatgpt.jpg" alt="ChatGPT" style="width:34px;height:34px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:110px;right:-50px;width:42px;height:42px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/OUTLOOK.png" alt="Outlook" style="width:28px;height:28px;object-fit:contain;" />
+            <!-- top:105 → right:-58px (sin 90° × 58 = 58) size:52  PEAK -->
+            <div style="position:absolute;top:105px;right:-58px;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 6px 20px rgba(0,0,0,0.22);">
+              <img src="brand_assets/icons/OUTLOOK.png" alt="Outlook" style="width:34px;height:34px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:162px;right:-48px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/ravmeser-logo.png" alt="רב מסר" style="width:26px;height:26px;object-fit:contain;" />
+            <!-- top:158 → right:-46px size:44 -->
+            <div style="position:absolute;top:158px;right:-46px;width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/ravmeser-logo.png" alt="רב מסר" style="width:30px;height:30px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:210px;right:-50px;width:40px;height:40px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/rivhit-logo.jpg" alt="ריווחית" style="width:30px;height:14px;object-fit:contain;" />
+            <!-- top:208 → right:-18px size:38 -->
+            <div style="position:absolute;top:208px;right:-18px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/rivhit-logo.jpg" alt="ריווחית" style="width:28px;height:13px;object-fit:contain;" />
             </div>
-            <!-- LEFT col: Make → Fillout → Fireberry → ClickUp (evenly spaced, clearly outside image) -->
-            <div style="position:absolute;top:0px;left:-62px;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/make.png" alt="Make" style="width:70px;height:28px;object-fit:contain;flex-shrink:0;max-width:none;" />
+            <!-- LEFT semicircle arc: mirror of right -->
+            <!-- top:0   → left:-18px size:38 -->
+            <div style="position:absolute;top:0px;left:-18px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/make.png" alt="Make" style="width:54px;height:21px;object-fit:contain;flex-shrink:0;max-width:none;" />
             </div>
-            <div style="position:absolute;top:70px;left:-56px;width:46px;height:46px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+            <!-- top:52  → left:-46px size:44 -->
+            <div style="position:absolute;top:52px;left:-46px;width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
               <img src="brand_assets/icons/fillout.png" alt="Fillout" style="width:34px;height:34px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:140px;left:-52px;width:42px;height:42px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/fireberry.webp" alt="Fireberry" style="width:42px;height:42px;object-fit:cover;" />
+            <!-- top:105 → left:-58px size:52  PEAK -->
+            <div style="position:absolute;top:105px;left:-58px;width:52px;height:52px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 6px 20px rgba(0,0,0,0.22);">
+              <img src="brand_assets/icons/GROW.webp" alt="Grow" style="width:40px;height:40px;object-fit:contain;" />
             </div>
-            <div style="position:absolute;top:205px;left:-58px;width:48px;height:48px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
-              <img src="brand_assets/icons/CLIKUP.jpg" alt="ClickUp" style="width:38px;height:38px;object-fit:contain;" />
+            <!-- top:158 → left:-46px size:44 -->
+            <div style="position:absolute;top:158px;left:-46px;width:44px;height:44px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/fireberry.webp" alt="Fireberry" style="width:44px;height:44px;object-fit:cover;" />
+            </div>
+            <!-- top:208 → left:-18px size:38 -->
+            <div style="position:absolute;top:208px;left:-18px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);">
+              <img src="brand_assets/icons/CLIKUP.jpg" alt="ClickUp" style="width:28px;height:28px;object-fit:contain;" />
             </div>
           </div>
         </div>
