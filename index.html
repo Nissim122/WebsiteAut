@@ -801,6 +801,12 @@
       #process  { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
     }
 
+    /* ── Mobile: banner submit — center text, no arrow ── */
+    @media (max-width: 767px) {
+      #banner-submit { justify-content: center !important; }
+      #banner-submit .btn-arrow { display: none !important; }
+    }
+
     /* ── CTA Banner inputs ── */
     .cta-banner-input::placeholder { color: rgba(255,255,255,0.85); }
     .cta-banner-input { direction: rtl; text-align: right; }
@@ -1008,7 +1014,7 @@
           <div style="position: relative; width: 180px; margin: 0 auto;">
             <picture>
               <source srcset="brand_assets/profile_pic_2_nobg.webp" type="image/webp" />
-              <img src="brand_assets/profile_pic_2_nobg.png" alt="ניסים בנגייב" width="180" height="240" style="width: 180px; height: auto; object-fit: contain; display: block; position: relative; z-index: 5;" />
+              <img src="brand_assets/profile_pic_2_nobg.png" alt="ניסים בנגייב" width="180" height="240" style="width: 180px; height: auto; object-fit: contain; display: block; position: relative; z-index: 5; -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%); mask-image: linear-gradient(to bottom, black 55%, transparent 100%);" />
             </picture>
             <!-- RIGHT semicircle — animated via JS once images loaded -->
             <div class="mob-bubble" style="position:absolute;top:0px;right:-18px;width:38px;height:38px;background:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:3;box-shadow:0 4px 16px rgba(0,0,0,0.20);--bx:-89px;--by:101px;--delay:0.3s;">
