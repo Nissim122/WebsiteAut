@@ -859,30 +859,9 @@
         order: 2;
       }
 
-      /* Contact — brand color treatment */
+      /* Contact — mobile padding */
       #contact {
-        background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(33,150,176,0.18) 0%, transparent 70%),
-                    #080f1e !important;
         padding: 3rem 1.25rem !important;
-      }
-      #contact form {
-        background: rgba(33,150,176,0.07) !important;
-        border: 1px solid rgba(33,150,176,0.3) !important;
-      }
-      #contact label[for] {
-        color: #2196b0 !important;
-      }
-      #contact .form-input {
-        background: rgba(33,150,176,0.08) !important;
-        border-color: rgba(33,150,176,0.25) !important;
-      }
-      #contact .form-input:focus {
-        border-color: #2196b0 !important;
-        box-shadow: 0 0 0 3px rgba(33,150,176,0.18) !important;
-      }
-      .contact-side-icons a span:first-child {
-        background: rgba(33,150,176,0.18) !important;
-        border-color: rgba(33,150,176,0.4) !important;
       }
     }
 
@@ -1004,6 +983,43 @@
       100% { transform: scale(0.05); opacity: 0; }
     }
 
+  </style>
+  <style>
+    /* Contact — brand color treatment (all viewports) */
+    #contact {
+      background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(33,150,176,0.18) 0%, transparent 70%),
+                  #080f1e !important;
+    }
+    #contact form {
+      background: #ffffff !important;
+      border: 1px solid rgba(33,150,176,0.25) !important;
+    }
+    #contact label[for],
+    #contact form label {
+      color: #2196b0 !important;
+    }
+    #contact .form-input {
+      background: #f8fafb !important;
+      border-color: rgba(33,150,176,0.3) !important;
+      color: #0e1628 !important;
+    }
+    #contact .form-input::placeholder {
+      color: rgba(14,22,40,0.38) !important;
+    }
+    #contact .form-input:focus {
+      border-color: #2196b0 !important;
+      box-shadow: 0 0 0 3px rgba(33,150,176,0.15) !important;
+    }
+    .contact-side-icons a span:first-child {
+      background: rgba(33,150,176,0.18) !important;
+      border-color: rgba(33,150,176,0.4) !important;
+    }
+    #contact input[type="checkbox"],
+    #contact input[type="checkbox"]:focus {
+      accent-color: #2196b0;
+      outline-color: #2196b0;
+      border-color: rgba(33,150,176,0.65);
+    }
   </style>
 </head>
 
@@ -1906,7 +1922,7 @@
             </label>
           </div>
           <button id="contact-submit" type="submit" class="btn-cta" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.875rem;">
-            שליחת פנייה <span class="btn-arrow">◄</span>
+            שליחה <span class="btn-arrow">◄</span>
           </button>
         </form>
 
