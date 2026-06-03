@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>טיוטה: למה תהליכים בעסק שלך תקועים? איך לזהות נקודות תורפה ולהתייעל עם Make</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { font-family: 'Heebo', sans-serif; background: #0e1628; color: #e2e8f8; direction: rtl; margin: 0; padding: 0; }
+  .wrap { max-width: 740px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  h1 { font-size: clamp(1.8rem,4vw,2.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 1.2rem; }
+  .draft-badge { display: inline-block; background: #e0176b; color: #fff; font-weight: 800; font-size: 0.78rem; letter-spacing: 0.05em; padding: 0.3rem 0.9rem; border-radius: 6px; margin-bottom: 1.2rem; }
+  .meta-bar { display: flex; flex-wrap: wrap; gap: 1rem; background: rgba(33,150,176,0.1); border: 1px solid rgba(33,150,176,0.22); border-radius: 10px; padding: 0.9rem 1.2rem; margin-bottom: 2.2rem; font-size: 0.85rem; color: #5ecfec; }
+  .content h2 { font-size: 1.35rem; font-weight: 800; color: #2196b0; margin: 2rem 0 0.6rem; }
+  .content h3 { font-size: 1.1rem; font-weight: 700; color: #5ecfec; margin: 1.5rem 0 0.5rem; }
+  .content p  { line-height: 1.8; margin-bottom: 1.1rem; color: #c8d8ee; }
+  .content ul { padding-right: 1.4rem; margin-bottom: 1.2rem; }
+  .content li { margin-bottom: 0.4rem; color: #c8d8ee; line-height: 1.7; }
+  .section { background: rgba(255,255,255,0.035); border: 1px dashed rgba(33,150,176,0.28); border-radius: 12px; padding: 1.4rem; margin-top: 2.5rem; }
+  .section-label { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; color: #5ecfec; text-transform: uppercase; margin-bottom: 0.8rem; }
+  .card-preview-title { font-weight: 800; font-size: 1rem; color: #e2e8f8; margin-bottom: 0.4rem; }
+  .card-preview-excerpt { font-size: 0.88rem; color: #8a9bbd; }
+  pre { background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 1rem; font-size: 0.75rem; overflow-x: auto; white-space: pre-wrap; color: #a0c4d8; direction: ltr; text-align: left; }
+  .publish-cmd { margin-top: 2rem; background: rgba(33,150,176,0.08); border-radius: 10px; padding: 1.2rem 1.5rem; font-size: 0.88rem; color: #5ecfec; }
+  .publish-cmd code { background: rgba(0,0,0,0.35); padding: 0.2rem 0.6rem; border-radius: 5px; font-family: monospace; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="draft-badge">⚠ טיוטה — לא פורסם</div>
+  <h1>למה תהליכים בעסק שלך תקועים? איך לזהות נקודות תורפה ולהתייעל עם Make</h1>
+  <div class="meta-bar">
+    <span>📁 Make & Zapier</span>
+    <span>⏱ 5 דק' קריאה</span>
+    <span>📅 3 ביוני 2026</span>
+    <span>✍️ ניסים בנגייב</span>
+  </div>
+  <div class="content">
+    <p>כל בעל עסק מכיר את ההרגשה הזאת: יום העבודה עמוס במשימות שחוזרות על עצמן, דברים נופלים בין הכיסאות, וטעויות קטנות מצטברות לכדי בזבוז זמן ואנרגיה גדול. אתם יודעים שיש דרך טובה יותר, אבל מאיפה מתחילים לסדר את הבלגן?</p>
+<h2>הבלגן שאתם מכירים מקרוב</h2>
+<p>העסק גדל, אבל המערכות נשארו מאחור. פתאום אתם מוצאים את עצמכם ואת הצוות שלכם מבזבזים שעות על העתקת נתונים, שליחת מיילים ידניים, או רדיפה אחרי אישורים שמתעכבים. זה לא רק מוריד את הפרודוקטיביות, זה פוגע גם בחווית הלקוח ובתחושה הכללית של כולם בעסק.</p>
+<p>הבעיה היא לא חוסר רצון או עבודה קשה, אלא לרוב תהליכים עסקיים שלא הוגדרו כמו שצריך, או שהשתנו עם הזמן ואיבדו את היעילות שלהם. תהליכים כאלה הם נקודות חיכוך שגורמות לבזבוז משאבים.</p>
+<h2>אז איך מזהים איפה הבעיה? מדברים על ניתוח תהליכים</h2>
+<p>ניתוח תהליכים הוא לא משהו מורכב ששמור רק לחברות ענק. למעשה, זו דרך פשוטה להסתכל על כל שלב ושלב בעבודה היומיומית שלכם ולשאול: "האם אפשר לעשות את זה טוב יותר?". המטרה היא לזהות את הצעדים המיותרים, את ה'צווארי בקבוק' שמעכבים הכל, ואת המקומות שבהם טעויות קורות שוב ושוב.</p>
+<p>כשמנתחים תהליך, חשבו על כל משימה שעוברת אצלכם בעסק. למשל, מה קורה מרגע שלקוח חדש מתעניין בשירות שלכם ועד שהוא הופך ללקוח משלם? רשמו את כל השלבים: קבלת ליד, שליחת הצעת מחיר, מעקב, סגירת עסקה. בכל שלב כזה, תשאלו: כמה זמן זה לוקח? מי מעורב? איפה יש מקום לטעויות? ומה קורה כשמישהו שוכח לעשות משהו?</p>
+<h2>דוגמה מעשית: כשלקוח חדש נכנס ודברים נופלים בין הכיסאות</h2>
+<p>קחו לדוגמה עסק שמתמודד עם ניהול לידים חדשים. הליד נכנס דרך טופס באתר, נשלח למייל של איש המכירות, הוא צריך להעתיק את הפרטים ל-CRM, לשלוח הודעת WhatsApp ללקוח, לתאם פגישה ביומן, ולעדכן את הסטטוס ב-CRM. תהליך ידני כזה יכול בקלות להתפקשש: איש המכירות עסוק, שוכח לעדכן את ה-CRM, ה-WhatsApp נשלח מאוחר, או שהפרטים מועתקים בטעות.</p>
+<p>עסק שמשתמש ב-Make יכול לבנות תהליך אוטומטי שפותר את הבעיות האלה. ברגע שליד חדש נכנס דרך הטופס, Make יקלוט את הנתונים:</p>
+<ul>
+<li>יעדכן אוטומטית את ה-CRM עם פרטי הליד.</li>
+<li>ישגר הודעת WhatsApp מותאמת אישית ללקוח (דרך ה-API של WhatsApp Business) עם פרטי יצירת קשר ראשוניים.</li>
+<li>ישלח מייל אוטומטי לאיש המכירות עם כל פרטי הליד והנחיה ליצור קשר.</li>
+<li>יפתח משימה חדשה ב-CRM או ב-Monday למעקב.</li>
+</ul>
+<p>בצורה כזו, אף ליד לא נופל בין הכיסאות, זמן התגובה מתקצר משמעותית, ואיש המכירות יכול להתמקד במכירה עצמה ולא במשימות אדמיניסטרטיביות חוזרות.</p>
+<h2>מה הרווחתם מכל זה?</h2>
+<p>על ידי ניתוח התהליכים שלכם וזיהוי נקודות הכאב, אתם יכולים לבנות אוטומציות חכמות שיחסכו לכם שעות עבודה שבועיות. זה אומר פחות טעויות, יותר לקוחות מרוצים, ויותר זמן להתמקד במה שבאמת חשוב בעסק שלכם — צמיחה וחדשנות. Make הוא כלי עוצמתי שמאפשר לחבר בין כל המערכות שאתם עובדים איתן ולבנות זרימות עבודה אוטומטיות שמתאימות בדיוק לצרכים שלכם.</p>
+<p>אם זה נשמע רלוונטי לעסק שלך, נשמח לדבר ולחשוב יחד איך לייעל את התהליכים אצלכם.</p>
+  </div>
+
+  <div class="section" style="border-color: rgba(224,23,107,0.4);">
+    <div class="section-label" style="color:#e0176b;">📸 תמונה נדרשת לפני פרסום</div>
+    <p style="color:#c8d8ee;font-size:0.9rem;line-height:1.7;margin:0;">
+      צור תמונה AI שקשורה למאמר ושמור אותה בנתיב:<br/>
+      <code style="background:rgba(0,0,0,0.4);padding:0.2rem 0.6rem;border-radius:5px;font-family:monospace;color:#5ecfec;">images/blog/2026-06-03-1.png</code><br/>
+      (גודל מומלץ: 1280×720 px)<br/><br/>
+      לאחר העלאה, הרץ: <code style="background:rgba(0,0,0,0.4);padding:0.2rem 0.6rem;border-radius:5px;font-family:monospace;color:#5ecfec;">node optimize-images.mjs</code><br/>
+      — ידחס את התמונה ויצור גרסת WebP קלה יותר אוטומטית.
+    </p>
+  </div>
+
+  <div class="section">
+    <div class="section-label">תצוגה מקדימה — כרטיס בלוג</div>
+    <div class="card-preview-title">למה תהליכים בעסק שלך תקועים? איך לזהות נקודות תורפה ולהתייעל עם Make</div>
+    <div class="card-preview-excerpt">האם העסק שלך מרגיש כמו סלט? גלו איך ניתוח תהליכים פשוט יכול לזהות איפה אתם מבזבזים זמן, ואיך אוטומציה עם Make תעזור לכם לייעל את העבודה.</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">HTML לכרטיס (לשימוש publish.mjs)</div>
+    <pre>      &lt;!-- AGENT POST 2026-06-03-1 --&gt;
+      &lt;article class="blog-card reveal" data-cats="make" style="transition-delay:0.05s;"&gt;
+        &lt;div class="blog-card-thumb-wrap"&gt;
+          &lt;picture&gt;
+            &lt;source srcset="images/blog/2026-06-03-1.webp" type="image/webp" /&gt;
+            &lt;img src="images/blog/2026-06-03-1.png" alt="למה תהליכים בעסק שלך תקועים? איך לזהות נקודות תורפה ולהתייעל עם Make" loading="lazy" /&gt;
+          &lt;/picture&gt;
+        &lt;/div&gt;
+        &lt;div class="blog-card-body"&gt;
+          &lt;span class="blog-tag make"&gt;Make&lt;/span&gt;
+          &lt;a href="posts/2026-06-03-1.html" class="blog-title"&gt;
+            למה תהליכים בעסק שלך תקועים? איך לזהות נקודות תורפה ולהתייעל עם Make
+          &lt;/a&gt;
+          &lt;p class="blog-excerpt"&gt;
+            האם העסק שלך מרגיש כמו סלט? גלו איך ניתוח תהליכים פשוט יכול לזהות איפה אתם מבזבזים זמן, ואיך אוטומציה עם Make תעזור לכם לייעל את העבודה.
+          &lt;/p&gt;
+          &lt;div class="blog-meta"&gt;
+            &lt;span&gt;ניסים בנגייב&lt;/span&gt;
+            &lt;span class="blog-meta-dot"&gt;&lt;/span&gt;
+            &lt;span&gt;3 ביוני 2026&lt;/span&gt;
+            &lt;span class="blog-meta-dot"&gt;&lt;/span&gt;
+            &lt;span&gt;5 דק' קריאה&lt;/span&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;</pre>
+  </div>
+
+  <div class="publish-cmd">
+    <strong>לפרסום:</strong> הרץ <code>node publish.mjs 2026-06-03-1</code>
+  </div>
+</div>
+</body>
+</html>
