@@ -3,6 +3,7 @@ name: Blog Agent — Weekly Post
 on:
   schedule:
     - cron: '0 6 * * 3'  # כל רביעי 06:00 UTC = 09:00 שעון ישראל
+    - cron: '0 7 * * 3'  # ניסיון חוזר שעה אחרי אם הראשון נכשל
   workflow_dispatch:        # הפעלה ידנית מ-GitHub
 
 env:
@@ -17,18 +18,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - name: Check if already published today
+        id: check
+        run: |
+          today=$(date +'%Y-%m-%d')
+          if git log --oneline | grep -q "blog-draft: $today"; then
+            echo "skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "skip=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Node.js
+        if: steps.check.outputs.skip == 'false'
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
       - name: Run Blog Agent
+        if: steps.check.outputs.skip == 'false'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: node blog-agent.mjs
 
       - name: Commit draft
+        if: steps.check.outputs.skip == 'false'
         run: |
           git config user.name "Blog Agent"
           git config user.email "bot@clix-automations.com"
