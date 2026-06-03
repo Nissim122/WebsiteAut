@@ -581,6 +581,12 @@
         padding: 1.5rem 1.25rem !important;
         gap: 1.25rem !important;
       }
+      .color-band-inner {
+        max-width: 100% !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+      }
       .cta-banner-headline { white-space: normal !important; font-size: 1rem !important; }
       .cta-banner-form {
         flex-direction: column !important;
@@ -821,6 +827,62 @@
       #contact .contact-grid > div:first-child { display: none; }
       .contact-side-icons {
         flex-direction: column !important;
+      }
+    }
+    /* ── Contact icons: mobile — שורה אופקית מתחת לטופס ── */
+    @media (max-width: 767px) {
+      .contact-side-icons {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 1.25rem !important;
+        flex-wrap: nowrap;
+        margin-top: 1.5rem;
+        padding-top: 0 !important;
+      }
+      .contact-side-icons a:first-child { display: none !important; }
+      .contact-side-icons a {
+        gap: 0.45rem !important;
+        flex: 1;
+        justify-content: center;
+      }
+      .contact-side-icons a span:first-child {
+        width: 34px !important;
+        height: 34px !important;
+        flex-shrink: 0 !important;
+        order: 1;
+      }
+      .contact-side-icons a span:last-child {
+        font-size: 0.75rem !important;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        order: 2;
+      }
+
+      /* Contact — brand color treatment */
+      #contact {
+        background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(33,150,176,0.18) 0%, transparent 70%),
+                    #080f1e !important;
+        padding: 3rem 1.25rem !important;
+      }
+      #contact form {
+        background: rgba(33,150,176,0.07) !important;
+        border: 1px solid rgba(33,150,176,0.3) !important;
+      }
+      #contact label[for] {
+        color: #2196b0 !important;
+      }
+      #contact .form-input {
+        background: rgba(33,150,176,0.08) !important;
+        border-color: rgba(33,150,176,0.25) !important;
+      }
+      #contact .form-input:focus {
+        border-color: #2196b0 !important;
+        box-shadow: 0 0 0 3px rgba(33,150,176,0.18) !important;
+      }
+      .contact-side-icons a span:first-child {
+        background: rgba(33,150,176,0.18) !important;
+        border-color: rgba(33,150,176,0.4) !important;
       }
     }
 
@@ -1611,7 +1673,7 @@
        COLOR BAND — BELOW BLOG
   ═══════════════════════════════════ -->
   <section style="background: #080f1e; padding: 2.5rem 1.5rem;">
-    <div style="max-width: 72%; margin: 0 auto; background: #e0176b; border-radius: 16px; padding: 2rem 2.5rem; min-height: 172px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; direction: rtl;">
+    <div class="color-band-inner" style="max-width: 72%; margin: 0 auto; background: #e0176b; border-radius: 16px; padding: 2rem 2.5rem; min-height: 172px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; direction: rtl;">
 
       <div style="flex: 1; min-width: 220px;">
         <h2 style="font-size: clamp(1.15rem, 2.5vw, 1.55rem); font-weight: 900; color: #fff; letter-spacing: -0.03em; margin: 0 0 0.55rem; line-height: 1.25;">
@@ -1849,7 +1911,7 @@
         </form>
 
         <!-- Contact icons — left column of the grid -->
-        <div class="reveal contact-side-icons" style="display: flex; flex-direction: column; gap: 1.25rem; transition-delay: 0.25s; padding-top: 0.5rem; align-self: center;">
+        <div class="reveal contact-side-icons" style="display: flex; gap: 1.25rem; transition-delay: 0.25s; padding-top: 0.5rem; align-self: center;">
 
           <!-- Instagram -->
           <a href="https://www.instagram.com/nisim.bengayev/" target="_blank" rel="noopener"
