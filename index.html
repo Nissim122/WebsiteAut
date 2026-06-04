@@ -1956,15 +1956,15 @@
             <textarea id="contact-message" rows="4" class="form-input" placeholder="באיזה תחום אתה פועל? אילו תהליכים תרצה לייעל?" style="resize: vertical;" maxlength="1000"></textarea>
           </div>
           <div style="margin-bottom: 0.6rem;">
-            <label for="contact-privacy" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
+            <label for="contact-privacy" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: nowrap;">
               <input id="contact-privacy" type="checkbox" style="flex-shrink:0; margin-top:2px; transition: outline 0.15s;" onchange="this.style.outline=''; this.style.boxShadow=''" />
-              <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: #0f7a8e; text-decoration: underline;">למדיניות הפרטיות</a></span>
+              <span style="min-width:0;">אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: #0f7a8e; text-decoration: underline;">למדיניות הפרטיות</a></span>
             </label>
           </div>
           <div style="margin-bottom: 0.5rem;">
-            <label for="contact-newsletter" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
+            <label for="contact-newsletter" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: nowrap;">
               <input id="contact-newsletter" type="checkbox" style="flex-shrink:0; margin-top:2px;" onchange="toggleContactEmail(this)" />
-              <span>אני מאשר/ת קבלת עדכונים ותוכן שיווקי</span>
+              <span style="min-width:0;">אני מאשר/ת קבלת עדכונים ותוכן שיווקי</span>
             </label>
           </div>
           <div id="contact-email-wrap" style="margin-bottom: 1.25rem; display: none;">
