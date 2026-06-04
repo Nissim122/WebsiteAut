@@ -58,20 +58,17 @@ function pickRelated(currentSlug, currentCategory, index) {
 
 function buildRelatedSection(relatedPosts) {
   if (!relatedPosts || relatedPosts.length === 0) return '';
-  const cards = relatedPosts.map(p => `      <a href="${p.url}" style="display:block;background:#131d35;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem 1.5rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#2196b0';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
-        <span style="font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:600;color:#e0e8f0;line-height:1.5;display:block;">${p.title}</span>
-        <span style="font-size:0.82rem;color:#2196b0;margin-top:0.6rem;display:block;font-weight:600;">קריאה ←</span>
-      </a>`).join('\n');
+  const rows = relatedPosts.map(p => `    <a href="${p.url}" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+      <span style="font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:500;color:rgba(224,232,240,0.88);line-height:1.5;">${p.title}</span>
+      <span style="font-family:'Heebo',sans-serif;font-size:0.82rem;color:#2196b0;font-weight:600;white-space:nowrap;padding-right:1.25rem;">קריאה ←</span>
+    </a>`).join('\n');
   return `
-<section style="background:#080f1e;border-top:1px solid rgba(255,255,255,0.07);padding:3rem 1.5rem;">
-  <div style="max-width:800px;margin:0 auto;">
-    <h2 style="font-family:'Heebo',sans-serif;font-size:1.2rem;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:1.25rem;">מאמרים נוספים שיעניינו אותך</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
-${cards}
+  <div class="related-posts" style="margin:2rem 0 1.5rem;border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;">
+    <p style="font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;color:#2196b0;text-align:center;margin-bottom:0.75rem;">מאמרים נוספים</p>
+    <div>
+${rows}
     </div>
-  </div>
-</section>
-`;
+  </div>`;
 }
 
 function buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts) {
@@ -222,10 +219,14 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts) {
     .post-content li { margin-bottom: 0.5rem; color: #c8d8ee; line-height: 1.75; font-size: 1.05rem; }
     .post-cta {
       margin-top: 3.5rem; padding: 2rem 2rem;
-      background: rgba(33,150,176,0.08); border: 1px solid rgba(33,150,176,0.22);
-      border-radius: 16px; text-align: center;
+      text-align: center;
     }
     .post-cta p { color: rgba(255,255,255,0.7); margin-bottom: 1.2rem; font-size: 1rem; }
+    .btn-text-short { display: none; }
+    @media (max-width: 767px) {
+      .btn-text-full { display: none; }
+      .btn-text-short { display: inline; }
+    }
   </style>
 </head>
 <body>
@@ -287,16 +288,16 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts) {
       ${post.content}
     </div>
 
+${buildRelatedSection(relatedPosts)}
+
     <div class="post-cta">
       <p>רוצים ליישם אוטומציה בעסק שלכם? נשמח לעזור.</p>
       <a href="../index.html#contact" class="btn-cta" style="font-size:1rem;padding:0.7rem 2rem;">
-        לתיאום שיחת אפיון - ללא עלות <span class="btn-arrow">◄</span>
+        <span class="btn-text-full">לתיאום שיחת אפיון - ללא עלות</span><span class="btn-text-short">לשיחת אפיון - ללא עלות</span> <span class="btn-arrow">◄</span>
       </a>
     </div>
   </div>
 </main>
-
-${buildRelatedSection(relatedPosts)}
 
 <footer style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 1.5rem;text-align:center;">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">

@@ -145,10 +145,15 @@
     .post-content li { margin-bottom: 0.5rem; color: #c8d8ee; line-height: 1.75; font-size: 1.05rem; }
     .post-cta {
       margin-top: 3.5rem; padding: 2rem 2rem;
-      background: rgba(33,150,176,0.08); border: 1px solid rgba(33,150,176,0.22);
+      
       border-radius: 16px; text-align: center;
     }
     .post-cta p { color: rgba(255,255,255,0.7); margin-bottom: 1.2rem; font-size: 1rem; }
+    .btn-text-short { display: none; }
+    @media (max-width: 767px) {
+      .btn-text-full { display: none; }
+      .btn-text-short { display: inline; }
+    }
   </style>
 </head>
 <body>
@@ -210,35 +215,33 @@
       <p>כולנו מכירים את הסיטואציה: אתם חוזרים מכנס, מאירוע נטוורקינג או מפגישה עסקית עם ערימה של כרטיסי ביקור. הם נערמים על השולחן, נכנסים לארנק, ובסופו של דבר הולכים לאיבוד או נשכחים. הבעיה היא שכל כרטיס כזה מייצג הזדמנות עסקית פוטנציאלית, ואם הוא לא מטופל בזמן, הוא פשוט מתמסמס.</p><h2>לסרוק זה רק הצעד הראשון</h2><p>היום יש שפע של אפליקציות שמאפשרות לסרוק כרטיסי ביקור בקלות ישירות לטלפון. הן מזהות את הפרטים – שם, תפקיד, חברה, מייל, טלפון – ושומרות אותם כאיש קשר דיגיטלי. זהו צעד חשוב לדיגיטציה, אבל הוא עדיין לא פותר את הבעיה המרכזית: מה עושים עם המידע הזה עכשיו?</p><h2>איך אוטומציה הופכת כרטיס ביקור לליד פעיל</h2><p>כאן נכנסת לתמונה האוטומציה. במקום להעתיק ידנית כל פרט מכל כרטיס למערכת ה-CRM, למערכת דיוור או לטבלת אקסל, אפשר לחבר את אפליקציית הסריקה למערכות האלו באמצעות כלי אוטומציה כמו Make או Zapier.</p><p>התהליך עובד כך: ברגע שסרקתם כרטיס, פרטיו נשלחים אוטומטית למערכת ה-CRM שלכם. שם הוא הופך לליד חדש עם כל הפרטים הרלוונטיים. אפשר גם להגדיר שאותו ליד יקבל תגית ספציפית בהתאם למקור הכרטיס – למשל, 'כנס X', 'פגישה אישית' או 'שותף פוטנציאלי'. כך אתם שומרים על סדר ועל היסטוריה.</p><p>מעבר לזה, האוטומציה מאפשרת להפעיל תהליכים נוספים באופן מיידי. אפשר לשלוח מייל פתיחה מותאם אישית לליד החדש דרך מערכת הדיוור שלכם, או להקצות לו משימת פולו-אפ אוטומטית לאיש המכירות הרלוונטי ב-Monday או במערכת ניהול משימות אחרת. אפשרות נוספת היא להוסיף אותו לרשימת תפוצה ספציפית ב-WhatsApp Business כדי לשלוח לו עדכונים או הצעות רלוונטיות בהמשך.</p><h2>דוגמה מעשית לזרימת עבודה</h2><p>עסק קטן שמשתתף הרבה בכנסים יכול לבנות זרימת עבודה פשוטה ב-Make. ברגע שאיש המכירות סורק כרטיס ביקור בעזרת אפליקציית סריקה מסוימת, המידע נשלף ומועבר ל-Google Sheets. משם, Make יכולה לקחת את הפרטים וליצור פריט חדש במערכת ה-CRM, להגדיר תזכורת ביומן של איש המכירות לשיחת פולו-אפ בעוד יומיים, ואפילו לשלוח מייל היכרות אוטומטי מותאם אישית לליד החדש. כל זה קורה בתוך דקות, ללא התערבות ידנית, ומשחרר את איש המכירות להתמקד בשיחות מכירה אמיתיות במקום במטלות אדמיניסטרטיביות.</p><p>השקעה באוטומציה של ניהול כרטיסי ביקור היא השקעה ישירה ביעילות המכירות והשיווק שלכם. היא מבטיחה שאף ליד פוטנציאלי לא ילך לאיבוד, ושכל הזדמנות עסקית תקבל את הטיפול הנדרש ובזמן. כך אתם ממקסמים את הערך של כל כרטיס שאתם מקבלים, והופכים אותו למנוע צמיחה.</p><p>אם אתם רוצים להפוך את כרטיסי הביקור שלכם לכלי שיווק ומכירה חזק, נשמח לעזור לכם לבנות את האוטומציה הנכונה לעסק שלכם.</p>
     </div>
 
-    <div class="post-cta">
+    
+  <div class="related-posts" style="margin:2rem 0 1.5rem;border-top:1px solid rgba(255,255,255,0.08);padding-top:1.5rem;">
+    <p style="font-family:'Heebo',sans-serif;font-size:1rem;font-weight:700;color:#2196b0;text-align:center;margin-bottom:0.75rem;">מאמרים נוספים</p>
+    <div>
+    <a href="2026-06-04-2.html" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+      <span style="font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:500;color:rgba(224,232,240,0.88);line-height:1.5;">חיבור WhatsApp ל-CRM בלי קוד</span>
+      <span style="font-family:'Heebo',sans-serif;font-size:0.82rem;color:#2196b0;font-weight:600;white-space:nowrap;padding-right:1.25rem;">קריאה ←</span>
+    </a>
+    <a href="2026-05-11-2.html" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+      <span style="font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:500;color:rgba(224,232,240,0.88);line-height:1.5;">זמן תגובה ללקוח: למה כל דקה קובעת</span>
+      <span style="font-family:'Heebo',sans-serif;font-size:0.82rem;color:#2196b0;font-weight:600;white-space:nowrap;padding-right:1.25rem;">קריאה ←</span>
+    </a>
+    <a href="2026-04-24.html" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+      <span style="font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:500;color:rgba(224,232,240,0.88);line-height:1.5;">CRM: הכלי שהופך עסק קטן לעסק מנוהל</span>
+      <span style="font-family:'Heebo',sans-serif;font-size:0.82rem;color:#2196b0;font-weight:600;white-space:nowrap;padding-right:1.25rem;">קריאה ←</span>
+    </a>
+    </div>
+  </div>
+
+  <div class="post-cta">
       <p>רוצים ליישם אוטומציה בעסק שלכם? נשמח לעזור.</p>
       <a href="../index.html#contact" class="btn-cta" style="font-size:1rem;padding:0.7rem 2rem;">
-        לתיאום שיחת אפיון - ללא עלות <span class="btn-arrow">◄</span>
+        <span class="btn-text-full">לתיאום שיחת אפיון - ללא עלות</span><span class="btn-text-short">לשיחת אפיון - ללא עלות</span> <span class="btn-arrow">◄</span>
       </a>
     </div>
   </div>
 </main>
-
-
-<section style="background:#080f1e;border-top:1px solid rgba(255,255,255,0.07);padding:3rem 1.5rem;">
-  <div style="max-width:800px;margin:0 auto;">
-    <h2 style="font-family:'Heebo',sans-serif;font-size:1.2rem;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:1.25rem;">מאמרים נוספים שיעניינו אותך</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
-      <a href="2026-06-04-2.html" style="display:block;background:#131d35;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem 1.5rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#2196b0';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
-        <span style="font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:600;color:#e0e8f0;line-height:1.5;display:block;">חיבור WhatsApp ל-CRM בלי קוד</span>
-        <span style="font-size:0.82rem;color:#2196b0;margin-top:0.6rem;display:block;font-weight:600;">קריאה ←</span>
-      </a>
-      <a href="2026-05-11-2.html" style="display:block;background:#131d35;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem 1.5rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#2196b0';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
-        <span style="font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:600;color:#e0e8f0;line-height:1.5;display:block;">זמן תגובה ללקוח: למה כל דקה קובעת</span>
-        <span style="font-size:0.82rem;color:#2196b0;margin-top:0.6rem;display:block;font-weight:600;">קריאה ←</span>
-      </a>
-      <a href="2026-04-24.html" style="display:block;background:#131d35;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem 1.5rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#2196b0';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
-        <span style="font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:600;color:#e0e8f0;line-height:1.5;display:block;">CRM: הכלי שהופך עסק קטן לעסק מנוהל</span>
-        <span style="font-size:0.82rem;color:#2196b0;margin-top:0.6rem;display:block;font-weight:600;">קריאה ←</span>
-      </a>
-    </div>
-  </div>
-</section>
 
 <footer style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 1.5rem;text-align:center;">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">
