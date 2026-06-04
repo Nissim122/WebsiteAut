@@ -2440,8 +2440,7 @@
     })();
 
     /* ── Shared submission logic ── */
-    const WEBHOOK  = 'https://hook.eu2.make.com/t78mm1bpxu3u881q4x1fgv40rlhgkl3g';
-    const WEBHOOK2 = 'https://hook.eu2.make.com/lciwv5l6jcxq81413xwxw2fqqh6yux8p';
+    const WEBHOOK  = 'https://hook.eu2.make.com/lciwv5l6jcxq81413xwxw2fqqh6yux8p';
     const NOTIFY_EMAIL = 'nisimelec77@gmail.com';
 
     function showToast() {
@@ -2474,10 +2473,7 @@
       const body = JSON.stringify({ ...payload, to_email: NOTIFY_EMAIL, source: 'Clix Automations Website' });
       const opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body };
       try {
-        await Promise.all([
-          fetch(WEBHOOK,  opts).catch(err => console.error('Webhook error:', err)),
-          fetch(WEBHOOK2, opts).catch(err => console.error('Webhook2 error:', err))
-        ]);
+        await fetch(WEBHOOK, opts).catch(err => console.error('Webhook error:', err));
       } catch (err) {
         console.error('sendData error:', err);
       }
