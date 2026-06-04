@@ -44,7 +44,37 @@ function resolveImagePath(slug) {
   return `images/blog/${slug}.webp`;
 }
 
-function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
+function pickRelated(currentSlug, currentCategory, index) {
+  const others = index.filter(p => p.slug !== currentSlug);
+  const sameCategory = others.filter(p => p.tag === currentCategory);
+  const different    = others.filter(p => p.tag !== currentCategory);
+  // up to 2 same-category + fill remainder from others, newest first
+  const picked = [
+    ...sameCategory.slice(0, 2),
+    ...different.slice(0, Math.max(1, 3 - sameCategory.length)),
+  ].slice(0, 3);
+  return picked;
+}
+
+function buildRelatedSection(relatedPosts) {
+  if (!relatedPosts || relatedPosts.length === 0) return '';
+  const cards = relatedPosts.map(p => `      <a href="${p.url}" style="display:block;background:#131d35;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:1.25rem 1.5rem;text-decoration:none;transition:border-color 0.2s,transform 0.2s;" onmouseover="this.style.borderColor='#2196b0';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.transform='translateY(0)'">
+        <span style="font-family:'Heebo',sans-serif;font-size:0.95rem;font-weight:600;color:#e0e8f0;line-height:1.5;display:block;">${p.title}</span>
+        <span style="font-size:0.82rem;color:#2196b0;margin-top:0.6rem;display:block;font-weight:600;">קריאה ←</span>
+      </a>`).join('\n');
+  return `
+<section style="background:#080f1e;border-top:1px solid rgba(255,255,255,0.07);padding:3rem 1.5rem;">
+  <div style="max-width:800px;margin:0 auto;">
+    <h2 style="font-family:'Heebo',sans-serif;font-size:1.2rem;font-weight:700;color:rgba(255,255,255,0.55);letter-spacing:0.04em;text-transform:uppercase;margin-bottom:1.25rem;">מאמרים נוספים שיעניינו אותך</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;">
+${cards}
+    </div>
+  </div>
+</section>
+`;
+}
+
+function buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts) {
   return `<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -266,6 +296,8 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug) {
   </div>
 </main>
 
+${buildRelatedSection(relatedPosts)}
+
 <footer style="border-top:1px solid rgba(255,255,255,0.08);padding:2rem 1.5rem;text-align:center;">
   <div style="max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;">
     <a href="../index.html" style="font-family:'Inter',sans-serif;font-weight:700;font-size:1.2rem;letter-spacing:-0.03em;color:#fff;text-decoration:none;">
@@ -325,7 +357,13 @@ async function main() {
   const isPlaceholder = existsSync(postPath) &&
     (await readFile(postPath, 'utf8')).includes('המאמר בכתיבה');
 
-  await writeFile(postPath, buildPostHtml(post, cat, heDate, postSlug, imageSlug), 'utf8');
+  // Read current index to pick related posts (index may not include current post yet — that's fine)
+  const existingIndex = existsSync(INDEX_PATH)
+    ? JSON.parse(await readFile(INDEX_PATH, 'utf8'))
+    : [];
+  const relatedPosts = pickRelated(postSlug, post.category, existingIndex);
+
+  await writeFile(postPath, buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts), 'utf8');
   console.log(isPlaceholder
     ? `📄 דורס placeholder: posts/${postSlug}.html`
     : `📄 נוצר: posts/${postSlug}.html`);
