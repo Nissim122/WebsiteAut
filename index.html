@@ -651,7 +651,9 @@
         align-items: center !important;
         min-height: auto !important;
       }
-      .results-about { max-width: 100% !important; min-width: 0 !important; }
+      .results-about { max-width: 100% !important; min-width: 0 !important; overflow-wrap: break-word !important; word-break: break-word !important; }
+      .results-about span[style*="white-space:nowrap"],
+      .results-about span[style*="white-space: nowrap"] { white-space: normal !important; }
 
       /* Mobile testimonial carousel — fade between cards */
       .testi-stack-wrap {
