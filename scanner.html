@@ -233,15 +233,7 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-2 {
-      height: calc(100vh - 210px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    #screen-2::-webkit-scrollbar { display: none; }
-    #screen-2.active { min-height: 0; }
+    #screen-2.active { min-height: calc(100vh - 80px); }
     #tools-grid { margin-bottom: 0; position: relative; isolation: isolate; }
     #screen-2 .btn-row {
       position: sticky;
@@ -829,7 +821,8 @@
     #mobile-menu { display: none; }
     #mobile-menu.open { display: flex; }
     @media (max-width: 767px) {
-      .nav-inner { max-width: calc(75% - 2rem) !important; }
+      .nav-inner { width: calc(100% - 2rem) !important; max-width: calc(100% - 2rem) !important; border-radius: 14px !important; border: 1.5px solid #e0176b !important; background: rgba(14, 22, 40, 0.72) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; height: 80px !important; }
+      .site-nav { padding: 0.6rem 1rem !important; }
       .hamburger-btn { display: flex; }
       .nav-cta-desktop { display: none !important; }
       .nav-links-desktop { display: none !important; }
@@ -866,16 +859,13 @@
   </nav>
 
   <!-- Mobile Navigation Menu -->
-  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; inset: 0; background: rgba(10,15,30,0.97); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); z-index: 200; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;">
-    <a href="/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">דף הבית</a>
-    <a href="/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תהליך</a>
-    <a href="/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">תוצאות</a>
-    <a href="/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">בלוג</a>
-    <a href="/scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.5rem; text-decoration: none;">רדאר העסק</a>
-    <a href="/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.85); font-weight: 600; font-size: 1.5rem; text-decoration: none;">צרו קשר</a>
-    <a href="/#contact" onclick="closeMobileMenu()" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 2rem; margin-top: 0.5rem;">
-      לתיאום פגישה <span class="btn-arrow">◄</span>
-    </a>
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; top: 92px; left: 1rem; right: 1rem; background: rgba(14, 22, 40, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 150; flex-direction: column; align-items: stretch; border: 1.5px solid #e0176b; border-top: none; border-radius: 0 0 14px 14px;">
+    <a href="/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">דף הבית</a>
+    <a href="/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
+    <a href="/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
+    <a href="/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
+    <a href="/scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">רדאר העסק</a>
+    <a href="/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
   </div>
 
   <div class="wrapper">
