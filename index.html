@@ -4349,7 +4349,17 @@
   (function () {
     function focusContactName() {
       var field = document.getElementById('contact-name');
-      if (field) setTimeout(function () { field.focus(); }, 600);
+      if (!field) return;
+      var done = false;
+      function doFocus() {
+        if (done) return;
+        done = true;
+        window.removeEventListener('scrollend', doFocus);
+        clearTimeout(timer);
+        field.focus();
+      }
+      var timer = setTimeout(doFocus, 1200);
+      window.addEventListener('scrollend', doFocus, { once: true });
     }
 
     function checkAndFocus() {
