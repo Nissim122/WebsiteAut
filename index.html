@@ -2269,6 +2269,12 @@
       }
 
       window.addEventListener('scroll', update, { passive: true });
+      // Fire after smooth-scroll stops (anchor nav like "איך זה עובד?")
+      window.addEventListener('scrollend', update, { passive: true });
+      // Fallback: re-check after any anchor click with a delay
+      document.querySelectorAll('a[href="#process"]').forEach(function(a) {
+        a.addEventListener('click', function() { setTimeout(update, 600); });
+      });
       update(); // set initial state on page load
     })();
 
