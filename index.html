@@ -2433,7 +2433,7 @@
       overlay.classList.remove('so-active');
       overlay.style.display = 'block';
       document.body.style.overflow = 'hidden';
-      ['cookie-banner', 'clix-cookie-wrap'].forEach(function(id) {
+      ['clix-cookie-wrap'].forEach(function(id) {
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
@@ -2820,26 +2820,6 @@
       });
     });
 
-    /* Cookie consent */
-    document.addEventListener('DOMContentLoaded', function() {
-      if (!localStorage.getItem('cookie-consent')) {
-        document.getElementById('cookie-banner').style.display = 'flex';
-      }
-    });
-    function cookieAccept() {
-      localStorage.setItem('cookie-consent', 'accepted');
-      const b = document.getElementById('cookie-banner');
-      b.style.opacity = '0';
-      b.style.transform = 'translateY(100%)';
-      setTimeout(() => b.style.display = 'none', 350);
-    }
-    function cookieDecline() {
-      localStorage.setItem('cookie-consent', 'declined');
-      const b = document.getElementById('cookie-banner');
-      b.style.opacity = '0';
-      b.style.transform = 'translateY(100%)';
-      setTimeout(() => b.style.display = 'none', 350);
-    }
 
 
     function toggleSub(btn) {
@@ -3230,45 +3210,6 @@
     })();
   </script>
 
-  <!-- Cookie Consent Banner -->
-  <div id="cookie-banner" role="region" aria-label="הסכמה לשימוש בעוגיות" style="
-    display: none;
-    position: fixed;
-    bottom: 0; left: 0; right: 0;
-    z-index: 9999;
-    padding: 1.1rem 1.5rem;
-    background: rgba(8, 14, 26, 0.97);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-top: 1px solid rgba(255,255,255,0.10);
-    box-shadow: 0 -6px 40px rgba(0,0,0,0.55);
-    align-items: center;
-    justify-content: center;
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  ">
-    <div style="max-width: 860px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
-      <p style="font-family: 'Heebo', sans-serif; font-size: 0.88rem; color: rgba(255,255,255,0.68); line-height: 1.65; flex: 1; min-width: 200px;">
-        🍪 אנו משתמשים בעוגיות אנליטיקה (Google Analytics) לשיפור האתר. הנתונים אנונימיים ומעובדים על ידי Google.
-        <a href="privacy.html" style="color: #2196b0; text-decoration: none; font-weight: 600; white-space: nowrap;">מדיניות פרטיות ועוגיות ◄</a>
-      </p>
-      <div style="display: flex; gap: 0.65rem; flex-shrink: 0;">
-        <button
-          onclick="cookieDecline()"
-          style="padding: 0.5rem 1.2rem; border-radius: 9px; border: 1px solid rgba(255,255,255,0.18); background: transparent; color: rgba(255,255,255,0.55); font-family: 'Heebo', sans-serif; font-size: 0.85rem; cursor: pointer; transition: border-color 0.2s, color 0.2s;"
-          onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.color='rgba(255,255,255,0.85)'"
-          onmouseout="this.style.borderColor='rgba(255,255,255,0.18)'; this.style.color='rgba(255,255,255,0.55)'"
-        >דחייה</button>
-        <button
-          onclick="cookieAccept()"
-          style="padding: 0.5rem 1.4rem; border-radius: 9px; border: none; background: #1a7a90; color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; box-shadow: 0 2px 14px rgba(33,150,176,0.35); transition: background 0.2s, box-shadow 0.2s;"
-          onmouseover="this.style.background='#155f70'; this.style.boxShadow='0 4px 20px rgba(33,150,176,0.5)'"
-          onmouseout="this.style.background='#1a7a90'; this.style.boxShadow='0 2px 14px rgba(33,150,176,0.35)'"
-        >אישור</button>
-      </div>
-    </div>
-  </div>
 
 
   <!-- ═══ AI Chat Widget ═══ -->
@@ -3784,14 +3725,16 @@
         if (sendBtn) { sendBtn.disabled = true; sendBtn.style.opacity = '0.3'; sendBtn.style.cursor = 'not-allowed'; }
       }
 
-      // ─── FingerprintJS — async layer for fingerprint-based blocking ───────────
-      (function () {
+      // ─── FingerprintJS — loaded lazily on first chat open to avoid blocking page load ───
+      var fpLoaded = false;
+      function loadFingerprintJS() {
+        if (fpLoaded) return;
+        fpLoaded = true;
         var s = document.createElement('script');
         s.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js';
         s.onload = function () {
           FingerprintJS.load().then(function (fp) { return fp.get(); }).then(function (result) {
             fpVisitorId = result.visitorId;
-            // Check if this fingerprint was blocked before (e.g. after cookie/localStorage clear)
             var fpRaw = getCookie('clix_fp_' + fpVisitorId);
             if (fpRaw) {
               try {
@@ -3806,12 +3749,12 @@
           }).catch(function () {});
         };
         document.head.appendChild(s);
-      })();
+      }
       // ─────────────────────────────────────────────────────────────────────────
 
       // Adjust launcher height when cookie banner is visible
       function adjustLauncherForCookieBanner() {
-        var banner = document.getElementById('cookie-banner');
+        var banner = document.getElementById('clix-cookie-wrap');
         var launcher = document.getElementById('chat-launcher');
         var panel = document.getElementById('chat-panel');
         if (!launcher) return;
@@ -3828,7 +3771,7 @@
       // Run on load and whenever cookie banner changes
       document.addEventListener('DOMContentLoaded', function () {
         adjustLauncherForCookieBanner();
-        var banner = document.getElementById('cookie-banner');
+        var banner = document.getElementById('clix-cookie-wrap');
         if (banner) {
           new MutationObserver(adjustLauncherForCookieBanner).observe(banner, { attributes: true, attributeFilter: ['style'] });
         }
@@ -3869,6 +3812,7 @@
 
         if (chatOpen) {
           tooltipDismissed = true;
+          loadFingerprintJS();
           if (tooltip) { tooltip.style.opacity = '0'; tooltip.style.transform = 'translateY(8px) scale(0.92)'; }
           if (dot) { dot.style.opacity = '0'; dot.style.transform = 'scale(0)'; }
           panel.style.opacity = '1';
@@ -4133,7 +4077,7 @@
 
       function restoreDesktopPanelBottom() {
         if (panel.style.bottom) return;
-        var banner = document.getElementById('cookie-banner');
+        var banner = document.getElementById('clix-cookie-wrap');
         var bannerH = (banner && banner.style.display !== 'none' && banner.offsetHeight > 0) ? banner.offsetHeight : 0;
         panel.style.bottom = bannerH > 0 ? (bannerH + 4.75 * 16 + 12) + 'px' : '6.5rem';
       }
