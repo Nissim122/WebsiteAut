@@ -1,0 +1,6 @@
+{
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/accessibility", "destination": "/accessibility.html", "permanent": true }
+  ]
+}
