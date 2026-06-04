@@ -485,11 +485,12 @@
       .zz-node-icon { display: flex !important; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; background: rgba(33,150,176,0.3); align-items: center; justify-content: center; color: #2196b0; }
       .zz-expand-arrow { display: flex !important; flex-shrink: 0; align-items: center; justify-content: center; color: rgba(33,150,176,0.8); margin-inline-start: auto; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
       /* Expanded pill */
-      .zz-node.expanded { border-radius: 18px !important; padding: 0.85rem 1rem !important; flex-direction: column !important; align-items: flex-start !important; gap: 0.3rem !important; border-color: rgba(33,150,176,0.55) !important; box-shadow: 0 0 40px rgba(33,150,176,0.28), inset 0 0 20px rgba(33,150,176,0.1) !important; }
+      .zz-node.expanded { border-radius: 18px !important; padding: 0.85rem 1rem !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: center !important; gap: 0 !important; border-color: rgba(33,150,176,0.55) !important; box-shadow: 0 0 40px rgba(33,150,176,0.28), inset 0 0 20px rgba(33,150,176,0.1) !important; }
+      .zz-node.expanded .zz-node-icon { order: 1; flex-shrink: 0; }
       .zz-node.expanded .zz-node-title-short { display: none !important; }
-      .zz-node.expanded .zz-node-title { display: block !important; font-size: 0.9rem !important; margin-bottom: 0.25rem; }
-      .zz-node.expanded .zz-node-body { display: block !important; font-size: 0.82rem !important; }
-      .zz-node.expanded .zz-expand-arrow { transform: rotate(180deg); align-self: flex-end; margin-inline-start: 0; }
+      .zz-node.expanded .zz-expand-arrow { order: 2; transform: rotate(180deg); margin-inline-start: auto; }
+      .zz-node.expanded .zz-node-title { order: 3; display: block !important; font-size: 0.9rem !important; flex-basis: 100%; margin-top: 0.5rem; }
+      .zz-node.expanded .zz-node-body { order: 4; display: block !important; font-size: 0.82rem !important; flex-basis: 100%; margin-top: 0.25rem; }
     }
 
     /* Mobile menu */
@@ -1425,7 +1426,7 @@
           <span id="banner-name-err" class="banner-field-error-msg" style="display:none;">שדה חובה</span>
         </div>
         <div class="banner-field-wrap">
-          <input id="banner-phone" type="tel" placeholder="טלפון" aria-label="טלפון" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s, border-color 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.value=this.value.replace(/[^\d+\-\s]/g,''); clearBannerFieldError(this)" />
+          <input id="banner-phone" type="tel" placeholder="טלפון" aria-label="טלפון" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s, border-color 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.value=this.value.replace(/[^\d]/g,''); clearBannerFieldError(this)" />
           <span id="banner-phone-err" class="banner-field-error-msg" style="display:none;">שדה חובה</span>
         </div>
         <div class="banner-field-wrap">
@@ -1435,7 +1436,7 @@
 
         <!-- צ'קבוקס פרטיות — order-4 על דסקטופ (שורה 2), order-4 על מובייל (לפני כפתור) -->
         <label id="banner-privacy-label" for="banner-privacy" style="display: flex; align-items: flex-start; gap: 0.4rem; font-size: 0.75rem; color: #0e1628; cursor: pointer; order: 4; flex-basis: 100%; flex-wrap: wrap;">
-          <input id="banner-privacy" type="checkbox" required style="flex-shrink:0; margin-top:2px;" />
+          <input id="banner-privacy" type="checkbox" style="flex-shrink:0; margin-top:2px; transition: outline 0.15s;" onchange="this.style.outline=''; this.style.boxShadow=''" />
           <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: #0e1628; text-decoration: underline;">למדיניות הפרטיות</a></span>
         </label>
 
@@ -1447,7 +1448,7 @@
 
         <!-- שדה מייל — מופיע כשדיוור מסומן -->
         <div id="banner-email-wrap" style="display: none; flex-basis: 100%; order: 6;">
-          <input id="banner-email" type="email" placeholder="כתובת מייל" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" />
+          <input id="banner-email" type="email" placeholder="כתובת מייל" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'; this.style.outline='none'; this.style.boxShadow='';" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.style.outline='none'; this.style.boxShadow='';" />
         </div>
 
         <button id="banner-submit" class="btn-cta" onclick="handleBannerSubmit(event)" style="background: #fff; color: #0e1628; white-space: nowrap; padding: 0.65rem 1.5rem; font-size: 0.95rem; border-radius: 8px; font-weight: 800; flex-shrink: 0; order: 3;">שליחה <span class="btn-arrow">◄</span></button>
@@ -1930,18 +1931,18 @@
           <div class="form-grid-2">
             <div>
               <label for="contact-name" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">שם מלא *</label>
-              <input id="contact-name" type="text" class="form-input" placeholder="שם מלא" autocomplete="name" />
+              <input id="contact-name" type="text" class="form-input" placeholder="שם מלא" autocomplete="name" oninput="this.value=this.value.replace(/[^\u05D0-\u05EA a-zA-Z\'\-]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-name','שם מלא נדרש');}else if(this.value.trim().length<2){showContactFieldError('contact-name','שם קצר מדי');}" />
             </div>
             <div>
               <label for="contact-phone" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">טלפון *</label>
-              <input id="contact-phone" type="tel" class="form-input" placeholder="טלפון" inputmode="numeric" maxlength="15" autocomplete="tel" oninput="this.value=this.value.replace(/[^\d+\-\s]/g,'')" />
+              <input id="contact-phone" type="tel" class="form-input" placeholder="טלפון" inputmode="numeric" maxlength="15" autocomplete="tel" oninput="this.value=this.value.replace(/[^\d]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-phone','טלפון נדרש');}else if(this.value.trim().length<9){showContactFieldError('contact-phone','מספר טלפון לא תקין');}" />
             </div>
           </div>
-          <div style="margin-bottom: 1rem;">
+          <div id="contact-email-wrap" style="margin-bottom: 1rem; display: none;">
             <label for="contact-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">אימייל *</label>
             <input id="contact-email" type="email" class="form-input" placeholder="example@email.com" autocomplete="email"
               oninput="this.style.direction='ltr'; this.style.textAlign='left';"
-              onblur="if(!this.value){this.style.direction='';this.style.textAlign='';}" />
+              onblur="if(!this.value){this.style.direction='';this.style.textAlign='';} var v=this.value.trim(); if(!v){showContactFieldError('contact-email','אימייל נדרש');}else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){showContactFieldError('contact-email','כתובת מייל לא תקינה');}" />
           </div>
           <div style="margin-bottom: 1.5rem;">
             <label for="contact-message" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">ספר לנו על העסק שלך</label>
@@ -1949,13 +1950,13 @@
           </div>
           <div style="margin-bottom: 0.6rem;">
             <label for="contact-privacy" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
-              <input id="contact-privacy" type="checkbox" required style="flex-shrink:0; margin-top:2px;" />
+              <input id="contact-privacy" type="checkbox" style="flex-shrink:0; margin-top:2px; transition: outline 0.15s;" onchange="this.style.outline=''; this.style.boxShadow=''" />
               <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.85); text-decoration: underline;">למדיניות הפרטיות</a></span>
             </label>
           </div>
           <div style="margin-bottom: 1.25rem;">
             <label for="contact-newsletter" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
-              <input id="contact-newsletter" type="checkbox" style="flex-shrink:0; margin-top:2px;" />
+              <input id="contact-newsletter" type="checkbox" style="flex-shrink:0; margin-top:2px;" onchange="toggleContactEmail(this)" />
               <span>אני מאשר/ת קבלת עדכונים ותוכן שיווקי</span>
             </label>
           </div>
@@ -2421,8 +2422,9 @@
       const email      = newsletter ? document.getElementById('banner-email').value.trim() : '';
       if (!name)  { showBannerFieldError('banner-name',  'banner-name-err');  return; }
       if (!phone) { showBannerFieldError('banner-phone', 'banner-phone-err'); return; }
-      if (!privacy) { document.getElementById('banner-privacy').reportValidity(); return; }
-      if (newsletter && !email) { document.getElementById('banner-email').focus(); return; }
+      if (!privacy) { const cb = document.getElementById('banner-privacy'); cb.style.outline = '2px solid #ef4444'; cb.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.25)'; cb.scrollIntoView({block:'nearest'}); return; }
+      if (newsletter && !email) { const _be = document.getElementById('banner-email'); _be.style.outline = '2px solid #ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.focus(); return; }
+      if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { const _be = document.getElementById('banner-email'); _be.style.outline = '2px solid #ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.focus(); return; }
       btn.disabled = true;
       btn.style.opacity = '0.6';
       try {
@@ -2465,7 +2467,8 @@
       if (!name)    { showContactFieldError('contact-name',  'שם מלא נדרש'); return; }
       if (!phone)   { showContactFieldError('contact-phone', 'טלפון נדרש'); return; }
       if (!email)   { showContactFieldError('contact-email', 'אימייל נדרש'); return; }
-      if (!privacy) { document.getElementById('contact-privacy').reportValidity(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showContactFieldError('contact-email', 'כתובת מייל לא תקינה'); return; }
+      if (!privacy) { const cb = document.getElementById('contact-privacy'); cb.style.outline = '2px solid #ef4444'; cb.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.25)'; cb.scrollIntoView({block:'nearest'}); return; }
       const btn = document.getElementById('contact-submit');
       btn.disabled = true;
       btn.style.opacity = '0.6';
