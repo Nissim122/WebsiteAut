@@ -241,7 +241,7 @@
       z-index: 5;
       background: linear-gradient(to top, var(--bg) 72%, transparent);
       padding-top: 18px;
-      padding-bottom: 14px;
+      padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
       margin-top: 4px;
     }
     .tools-grid {
@@ -772,6 +772,9 @@
     @media (max-width: 480px) {
       .wrapper { padding-left: 18px; padding-right: 18px; }
       .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      #screen-2 .btn-row {
+        padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
+      }
     }
 
     /* ── Site-wide nav ── */
