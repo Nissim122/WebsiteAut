@@ -829,6 +829,10 @@
       .hamburger-btn { display: flex; }
       .nav-cta-desktop { display: none !important; }
       .nav-links-desktop { display: none !important; }
+      /* Prevent iOS Safari auto-zoom on input focus (font-size < 16px triggers it) */
+      input, textarea, select { font-size: 16px !important; }
+      /* position:relative on html breaks overflow-x:hidden on some mobile browsers */
+      html { position: static !important; }
     }
   </style>
 </head>
@@ -1339,6 +1343,9 @@
     const modal = document.getElementById('lead-modal');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    // Hide cookie banner so it doesn't block modal inputs (banner z-index > modal z-index)
+    const cookieWrap = document.getElementById('clix-cookie-wrap');
+    if (cookieWrap) cookieWrap.style.display = 'none';
     document.addEventListener('keydown', _onModalEscape);
     setTimeout(() => { const f = document.getElementById('mf-name'); if (f) f.focus(); }, 100);
   }
@@ -1347,6 +1354,9 @@
     document.getElementById('lead-modal').style.display = 'none';
     document.body.style.overflow = '';
     document.removeEventListener('keydown', _onModalEscape);
+    // Restore cookie banner if it was hidden
+    const cookieWrap = document.getElementById('clix-cookie-wrap');
+    if (cookieWrap) cookieWrap.style.display = '';
     if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
   }
 
