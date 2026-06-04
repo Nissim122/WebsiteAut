@@ -2327,7 +2327,7 @@
       e.preventDefault();
       const btn = document.getElementById('banner-submit');
       const name       = document.getElementById('banner-name').value.trim();
-      const phone      = toE164(document.getElementById('banner-phone').value.trim());
+      const phone      = document.getElementById('banner-phone').value.trim();
       const business   = document.getElementById('banner-business').value.trim();
       const privacy    = document.getElementById('banner-privacy').checked;
       const newsletter = document.getElementById('banner-newsletter').checked;
@@ -2349,15 +2349,6 @@
       }
     }
 
-    /* Convert Israeli phone to E.164: 05XXXXXXXX → +9725XXXXXXXX */
-    function toE164(raw) {
-      const digits = raw.replace(/\D/g, '');
-      if (digits.startsWith('0') && digits.length >= 9) {
-        return '+972' + digits.slice(1);
-      }
-      return raw; // already formatted or unrecognised — pass through
-    }
-
     /* Main contact form */
     async function handleSubmit(e) {
       e.preventDefault();
@@ -2366,7 +2357,7 @@
       btn.style.opacity = '0.6';
       btn.style.cursor = 'not-allowed';
       const name       = document.getElementById('contact-name').value.trim();
-      const phone      = toE164(document.getElementById('contact-phone').value.trim());
+      const phone      = document.getElementById('contact-phone').value.trim();
       const email      = document.getElementById('contact-email').value.trim();
       const message    = document.getElementById('contact-message').value.trim();
       const newsletter = document.getElementById('contact-newsletter').checked;
@@ -2944,7 +2935,7 @@
         btn.style.opacity = '0.65';
         btn.textContent = 'שולח...';
 
-        sendData({ form: 'offer', name: name.trim(), email: email.trim(), phone: toE164(phone.trim()), newsletter: newsletter })
+        sendData({ form: 'offer', name: name.trim(), email: email.trim(), phone: phone.trim(), newsletter: newsletter })
           .finally(function () {
             form.style.display = 'none';
             success.style.display = 'block';
@@ -4147,6 +4138,10 @@
       if (a) focusContactName();
     });
   })();
+
+  // Always start at top on page load/refresh
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
   </script>
 
   <script>

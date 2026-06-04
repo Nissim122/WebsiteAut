@@ -1125,6 +1125,10 @@
   </div>
 
   <script>
+  // Always start at top on page load/refresh
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   // ═══════════════════════════════════════════════════════════════
   //  STATE
   // ═══════════════════════════════════════════════════════════════
