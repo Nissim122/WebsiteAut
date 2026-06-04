@@ -4253,7 +4253,9 @@
     function checkAndFocus() {
       var fromExternal = sessionStorage.getItem('contact-focus') === '1';
       if (fromExternal) sessionStorage.removeItem('contact-focus');
-      if (window.location.hash === '#contact' || fromExternal) focusContactName();
+      var navEntries = performance && performance.getEntriesByType && performance.getEntriesByType('navigation');
+      var isReload = navEntries && navEntries[0] && navEntries[0].type === 'reload';
+      if (!isReload && (window.location.hash === '#contact' || fromExternal)) focusContactName();
     }
 
     // Page load: handle both direct URL hash and sessionStorage flag (from external pages)
