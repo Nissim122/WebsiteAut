@@ -1103,7 +1103,16 @@
   </nav>
 
   <!-- Mobile Navigation Menu -->
-  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; top: 92px; left: 1rem; right: 1rem; background: rgba(14, 22, 40, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 150; flex-direction: column; align-items: stretch; border: 1.5px solid #e0176b; border-top: none; border-radius: 0 0 14px 14px;">
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; top: 0.6rem; left: 1rem; right: 1rem; background: rgba(14, 22, 40, 0.95); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 150; flex-direction: column; align-items: stretch; border: 1.5px solid #e0176b; border-radius: 14px;">
+    <!-- Menu header — logo + close -->
+    <div style="display: flex; align-items: center; justify-content: space-between; height: 80px; padding: 0 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.07); flex-shrink: 0;">
+      <button onclick="closeMobileMenu()" aria-label="סגור תפריט" style="background: none; border: none; cursor: pointer; padding: 0.5rem; color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; transition: color 0.2s; border-radius: 8px;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,0.7)'">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="18" y2="18"/><line x1="18" y1="4" x2="4" y2="18"/></svg>
+      </button>
+      <a href="#" onclick="closeMobileMenu()" style="text-decoration: none; display: flex; align-items: baseline; gap: 0.15rem; direction: ltr;">
+        <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.22rem; letter-spacing: -0.04em; color: #ffffff;">Clix</span><span style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 0.95rem; letter-spacing: -0.02em; color: #e0176b;">Automations</span>
+      </a>
+    </div>
     <a href="#" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">דף הבית</a>
     <a href="#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
     <a href="#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
