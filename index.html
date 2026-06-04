@@ -2970,53 +2970,55 @@
         style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem; position:relative; z-index:1;"
       >
         <!-- Fields row -->
-        <div style="display:flex; gap:0.65rem; flex-wrap:nowrap;">
-          <input
-            type="text"
-            name="name"
-            placeholder="שם מלא"
-            required
-            autocomplete="name"
-            style="
-              flex: 1 1 0%;
-              min-width: 0;
-              background: rgba(255,255,255,0.05);
-              border: 1.5px solid rgba(255,255,255,0.10);
-              border-radius: 12px;
-              padding: 0.78rem 1rem;
-              color: #fff;
-              font-family: 'Heebo', sans-serif;
-              font-size: 0.95rem;
-              outline: none;
-              text-align: right;
-              transition: border-color 0.2s, background 0.2s;
-            "
-            onfocus="this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'"
-            onblur="this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'"
-          />
-          <input
-            type="tel"
-            name="phone"
-            placeholder="טלפון"
-            required
-            autocomplete="tel"
-            style="
-              flex: 1 1 0%;
-              min-width: 0;
-              background: rgba(255,255,255,0.05);
-              border: 1.5px solid rgba(255,255,255,0.10);
-              border-radius: 12px;
-              padding: 0.78rem 1rem;
-              color: #fff;
-              font-family: 'Heebo', sans-serif;
-              font-size: 0.95rem;
-              outline: none;
-              text-align: right;
-              transition: border-color 0.2s, background 0.2s;
-            "
-            onfocus="this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'"
-            onblur="this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'"
-          />
+        <div style="display:flex; gap:0.65rem; flex-wrap:nowrap; align-items:flex-start;">
+          <div style="flex:1 1 0%; min-width:0;">
+            <input
+              type="text"
+              name="name"
+              placeholder="שם מלא"
+              required
+              autocomplete="name"
+              style="
+                width:100%; box-sizing:border-box;
+                background: rgba(255,255,255,0.05);
+                border: 1.5px solid rgba(255,255,255,0.10);
+                border-radius: 12px;
+                padding: 0.78rem 1rem;
+                color: #fff;
+                font-family: 'Heebo', sans-serif;
+                font-size: 0.95rem;
+                outline: none;
+                text-align: right;
+                transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+              "
+              onfocus="this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'"
+              onblur="this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'"
+            />
+          </div>
+          <div style="flex:1 1 0%; min-width:0;">
+            <input
+              type="tel"
+              name="phone"
+              placeholder="טלפון"
+              required
+              autocomplete="tel"
+              style="
+                width:100%; box-sizing:border-box;
+                background: rgba(255,255,255,0.05);
+                border: 1.5px solid rgba(255,255,255,0.10);
+                border-radius: 12px;
+                padding: 0.78rem 1rem;
+                color: #fff;
+                font-family: 'Heebo', sans-serif;
+                font-size: 0.95rem;
+                outline: none;
+                text-align: right;
+                transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+              "
+              onfocus="this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'"
+              onblur="this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'"
+            />
+          </div>
         </div>
 
         <!-- Checkboxes -->
@@ -3158,6 +3160,27 @@
         }, 380);
       };
 
+      function showOfferFieldError(inputEl, msgText) {
+        inputEl.style.borderColor = 'rgba(224,23,107,0.8)';
+        inputEl.style.boxShadow   = '0 0 0 3px rgba(224,23,107,0.2)';
+        var wrap = inputEl.parentElement;
+        var errEl = wrap.querySelector('.offer-field-err');
+        if (!errEl) {
+          errEl = document.createElement('span');
+          errEl.className = 'offer-field-err';
+          errEl.style.cssText = 'display:block;font-size:0.75rem;color:#f87171;margin-top:0.25rem;text-align:right;';
+          wrap.appendChild(errEl);
+        }
+        errEl.textContent = msgText || 'שדה חובה';
+        inputEl.focus();
+        inputEl.addEventListener('input', function clearErr() {
+          inputEl.style.borderColor = 'rgba(255,255,255,0.10)';
+          inputEl.style.boxShadow   = '';
+          if (errEl) errEl.remove();
+          inputEl.removeEventListener('input', clearErr);
+        });
+      }
+
       window.handleOfferSubmit = function (e) {
         e.preventDefault();
         var form = document.getElementById('offer-form');
@@ -3165,17 +3188,20 @@
         var btn = document.getElementById('offer-submit-btn');
         if (!form || !success) return;
 
-        var name           = (form.querySelector('[name="name"]')       || {}).value || '';
-        var email          = (form.querySelector('[name="email"]')      || {}).value || '';
-        var phone          = (form.querySelector('[name="phone"]')      || {}).value || '';
-        var newsletter     = (form.querySelector('[name="newsletter"]') || {}).checked || false;
+        var nameInput      = form.querySelector('[name="name"]');
+        var phoneInput     = form.querySelector('[name="phone"]');
         var emailInput     = form.querySelector('[name="email"]');
+        var name           = (nameInput  || {}).value ? nameInput.value.trim()  : '';
+        var phone          = (phoneInput || {}).value ? phoneInput.value.trim() : '';
+        var newsletter     = (form.querySelector('[name="newsletter"]') || {}).checked || false;
+        var email          = (newsletter && emailInput) ? emailInput.value.trim() : '';
 
-        if (newsletter && !email.trim()) {
-          if (emailInput) { emailInput.focus(); emailInput.style.borderColor = 'rgba(224,23,107,0.8)'; }
-          return;
-        }
-        if (emailInput) emailInput.style.borderColor = 'rgba(255,255,255,0.10)';
+        if (!name)  { if (nameInput)  showOfferFieldError(nameInput,  'שם מלא נדרש'); return; }
+        if (name.trim().split(/\s+/).length < 2) { if (nameInput) showOfferFieldError(nameInput, 'נא להזין שם ושם משפחה'); return; }
+        if (!phone) { if (phoneInput) showOfferFieldError(phoneInput, 'טלפון נדרש'); return; }
+        if (!/^[0-9+\-\s()]{7,15}$/.test(phone)) { if (phoneInput) showOfferFieldError(phoneInput, 'מספר טלפון לא תקין'); return; }
+        if (newsletter && !email)   { if (emailInput) showOfferFieldError(emailInput, 'אימייל נדרש'); return; }
+        if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (emailInput) showOfferFieldError(emailInput, 'כתובת מייל לא תקינה'); return; }
 
         btn.disabled = true;
         btn.style.opacity = '0.65';
