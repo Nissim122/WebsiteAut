@@ -1203,7 +1203,7 @@
             <img src="brand_assets/profile_pic_2_nobg.png"
                  alt="ניסים בנגייב, מומחה אוטומציה עסקית ומייסד קליקס אוטומציות"
                  width="420" height="560"
-                 style="width: 420px; height: 560px; object-fit: contain; object-position: center bottom; display: block;" />
+                 style="width: 420px; height: 560px; object-fit: contain; object-position: center bottom; display: block; -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%); mask-image: linear-gradient(to bottom, black 55%, transparent 100%);" />
           </picture>
         </div>
 
@@ -1938,12 +1938,6 @@
               <input id="contact-phone" type="tel" class="form-input" placeholder="טלפון" inputmode="numeric" maxlength="15" autocomplete="tel" oninput="this.value=this.value.replace(/[^\d]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-phone','טלפון נדרש');}else if(this.value.trim().length<9){showContactFieldError('contact-phone','מספר טלפון לא תקין');}" />
             </div>
           </div>
-          <div id="contact-email-wrap" style="margin-bottom: 1rem; display: none;">
-            <label for="contact-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">אימייל *</label>
-            <input id="contact-email" type="email" class="form-input" placeholder="example@email.com" autocomplete="email"
-              oninput="this.style.direction='ltr'; this.style.textAlign='left';"
-              onblur="if(!this.value){this.style.direction='';this.style.textAlign='';} var v=this.value.trim(); if(!v){showContactFieldError('contact-email','אימייל נדרש');}else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){showContactFieldError('contact-email','כתובת מייל לא תקינה');}" />
-          </div>
           <div style="margin-bottom: 1.5rem;">
             <label for="contact-message" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">ספר לנו על העסק שלך</label>
             <textarea id="contact-message" rows="4" class="form-input" placeholder="באיזה תחום אתה פועל? אילו תהליכים תרצה לייעל?" style="resize: vertical;" maxlength="1000"></textarea>
@@ -1954,11 +1948,17 @@
               <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.85); text-decoration: underline;">למדיניות הפרטיות</a></span>
             </label>
           </div>
-          <div style="margin-bottom: 1.25rem;">
+          <div style="margin-bottom: 0.5rem;">
             <label for="contact-newsletter" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.82rem; color: rgba(255,255,255,0.65); cursor: pointer; direction: rtl; flex-wrap: wrap;">
               <input id="contact-newsletter" type="checkbox" style="flex-shrink:0; margin-top:2px;" onchange="toggleContactEmail(this)" />
               <span>אני מאשר/ת קבלת עדכונים ותוכן שיווקי</span>
             </label>
+          </div>
+          <div id="contact-email-wrap" style="margin-bottom: 1.25rem; display: none;">
+            <label for="contact-email" style="display: block; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.4rem;">אימייל *</label>
+            <input id="contact-email" type="email" class="form-input" placeholder="example@email.com" autocomplete="email"
+              oninput="this.style.direction='ltr'; this.style.textAlign='left';"
+              onblur="if(!this.value){this.style.direction='';this.style.textAlign='';} var v=this.value.trim(); if(!v){showContactFieldError('contact-email','אימייל נדרש');}else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)){showContactFieldError('contact-email','כתובת מייל לא תקינה');}" />
           </div>
           <button id="contact-submit" type="submit" class="btn-cta" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.875rem;">
             שליחה <span class="btn-arrow">◄</span>
@@ -2378,6 +2378,23 @@
       }
     }
 
+    function toggleContactEmail(cb) {
+      const wrap  = document.getElementById('contact-email-wrap');
+      const input = document.getElementById('contact-email');
+      if (cb.checked) {
+        wrap.style.display = 'block';
+        input.focus();
+      } else {
+        wrap.style.display = 'none';
+        input.value = '';
+        input.style.direction = '';
+        input.style.textAlign = '';
+        const errEl = wrap.querySelector('.field-error-msg');
+        if (errEl) errEl.remove();
+        input.classList.remove('field-error');
+      }
+    }
+
     function toggleBannerEmail(cb) {
       const wrap  = document.getElementById('banner-email-wrap');
       const input = document.getElementById('banner-email');
@@ -2460,21 +2477,21 @@
     /* Main contact form */
     async function handleSubmit(e) {
       e.preventDefault();
-      const name    = document.getElementById('contact-name').value.trim();
-      const phone   = document.getElementById('contact-phone').value.trim();
-      const email   = document.getElementById('contact-email').value.trim();
-      const privacy = document.getElementById('contact-privacy').checked;
+      const name       = document.getElementById('contact-name').value.trim();
+      const phone      = document.getElementById('contact-phone').value.trim();
+      const privacy    = document.getElementById('contact-privacy').checked;
+      const newsletter = document.getElementById('contact-newsletter').checked;
+      const email      = newsletter ? document.getElementById('contact-email').value.trim() : '';
       if (!name)    { showContactFieldError('contact-name',  'שם מלא נדרש'); return; }
       if (!phone)   { showContactFieldError('contact-phone', 'טלפון נדרש'); return; }
-      if (!email)   { showContactFieldError('contact-email', 'אימייל נדרש'); return; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showContactFieldError('contact-email', 'כתובת מייל לא תקינה'); return; }
+      if (newsletter && !email)   { showContactFieldError('contact-email', 'אימייל נדרש'); return; }
+      if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showContactFieldError('contact-email', 'כתובת מייל לא תקינה'); return; }
       if (!privacy) { const cb = document.getElementById('contact-privacy'); cb.style.outline = '2px solid #ef4444'; cb.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.25)'; cb.scrollIntoView({block:'nearest'}); return; }
       const btn = document.getElementById('contact-submit');
       btn.disabled = true;
       btn.style.opacity = '0.6';
       btn.style.cursor = 'not-allowed';
-      const message    = document.getElementById('contact-message').value.trim();
-      const newsletter = document.getElementById('contact-newsletter').checked;
+      const message = document.getElementById('contact-message').value.trim();
       try {
         await sendData({ form: 'contact', name, phone, email, message, newsletter });
         showToast();
