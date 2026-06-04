@@ -2967,6 +2967,7 @@
       <form
         id="offer-form"
         onsubmit="handleOfferSubmit(event)"
+        novalidate
         style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1rem; position:relative; z-index:1;"
       >
         <!-- Fields row -->
@@ -2976,7 +2977,6 @@
               type="text"
               name="name"
               placeholder="שם מלא"
-              required
               autocomplete="name"
               style="
                 width:100%; box-sizing:border-box;
@@ -3000,7 +3000,6 @@
               type="tel"
               name="phone"
               placeholder="טלפון"
-              required
               autocomplete="tel"
               style="
                 width:100%; box-sizing:border-box;
@@ -3023,7 +3022,7 @@
 
         <!-- Checkboxes -->
         <label for="offer-privacy" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: rgba(255,255,255,0.55); cursor: pointer; direction: rtl; flex-wrap: wrap;">
-          <input id="offer-privacy" name="privacy" type="checkbox" required style="flex-shrink:0; margin-top:2px;" />
+          <input id="offer-privacy" name="privacy" type="checkbox" style="flex-shrink:0; margin-top:2px;" />
           <span>אני מסכים למסור את פרטיי בהתאם <a href="privacy.html" target="_blank" rel="noopener" style="color: rgba(255,255,255,0.75); text-decoration: underline;">למדיניות הפרטיות</a></span>
         </label>
         <label for="offer-newsletter" style="display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.78rem; color: rgba(255,255,255,0.55); cursor: pointer; direction: rtl; flex-wrap: wrap;">
@@ -3196,12 +3195,14 @@
         var newsletter     = (form.querySelector('[name="newsletter"]') || {}).checked || false;
         var email          = (newsletter && emailInput) ? emailInput.value.trim() : '';
 
-        if (!name)  { if (nameInput)  showOfferFieldError(nameInput,  'שם מלא נדרש'); return; }
-        if (name.trim().split(/\s+/).length < 2) { if (nameInput) showOfferFieldError(nameInput, 'נא להזין שם ושם משפחה'); return; }
-        if (!phone) { if (phoneInput) showOfferFieldError(phoneInput, 'טלפון נדרש'); return; }
+        var privacyCb = document.getElementById('offer-privacy');
+        if (!name)  { if (nameInput)  showOfferFieldError(nameInput,  'יש להזין שם מלא'); return; }
+        if (name.trim().split(/\s+/).length < 2) { if (nameInput) showOfferFieldError(nameInput, 'יש להזין שם ושם משפחה'); return; }
+        if (!phone) { if (phoneInput) showOfferFieldError(phoneInput, 'יש להזין טלפון'); return; }
         if (!/^[0-9+\-\s()]{7,15}$/.test(phone)) { if (phoneInput) showOfferFieldError(phoneInput, 'מספר טלפון לא תקין'); return; }
-        if (newsletter && !email)   { if (emailInput) showOfferFieldError(emailInput, 'אימייל נדרש'); return; }
+        if (newsletter && !email)   { if (emailInput) showOfferFieldError(emailInput, 'יש להזין אימייל'); return; }
         if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { if (emailInput) showOfferFieldError(emailInput, 'כתובת מייל לא תקינה'); return; }
+        if (privacyCb && !privacyCb.checked) { privacyCb.style.outline = '2px solid rgba(224,23,107,0.8)'; privacyCb.style.boxShadow = '0 0 0 3px rgba(224,23,107,0.2)'; privacyCb.scrollIntoView({block:'nearest'}); privacyCb.addEventListener('change', function c() { privacyCb.style.outline=''; privacyCb.style.boxShadow=''; privacyCb.removeEventListener('change',c); }); return; }
 
         btn.disabled = true;
         btn.style.opacity = '0.65';
