@@ -689,7 +689,12 @@
 
       /* Prevent horizontal scroll from decorative elements */
       body, html { overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; }
+      /* position:relative on html breaks overflow-x:hidden on some mobile browsers */
+      html { position: static !important; }
       .hero-section { overflow: hidden !important; }
+      /* font-size ≥16px on ALL inputs/textareas — prevents iOS Safari auto-zoom
+         which is the primary cause of the page shifting right when keyboard opens */
+      input, textarea, select { font-size: 16px !important; }
 
       /* General section padding */
       section { padding-left: 1rem !important; padding-right: 1rem !important; }
@@ -3857,16 +3862,16 @@
 
       // Fix: prevent RTL focus from shifting the page horizontally on mobile
       document.addEventListener('DOMContentLoaded', function () {
-        var chatInput = document.getElementById('chat-input');
-        if (chatInput) {
-          chatInput.addEventListener('focus', function () {
-            setTimeout(function () {
-              window.scrollTo(0, window.scrollY);
-              document.documentElement.scrollLeft = 0;
-              document.body.scrollLeft = 0;
-            }, 150);
-          });
+        function resetHScroll() {
+          setTimeout(function () {
+            window.scrollTo(0, window.scrollY);
+            document.documentElement.scrollLeft = 0;
+            document.body.scrollLeft = 0;
+          }, 150);
         }
+        document.querySelectorAll('input, textarea, select').forEach(function (el) {
+          el.addEventListener('focus', resetHScroll);
+        });
       });
 
       window.chatKeydown = function (e) {
