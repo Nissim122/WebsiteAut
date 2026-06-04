@@ -22,7 +22,14 @@ const analyticsData = google.analyticsdata({ version: 'v1beta', auth: oauth2Clie
 const args = process.argv.slice(2);
 let startDate, endDate, reportLabel;
 
-if (args[0] === '--month' && args[1]) {
+if (args[0] === '--week') {
+  const now = new Date();
+  const d7  = new Date(now); d7.setDate(now.getDate() - 6);
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  startDate   = fmt(d7);
+  endDate     = 'today';
+  reportLabel = `שבוע ${fmt(d7)} → ${fmt(now)}`;
+} else if (args[0] === '--month' && args[1]) {
   const [year, month] = args[1].split('-');
   const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
   startDate   = `${year}-${month}-01`;
