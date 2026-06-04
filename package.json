@@ -4,7 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "sync:scanner": "node update-scanner-site.mjs"
+    "sync:scanner": "node update-scanner-site.mjs",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i tailwind-input.css -o tailwind.css --minify",
+    "watch:css": "tailwindcss -c tailwind.config.cjs -i tailwind-input.css -o tailwind.css --watch"
   },
   "dependencies": {
     "@google-analytics/data": "^6.0.0",
@@ -14,5 +16,8 @@
     "puppeteer": "^24.40.0",
     "sharp": "^0.34.5",
     "simple-icons": "^16.15.0"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
   }
 }
