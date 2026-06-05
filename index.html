@@ -363,6 +363,12 @@
       z-index: 1;
       transform: translateX(28px) translateY(28px);
     }
+    .shuffle-card.pos-hidden {
+      z-index: 0;
+      opacity: 0;
+      transform: translateX(28px) translateY(28px);
+      pointer-events: none;
+    }
 
     /* Circle service icons */
     .service-circle {
@@ -687,7 +693,8 @@
         z-index: 3 !important;
       }
       .shuffle-card.pos-middle,
-      .shuffle-card.pos-back {
+      .shuffle-card.pos-back,
+      .shuffle-card.pos-hidden {
         opacity: 0 !important;
         transform: none !important;
         z-index: 0 !important;
@@ -1571,6 +1578,24 @@
             <div style="text-align: center; margin-bottom: 0;" dir="rtl">
               <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">מיכל יוסופוביץ</div>
               <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem;">מדרסים - אורטודוק</div>
+            </div>
+            <div style="display: flex; gap: 0.25rem; justify-content: center; color: #eab308;" aria-hidden="true">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <span class="sr-only">דירוג: 5 כוכבים</span>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="testi-card shuffle-card pos-hidden" data-idx="3" role="article" aria-label="המלצה מאת איתן שמחה">
+            <div style="display: flex; justify-content: center;">
+              <div style="width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #17a076, #073d2a); border: 2px solid #17a076; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 700; color: #fff;">א.ש</div>
+            </div>
+            <p style="font-size: 0.9rem; line-height: 1.65; color: rgba(255,255,255,0.85); text-align: center; margin: 0;" dir="rtl">
+              "אני רוצה לשבח את ניסים על עבודה ושירות מעולה עם יחס אישי ומחירים נוחים. זו כבר הפעם השנייה שאני פונה אליו להוסיף עוד דברים על עבודה קיימת שהוא כבר ביצע לי — ואני מאוד מרוצה."
+            </p>
+            <div style="text-align: center; margin-bottom: 0;" dir="rtl">
+              <div style="font-size: 0.9rem; font-weight: 700; color: #fff;">איתן שמחה</div>
+              <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4); margin-top: 0.15rem;">ביטוחי רכב</div>
             </div>
             <div style="display: flex; gap: 0.25rem; justify-content: center; color: #eab308;" aria-hidden="true">
               <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
@@ -2574,13 +2599,13 @@
       const stack = document.getElementById('testi-stack');
       if (!stack) return;
       const cards = Array.from(stack.querySelectorAll('.shuffle-card'));
-      let positions = ['pos-front', 'pos-middle', 'pos-back'];
+      let positions = ['pos-front', 'pos-middle', 'pos-back', 'pos-hidden'];
       let paused = false;
       let pauseTimer = null;
 
       function applyPositions() {
         cards.forEach(function(card, i) {
-          card.classList.remove('pos-front', 'pos-middle', 'pos-back');
+          card.classList.remove('pos-front', 'pos-middle', 'pos-back', 'pos-hidden');
           card.classList.add(positions[i]);
         });
       }
@@ -2594,7 +2619,7 @@
       function pauseFor20() {
         paused = true;
         clearTimeout(pauseTimer);
-        pauseTimer = setTimeout(function() { paused = false; }, 20000);
+        pauseTimer = setTimeout(function() { paused = false; }, 12000);
       }
 
       stack.addEventListener('mousedown', pauseFor20);
@@ -2607,7 +2632,7 @@
         if (dy < 8) pauseFor20(); // tap (not scroll) → pause
       }, { passive: true });
 
-      setInterval(function() { if (!paused) shuffle(); }, 7000);
+      setInterval(function() { if (!paused) shuffle(); }, 8000);
     })();
 
     /* FAQ Accordion */
