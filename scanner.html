@@ -891,7 +891,9 @@
     #mobile-menu.open { display: flex; }
     /* Desktop: body must not be a competing scroll container — html is the sole viewport scroller */
     @media (min-width: 768px) {
-      body { overflow-y: visible; }
+      /* overflow-y:visible alone gets promoted to auto when overflow-x:hidden is set (CSS spec).
+         Setting both to visible avoids the promotion and keeps html as the sole scroll container. */
+      body { overflow: visible; }
     }
     @media (max-width: 767px) {
       .nav-inner { width: calc(100% - 2rem) !important; max-width: calc(100% - 2rem) !important; border-radius: 14px !important; border: 1.5px solid #e0176b !important; background: rgba(14, 22, 40, 0.72) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; height: 80px !important; }
