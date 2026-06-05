@@ -1485,6 +1485,18 @@
 
       </div>
 
+      <!-- Mobile in-banner success -->
+      <div id="banner-success" style="display:none; width:100%; flex-shrink:0; flex-direction:column; align-items:center; justify-content:center; text-align:center; direction:ltr; font-family:'Heebo',sans-serif; padding:1rem 0;">
+        <div style="margin-bottom:0.9rem;">
+          <svg width="56" height="56" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="so-check-circle" cx="26" cy="26" r="25" style="stroke:#fff;"/>
+            <path class="so-check-tick" d="M15 26l8 9 14-17" style="stroke:#fff;"/>
+          </svg>
+        </div>
+        <p style="font-weight:800; font-size:1.1rem; color:#fff; margin:0 0 0.3rem; letter-spacing:-0.02em; direction:rtl;">קיבלנו את הפרטים שלך!</p>
+        <p style="font-size:0.85rem; color:rgba(255,255,255,0.8); margin:0; line-height:1.6; direction:rtl;">ניצור איתך קשר בהקדם האפשרי</p>
+      </div>
+
     </div>
   </section>
 
@@ -1958,6 +1970,7 @@
 
         <!-- Form -->
         <form class="reveal" aria-label="טופס יצירת קשר" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2rem; transition-delay: 0.15s;" onsubmit="handleSubmit(event)">
+          <div id="contact-form-fields">
           <div class="form-grid-2">
             <div>
               <input id="contact-name" type="text" class="form-input" placeholder="שם מלא" autocomplete="name" oninput="this.value=this.value.replace(/[^\u05D0-\u05EA a-zA-Z\'\-]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-name','שם מלא נדרש');}else if(this.value.trim().length<2){showContactFieldError('contact-name','שם קצר מדי');}" />
@@ -1989,6 +2002,19 @@
           <button id="contact-submit" type="submit" class="btn-cta" style="width: 100%; justify-content: center; font-size: 1rem; padding: 0.875rem;">
             שליחה <span class="btn-arrow">◄</span>
           </button>
+          </div><!-- /contact-form-fields -->
+
+          <!-- Mobile in-card success (mobile only, replaces fields) -->
+          <div id="contact-success-card" style="display:none; text-align:center; padding:1.5rem 0 0.75rem; direction:rtl; font-family:'Heebo',sans-serif;">
+            <div id="contact-success-icon" style="margin-bottom:1.1rem;">
+              <svg width="64" height="64" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle class="so-check-circle" cx="26" cy="26" r="25"/>
+                <path class="so-check-tick" d="M15 26l8 9 14-17"/>
+              </svg>
+            </div>
+            <h3 style="font-size:1.3rem; font-weight:800; color:#fff; letter-spacing:-0.02em; margin:0 0 0.4rem;">קיבלנו את הפרטים שלך!</h3>
+            <p style="font-size:0.88rem; color:rgba(255,255,255,0.5); margin:0; line-height:1.6;">ניצור איתך קשר בהקדם האפשרי</p>
+          </div>
         </form>
 
         <!-- Contact icons — below the form -->
@@ -2442,6 +2468,7 @@
     const NOTIFY_EMAIL = 'nisimelec77@gmail.com';
 
     function showToast() {
+      if (window.innerWidth <= 767) return; // mobile: per-form handlers show in-card success
       const overlay = document.getElementById('success-overlay');
       overlay.classList.remove('so-active');
       overlay.style.display = 'block';
@@ -2562,10 +2589,35 @@
       btn.style.opacity = '0.6';
       try {
         await sendData({ form: 'banner', name, phone, business, newsletter, email });
-        document.getElementById('banner-name').value = '';
-        document.getElementById('banner-phone').value = '';
-        document.getElementById('banner-business').value = '';
-        showToast();
+        if (window.innerWidth <= 767) {
+          const bannerForm = document.getElementById('banner-submit').closest('.cta-banner-form');
+          const bannerHeadline = document.querySelector('.cta-banner-headline');
+          const bannerSuccess = document.getElementById('banner-success');
+          if (bannerForm) bannerForm.style.display = 'none';
+          if (bannerHeadline) bannerHeadline.style.display = 'none';
+          if (bannerSuccess) {
+            const bannerInner = bannerSuccess.closest('.cta-banner-inner');
+            var savedHeight = bannerInner ? bannerInner.offsetHeight : 0;
+            bannerSuccess.style.display = 'flex';
+            if (bannerInner) {
+              bannerInner.style.display = 'flex';
+              bannerInner.style.flexDirection = 'column';
+              bannerInner.style.flexWrap = 'nowrap';
+              bannerInner.style.justifyContent = 'center';
+              bannerInner.style.alignItems = 'center';
+              bannerInner.style.minHeight = savedHeight + 'px';
+            }
+            const animated = bannerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
+            animated.forEach(function(el) { el.style.animation = 'none'; });
+            void bannerSuccess.offsetWidth;
+            animated.forEach(function(el) { el.style.animation = ''; });
+          }
+        } else {
+          document.getElementById('banner-name').value = '';
+          document.getElementById('banner-phone').value = '';
+          document.getElementById('banner-business').value = '';
+          showToast();
+        }
       } finally {
         btn.disabled = false;
         btn.style.opacity = '';
@@ -2610,7 +2662,11 @@
       const message = document.getElementById('contact-message').value.trim();
       try {
         await sendData({ form: 'contact', name, phone, email, message, newsletter });
-        showToast();
+        if (window.innerWidth <= 767) {
+          showContactCardSuccess();
+        } else {
+          showToast();
+        }
         e.target.reset();
       } finally {
         btn.disabled = false;
@@ -2716,6 +2772,19 @@
         }
       }
     });
+    function showContactCardSuccess() {
+      var fields = document.getElementById('contact-form-fields');
+      var card   = document.getElementById('contact-success-card');
+      if (!fields || !card) return;
+      fields.style.display = 'none';
+      card.style.display = 'block';
+      // Replay SVG animations (fixes Safari bug)
+      var animated = card.querySelectorAll('.so-check-circle,.so-check-tick');
+      animated.forEach(function(el) { el.style.animation = 'none'; });
+      void card.offsetWidth;
+      animated.forEach(function(el) { el.style.animation = ''; });
+    }
+
     function _closeSuccessOverlay() {
       const o = document.getElementById('success-overlay');
       o.classList.remove('so-active');
@@ -3085,10 +3154,15 @@
       </form>
 
       <!-- Success state (hidden) -->
-      <div id="offer-success" style="display:none; padding:0.5rem 0 0.2rem; position:relative; z-index:1;">
-        <div style="font-size:2rem; margin-bottom:0.4rem;">✅</div>
-        <p style="font-weight:700; font-size:1.05rem; color:#fff; margin-bottom:0.3rem;">קיבלנו! ניצור איתך קשר תוך 24 שעות.</p>
-        <p style="font-size:0.85rem; color:rgba(255,255,255,0.5);">בינתיים אפשר לעיין באתר ולהכיר אותנו</p>
+      <div id="offer-success" style="display:none; padding:1.5rem 0 0.75rem; position:relative; z-index:1; text-align:center; direction:rtl; font-family:'Heebo',sans-serif;">
+        <div style="margin-bottom:1.1rem;">
+          <svg width="64" height="64" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle class="so-check-circle" cx="26" cy="26" r="25"/>
+            <path class="so-check-tick" d="M15 26l8 9 14-17"/>
+          </svg>
+        </div>
+        <p style="font-weight:800; font-size:1.15rem; color:#fff; margin:0 0 0.35rem; letter-spacing:-0.02em;">קיבלנו! ניצור איתך קשר בהקדם.</p>
+        <p style="font-size:0.85rem; color:rgba(255,255,255,0.5); margin:0; line-height:1.6;">בינתיים אפשר לעיין באתר ולהכיר אותנו</p>
       </div>
 
       <!-- Footnote / trust -->
@@ -3216,8 +3290,22 @@
           .finally(function () {
             sessionStorage.setItem(OFFER_KEY, '1');
             clearInterval(window._offerInterval);
-            closeOfferPopup();
-            showToast();
+            if (window.innerWidth <= 767) {
+              // Mobile: show success inside the popup card, keep user on page
+              var offerForm = document.getElementById('offer-form');
+              var offerSuccess = document.getElementById('offer-success');
+              if (offerForm) offerForm.style.display = 'none';
+              if (offerSuccess) {
+                offerSuccess.style.display = 'block';
+                var animated = offerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
+                animated.forEach(function(el) { el.style.animation = 'none'; });
+                void offerSuccess.offsetWidth;
+                animated.forEach(function(el) { el.style.animation = ''; });
+              }
+            } else {
+              closeOfferPopup();
+              showToast();
+            }
           });
       };
 
