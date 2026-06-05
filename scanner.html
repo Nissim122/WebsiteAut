@@ -889,6 +889,10 @@
     }
     #mobile-menu { display: none; }
     #mobile-menu.open { display: flex; }
+    /* Desktop: body must not be a competing scroll container — html is the sole viewport scroller */
+    @media (min-width: 768px) {
+      body { overflow-y: visible; }
+    }
     @media (max-width: 767px) {
       .nav-inner { width: calc(100% - 2rem) !important; max-width: calc(100% - 2rem) !important; border-radius: 14px !important; border: 1.5px solid #e0176b !important; background: rgba(14, 22, 40, 0.72) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; height: 80px !important; }
       .site-nav { padding: 0.6rem 1rem !important; }
@@ -2550,7 +2554,9 @@
       <table width="600" cellpadding="0" cellspacing="0" style="background-color:#0e1628 !important;border-radius:16px;overflow:hidden;border:1px solid #1e2a40;">
         <tr>
           <td style="background-color:#141d35 !important;padding:36px 36px 30px;text-align:center;border-bottom:1px solid #1e3a4a;">
-            <div style="font-size:11px;color:#2db3cd !important;font-weight:700;letter-spacing:0.12em;margin-bottom:14px;">CLIX AUTOMATIONS</div>
+            <div style="margin-bottom:18px;">
+              <span style="font-family:Inter,Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.04em;color:#ffffff !important;">Clix</span><span style="font-family:Inter,Arial,sans-serif;font-size:17px;font-weight:400;letter-spacing:-0.02em;color:#e0176b !important;">Automations</span>
+            </div>
             <div style="font-size:26px;font-weight:700;color:#ffffff !important;margin-bottom:8px;">${topFlows.length} האוטומציות המובילות לעסק שלך</div>
             <div style="font-size:14px;color:#8e96a6 !important;line-height:1.6;">ניתחנו את הכלים שלך ובחרנו את האוטומציות עם הפוטנציאל הגדול ביותר —<br>לפי סדר עדיפות</div>
           </td>
@@ -2643,13 +2649,20 @@
     // Banner may already be in the DOM (showBanner ran before DOMContentLoaded fired late)
     applyCookieBannerPadding();
 
-    // Desktop: redirect wheel events to screen-4 scroll container
+    // Desktop: intercept wheel events and route to the correct scroll container
     window.addEventListener('wheel', function(e) {
-      if (_curScreen === 4 && window.innerWidth >= 768) {
+      if (window.innerWidth < 768) return;
+      if (_curScreen === 4) {
         var s4 = document.getElementById('screen-4');
         if (s4 && s4.scrollHeight > s4.clientHeight) {
           e.preventDefault();
           s4.scrollTop += e.deltaY;
+        }
+      } else {
+        var html = document.documentElement;
+        if (html.scrollHeight > html.clientHeight) {
+          e.preventDefault();
+          html.scrollTop = Math.max(0, Math.min(html.scrollTop + e.deltaY, html.scrollHeight - html.clientHeight));
         }
       }
     }, { passive: false });
