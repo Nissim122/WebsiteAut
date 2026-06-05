@@ -1456,7 +1456,7 @@
           <span id="banner-name-err" class="banner-field-error-msg" style="display:none;">שדה חובה</span>
         </div>
         <div class="banner-field-wrap">
-          <input id="banner-phone" type="tel" placeholder="טלפון" aria-label="טלפון" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s, border-color 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.value=this.value.replace(/[^\d]/g,''); clearBannerFieldError(this)" />
+          <input id="banner-phone" type="tel" placeholder="טלפון" aria-label="טלפון" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: 2px solid transparent; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s, border-color 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.value=this.value.replace(/[^\d+]/g,''); clearBannerFieldError(this)" />
           <span id="banner-phone-err" class="banner-field-error-msg" style="display:none;">שדה חובה</span>
         </div>
         <div class="banner-field-wrap">
@@ -1494,7 +1494,7 @@
           </svg>
         </div>
         <p style="font-weight:800; font-size:1.1rem; color:#fff; margin:0 0 0.3rem; letter-spacing:-0.02em; direction:rtl;">קיבלנו את הפרטים שלך!</p>
-        <p style="font-size:0.85rem; color:rgba(255,255,255,0.8); margin:0; line-height:1.6; direction:rtl;">ניצור איתך קשר בהקדם האפשרי</p>
+        <p style="font-size:0.85rem; color:rgba(255,255,255,0.8); margin:0; line-height:1.6; direction:rtl;">ניצור איתך קשר בהקדם</p>
       </div>
 
     </div>
@@ -1976,7 +1976,7 @@
               <input id="contact-name" type="text" class="form-input" placeholder="שם מלא" autocomplete="name" oninput="this.value=this.value.replace(/[^\u05D0-\u05EA a-zA-Z\'\-]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-name','שם מלא נדרש');}else if(this.value.trim().length<2){showContactFieldError('contact-name','שם קצר מדי');}" />
             </div>
             <div>
-              <input id="contact-phone" type="tel" class="form-input" placeholder="טלפון" inputmode="numeric" maxlength="15" autocomplete="tel" oninput="this.value=this.value.replace(/[^\d]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-phone','טלפון נדרש');}else if(this.value.trim().length<9){showContactFieldError('contact-phone','מספר טלפון לא תקין');}" />
+              <input id="contact-phone" type="tel" class="form-input" placeholder="טלפון" inputmode="tel" maxlength="16" autocomplete="tel" oninput="this.value=this.value.replace(/[^\d+]/g,'')" onblur="if(!this.value.trim()){showContactFieldError('contact-phone','טלפון נדרש');}else if(this.value.trim().length<9){showContactFieldError('contact-phone','מספר טלפון לא תקין');}" />
             </div>
           </div>
           <div style="margin-bottom: 1.5rem;">
@@ -2005,15 +2005,15 @@
           </div><!-- /contact-form-fields -->
 
           <!-- Mobile in-card success (mobile only, replaces fields) -->
-          <div id="contact-success-card" style="display:none; text-align:center; padding:1.5rem 0 0.75rem; direction:rtl; font-family:'Heebo',sans-serif;">
-            <div id="contact-success-icon" style="margin-bottom:1.1rem;">
+          <div id="contact-success-card" style="display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; width:100%; direction:rtl; font-family:'Heebo',sans-serif; padding:1.5rem 0 0.75rem;">
+            <div style="margin-bottom:1.1rem;">
               <svg width="64" height="64" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle class="so-check-circle" cx="26" cy="26" r="25"/>
                 <path class="so-check-tick" d="M15 26l8 9 14-17"/>
               </svg>
             </div>
-            <h3 style="font-size:1.3rem; font-weight:800; color:#fff; letter-spacing:-0.02em; margin:0 0 0.4rem;">קיבלנו את הפרטים שלך!</h3>
-            <p style="font-size:0.88rem; color:rgba(255,255,255,0.5); margin:0; line-height:1.6;">ניצור איתך קשר בהקדם האפשרי</p>
+            <h3 style="font-size:1.3rem; font-weight:800; color:#2196b0; letter-spacing:-0.02em; margin:0 0 0.4rem;">קיבלנו את הפרטים שלך!</h3>
+            <p style="font-size:0.88rem; color:#2db3cd; margin:0; line-height:1.6;">ניצור איתך קשר בהקדם</p>
           </div>
         </form>
 
@@ -2144,7 +2144,7 @@
       </div>
 
       <h2 class="so-title">קיבלנו את הפרטים שלך!</h2>
-      <p class="so-subtitle">ניצור איתך קשר בהקדם האפשרי</p>
+      <p class="so-subtitle">ניצור איתך קשר בהקדם</p>
 
       <div class="so-radar-card">
         <p class="so-radar-label">בינתיים</p>
@@ -2776,9 +2776,17 @@
       var fields = document.getElementById('contact-form-fields');
       var card   = document.getElementById('contact-success-card');
       if (!fields || !card) return;
+      var form = fields.closest('form');
+      var savedHeight = form ? form.offsetHeight : 0;
       fields.style.display = 'none';
-      card.style.display = 'block';
-      // Replay SVG animations (fixes Safari bug)
+      card.style.display = 'flex';
+      if (form) {
+        form.style.display = 'flex';
+        form.style.flexDirection = 'column';
+        form.style.alignItems = 'center';
+        form.style.justifyContent = 'center';
+        form.style.minHeight = savedHeight + 'px';
+      }
       var animated = card.querySelectorAll('.so-check-circle,.so-check-tick');
       animated.forEach(function(el) { el.style.animation = 'none'; });
       void card.offsetWidth;
