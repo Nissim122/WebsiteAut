@@ -2627,13 +2627,15 @@
     // Banner may already be in the DOM (showBanner ran before DOMContentLoaded fired late)
     applyCookieBannerPadding();
 
-    // Desktop: on screen-4 the viewport is overflow:hidden, so redirect wheel to the inner container
+    // Desktop: native wheel routing is unreliable when a non-passive listener exists — explicitly redirect
     window.addEventListener('wheel', function(e) {
-      if (_curScreen !== 4 || window.innerWidth < 768) return;
-      var s4 = document.getElementById('screen-4');
-      if (s4 && s4.scrollHeight > s4.clientHeight) {
-        e.preventDefault();
-        s4.scrollTop += e.deltaY;
+      if (window.innerWidth < 768) return;
+      e.preventDefault();
+      if (_curScreen === 4) {
+        var s4 = document.getElementById('screen-4');
+        if (s4) s4.scrollTop += e.deltaY;
+      } else {
+        document.documentElement.scrollTop += e.deltaY;
       }
     }, { passive: false });
 
