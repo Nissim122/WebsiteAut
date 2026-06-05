@@ -1050,6 +1050,11 @@
       border-color: #2196b0 !important;
       box-shadow: 0 0 0 3px rgba(33,150,176,0.15) !important;
     }
+    #contact .form-input.field-error,
+    #contact .form-input.field-error:focus {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important;
+    }
     .contact-side-icons a span:first-child {
       background: rgba(33,150,176,0.18) !important;
       border-color: rgba(33,150,176,0.4) !important;
@@ -1473,7 +1478,7 @@
 
         <!-- שדה מייל — מופיע כשדיוור מסומן -->
         <div id="banner-email-wrap" style="display: none; flex-basis: 100%; order: 6;">
-          <input id="banner-email" type="email" placeholder="כתובת מייל" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: none; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)'; this.style.outline='none'; this.style.boxShadow='';" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.style.outline='none'; this.style.boxShadow='';" />
+          <input id="banner-email" type="email" placeholder="כתובת מייל" class="cta-banner-input" style="width: 100%; box-sizing: border-box; padding: 0.65rem 1rem; border-radius: 8px; border: 1px solid transparent; background: rgba(0,0,0,0.25); color: #fff; font-family: 'Heebo', sans-serif; font-size: 0.95rem; outline: none; transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;" onfocus="this.style.background='rgba(0,0,0,0.18)';" onblur="this.style.background='rgba(0,0,0,0.25)'" oninput="this.style.borderColor='transparent'; this.style.boxShadow='';" />
         </div>
 
         <button id="banner-submit" class="btn-cta" onclick="handleBannerSubmit(event)" style="background: #fff; color: #0e1628; white-space: nowrap; padding: 0.65rem 1.5rem; font-size: 0.95rem; border-radius: 8px; font-weight: 800; flex-shrink: 0; order: 3;">שליחה <span class="btn-arrow">◄</span></button>
@@ -2445,7 +2450,11 @@
         const el = document.getElementById(id);
         if (el) el.style.display = 'none';
       });
+      // Reset animations so they replay on every show (fixes iOS Safari SVG animation bug)
+      const animated = overlay.querySelectorAll('.so-check-wrap,.so-check-circle,.so-check-tick,.so-title,.so-subtitle,.so-radar-card,.so-btn,.so-close-x,.so-ring-1,.so-ring-2,.so-ring-3');
+      animated.forEach(function(el) { el.style.animation = 'none'; });
       void overlay.offsetWidth;
+      animated.forEach(function(el) { el.style.animation = ''; });
       overlay.classList.add('so-active');
       overlay.focus();
     }
@@ -2547,8 +2556,8 @@
       if (!name)  { showBannerFieldError('banner-name',  'banner-name-err');  return; }
       if (!phone) { showBannerFieldError('banner-phone', 'banner-phone-err'); return; }
       if (!privacy) { const cb = document.getElementById('banner-privacy'); cb.style.outline = '2px solid #ef4444'; cb.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.25)'; cb.scrollIntoView({block:'nearest'}); return; }
-      if (newsletter && !email) { const _be = document.getElementById('banner-email'); _be.style.outline = '2px solid #ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.focus(); return; }
-      if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { const _be = document.getElementById('banner-email'); _be.style.outline = '2px solid #ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.focus(); return; }
+      if (newsletter && !email) { const _be = document.getElementById('banner-email'); _be.style.borderColor = '#ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.scrollIntoView({block:'nearest'}); return; }
+      if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { const _be = document.getElementById('banner-email'); _be.style.borderColor = '#ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.scrollIntoView({block:'nearest'}); return; }
       btn.disabled = true;
       btn.style.opacity = '0.6';
       try {
@@ -3044,8 +3053,8 @@
               text-align: right;
               transition: border-color 0.2s, background 0.2s;
             "
-            onfocus="this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'"
-            onblur="this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'"
+            onfocus="if(!this.dataset.err){ this.style.borderColor='rgba(33,150,176,0.55)'; this.style.background='rgba(33,150,176,0.06)'; }"
+            onblur="if(!this.dataset.err){ this.style.borderColor='rgba(255,255,255,0.10)'; this.style.background='rgba(255,255,255,0.05)'; }"
           />
         </div>
 
@@ -3155,6 +3164,7 @@
       function showOfferFieldError(inputEl, msgText) {
         inputEl.style.borderColor = 'rgba(224,23,107,0.8)';
         inputEl.style.boxShadow   = '0 0 0 3px rgba(224,23,107,0.2)';
+        inputEl.dataset.err = '1';
         var wrap = inputEl.parentElement;
         var errEl = wrap.querySelector('.offer-field-err');
         if (!errEl) {
@@ -3168,6 +3178,7 @@
         inputEl.addEventListener('input', function clearErr() {
           inputEl.style.borderColor = 'rgba(255,255,255,0.10)';
           inputEl.style.boxShadow   = '';
+          delete inputEl.dataset.err;
           if (errEl) errEl.remove();
           inputEl.removeEventListener('input', clearErr);
         });
