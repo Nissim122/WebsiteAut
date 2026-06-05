@@ -16,6 +16,7 @@
   <meta name="robots" content="index, follow" />
   <meta name="author" content="ניסים בנגייב — Clix Automations" />
   <link rel="canonical" href="https://clix-automations.com/scanner.html" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
 
   <!-- Open Graph (Facebook / LinkedIn) -->
   <meta property="og:type" content="website" />
@@ -191,6 +192,8 @@
       from { opacity: 0; transform: translateY(5px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
     /* ── Typography ── */
     .h1 {
@@ -878,6 +881,8 @@
   </div>
 
   <div class="wrapper">
+
+    <h1 class="sr-only">סורק אוטומציות חינמי — גלה איפה העסק שלך מבזבז זמן וכסף</h1>
 
     <!-- Progress bar -->
     <nav class="prog-bar" id="prog-bar" aria-label="שלבי השאלון">
@@ -1948,7 +1953,7 @@
         <div style="display:flex; align-items:center; justify-content:center;">
           ${t.img
             ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
-            : `<span aria-hidden="true">${t.svg}</span>`}
+            : `<span aria-hidden="true">${t.svg.replace(/<img /, `<img alt="${t.lbl}" `)}</span>`}
         </div>
         <span class="tool-name" aria-hidden="true">${t.lbl}</span>
       </div>

@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://scanner.clix-automations.com/sitemap.xml
