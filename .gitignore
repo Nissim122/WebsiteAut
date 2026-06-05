@@ -10,3 +10,4 @@ ga-credentials.json
 oauth-client.json
 ga-token.json
 *.ps1
+screenshot-overlay*.mjs
