@@ -147,7 +147,7 @@
     /* ── Progress bar ── */
     .prog-bar {
       display: flex; align-items: center; justify-content: center;
-      gap: 0; margin-top: 66px; margin-bottom: 32px;
+      gap: 0; margin-top: 130px; margin-bottom: 32px;
     }
     .prog-seg {
       width: 34px; height: 34px; border-radius: 50%;
@@ -181,6 +181,7 @@
     #screen-1.active, #screen-2.active {
       min-height: calc(100vh - 80px);
     }
+    #screen-1::-webkit-scrollbar { display: none; }
     #screen-3.active {
       animation: none;
     }
@@ -232,15 +233,7 @@
     .intent-desc  { color: rgba(255,255,255,0.65); font-size: 12px; line-height: 1.5; }
 
     /* ── Tools grid ── */
-    #screen-2 {
-      height: calc(100vh - 146px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    #screen-2::-webkit-scrollbar { display: none; }
-    #screen-2.active { min-height: 0; }
+    #screen-2.active { min-height: calc(100vh - 80px); }
     #tools-grid { margin-bottom: 0; position: relative; isolation: isolate; }
     #screen-2 .btn-row {
       position: sticky;
@@ -248,7 +241,7 @@
       z-index: 5;
       background: linear-gradient(to top, var(--bg) 72%, transparent);
       padding-top: 18px;
-      padding-bottom: 14px;
+      padding-bottom: max(28px, env(safe-area-inset-bottom, 28px));
       margin-top: 4px;
     }
     .tools-grid {
@@ -779,6 +772,67 @@
     @media (max-width: 480px) {
       .wrapper { padding-left: 18px; padding-right: 18px; }
       .tools-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      #screen-2 .btn-row {
+        padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
+      }
+    }
+
+    /* ── Site-wide nav ── */
+    .site-nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      width: 100%; z-index: 100;
+      background: transparent; padding: 0.75rem 1rem;
+    }
+    .nav-inner {
+      width: calc(75% - 2rem); max-width: calc(75% - 2rem);
+      margin: 0 auto;
+      background: rgba(14,16,28,0.55);
+      backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+      border-radius: 16px; border: 1.5px solid rgba(255,255,255,0.10);
+      padding: 0 1.25rem; height: 100px; overflow: visible;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.35);
+    }
+    .site-nav a {
+      color: rgba(255,255,255,0.75); text-decoration: none;
+      font-size: 1.05rem; font-weight: 500; transition: color 0.2s;
+    }
+    .site-nav a:hover { color: #fff; }
+    .site-nav a:link:not(.nav-active),
+    .site-nav a:visited:not(.nav-active) { color: rgba(255,255,255,0.75) !important; }
+    .site-nav a.nav-active { color: #e0176b !important; font-weight: 700; }
+    .btn-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.4rem; background: #e0176b; color: #fff;
+      font-family: 'Heebo', sans-serif; font-weight: 700; font-size: 0.9rem;
+      border-radius: 10px; border: none; cursor: pointer; text-decoration: none;
+    }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-cta:hover .btn-arrow { transform: translateX(-5px); }
+    .hamburger-btn {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 0.5rem; flex-shrink: 0;
+    }
+    .hamburger-btn span {
+      display: block; width: 22px; height: 2px; border-radius: 2px;
+      background: rgba(255,255,255,0.85);
+      transition: transform 0.25s cubic-bezier(0.4,0,0.2,1), opacity 0.2s;
+    }
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: flex; }
+    @media (max-width: 767px) {
+      .nav-inner { width: calc(100% - 2rem) !important; max-width: calc(100% - 2rem) !important; border-radius: 14px !important; border: 1.5px solid #e0176b !important; background: rgba(14, 22, 40, 0.72) !important; backdrop-filter: blur(24px) !important; -webkit-backdrop-filter: blur(24px) !important; height: 80px !important; }
+      .site-nav { padding: 0.6rem 1rem !important; }
+      .hamburger-btn { display: flex; }
+      .nav-cta-desktop { display: none !important; }
+      .nav-links-desktop { display: none !important; }
+      /* Prevent iOS Safari auto-zoom on input focus (font-size < 16px triggers it) */
+      input, textarea, select { font-size: 16px !important; }
+      /* position:relative on html breaks overflow-x:hidden on some mobile browsers */
+      html { position: static !important; }
     }
   </style>
 </head>
@@ -786,12 +840,40 @@
   <div class="bg-grad"></div>
   <div class="grain"></div>
 
-  <!-- Logo header -->
-  <header style="position:fixed; top:0; left:0; right:0; z-index:50; height:54px; background:rgba(14,22,40,0.75); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border-bottom:1px solid rgba(255,255,255,0.07); display:flex; align-items:center; justify-content:center;">
-    <a href="https://clix-automations.com/" aria-label="Clix Automations — דף הבית" style="text-decoration:none; display:flex; align-items:baseline; gap:0.15rem; direction:ltr;">
-      <span style="font-family:'Inter',sans-serif; font-weight:700; font-size:1.55rem; letter-spacing:-0.04em; color:#ffffff;">Clix</span><span style="font-family:'Inter',sans-serif; font-weight:400; font-size:1.2rem; letter-spacing:-0.02em; color:#e0176b;">Automations</span>
-    </a>
-  </header>
+  <!-- Main site nav -->
+  <nav class="site-nav" aria-label="תפריט ראשי">
+    <div class="nav-inner">
+      <a href="https://clix-automations.com/" aria-label="Clix Automations — דף הבית" style="text-decoration: none; display: flex; align-items: baseline; gap: 0.15rem; flex-shrink: 0; direction: ltr;">
+        <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.75rem; letter-spacing: -0.04em; color: #ffffff;">Clix</span><span style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.02em; color: #e0176b;">Automations</span>
+      </a>
+      <div style="display: flex; gap: 2.5rem;" class="hidden md:flex nav-links-desktop">
+        <a href="/">דף הבית</a>
+        <a href="/#process">תהליך</a>
+        <a href="/#results">תוצאות</a>
+        <a href="/blog.html">בלוג</a>
+        <a href="/scanner.html" class="nav-active">רדאר העסק</a>
+        <a href="/#contact">צרו קשר</a>
+      </div>
+      <a href="/#contact" class="btn-cta nav-cta-desktop" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">
+        לפרטים נוספים <span class="btn-arrow">◄</span>
+      </a>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט ניווט" aria-expanded="false" aria-controls="mobile-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; top: 92px; left: 1rem; right: 1rem; background: rgba(14, 22, 40, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 150; flex-direction: column; align-items: stretch; border: 1.5px solid #e0176b; border-top: none; border-radius: 0 0 14px 14px;">
+    <a href="/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">דף הבית</a>
+    <a href="/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
+    <a href="/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
+    <a href="/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
+    <a href="/scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">רדאר העסק</a>
+    <a href="/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
+  </div>
 
   <div class="wrapper">
 
@@ -1125,10 +1207,6 @@
   </div>
 
   <script>
-  // Always start at top on page load/refresh
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.scrollTo(0, 0);
-
   // ═══════════════════════════════════════════════════════════════
   //  STATE
   // ═══════════════════════════════════════════════════════════════
@@ -1198,40 +1276,48 @@
                    ['mailchimp','smoove','gmail']],
     };
 
-    const groupLabels = {
-      leads:      ['WhatsApp / Instagram / טופס', 'CRM (Monday, HubSpot)'],
-      followup:   ['WhatsApp / Telegram', 'CRM (Monday, HubSpot)', 'Gmail / Outlook'],
-      service:    ['WhatsApp / Telegram', 'Gmail / Outlook', 'Monday / Slack / Trello'],
-      scheduling: ['Calendly / Tor4You', 'WhatsApp / Telegram'],
-      reports:    ['Google Sheets / Excel / Airtable', 'Gmail / Outlook'],
-      sales:      ['CRM (HubSpot, Monday)', 'WhatsApp / Telegram', 'Gmail / Outlook'],
-      tasks:      ['Monday / Trello / Notion'],
-      invoices:   ['Rivhit', 'Gmail / Outlook'],
-      marketing:  ['Instagram / Facebook', 'Mailchimp / Gmail'],
+    const groupCategories = {
+      leads:      ['ערוץ קבלת לידים', 'CRM'],
+      followup:   ['הודעות', 'CRM', 'מייל'],
+      service:    ['הודעות', 'מייל', 'ניהול משימות'],
+      scheduling: ['תיאום פגישות', 'הודעות'],
+      reports:    ['נתונים ודוחות', 'מייל'],
+      sales:      ['CRM', 'הודעות', 'מייל'],
+      tasks:      ['ניהול משימות'],
+      invoices:   ['חשבוניות', 'מייל'],
+      marketing:  ['רשתות חברתיות', 'מייל'],
     };
 
-    const groups = painGroups[S.pain];
-    const labels = groupLabels[S.pain];
+    const groups     = painGroups[S.pain];
+    const categories = groupCategories[S.pain];
     if (!groups) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
 
     const missing = groups.reduce((acc, g, i) => {
-      if (!g.some(t => S.tools.includes(t))) acc.push(labels[i]);
+      if (!g.some(t => S.tools.includes(t))) {
+        const toolList = g.map(id => getToolLabel(id)).join(' / ');
+        acc.push({ category: categories[i], toolList });
+      }
       return acc;
     }, []);
 
     if (!missing.length) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
 
+    const rows = missing.map(({ category, toolList }) => `
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06);">
+        <span style="font-size:12px;color:rgba(255,255,255,0.55);flex-shrink:0;">מומלץ להוסיף ${category} —</span>
+        <span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:3px 10px;font-size:12px;color:#2db3cd;font-weight:600;white-space:nowrap;">${toolList}</span>
+      </div>
+    `).join('');
+
     hint.style.display = 'block';
     hint.innerHTML = `
-      <div style="background:rgba(33,150,176,0.08);border:1px solid rgba(33,150,176,0.22);border-radius:12px;padding:14px 16px;margin-bottom:16px;">
-        <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.88);margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;">
-          <svg style="flex-shrink:0;margin-top:1px" width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2db3cd" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#2db3cd" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#2db3cd" stroke-width="2.5" stroke-linecap="round"/></svg>
-          כדי לאוטמט את תהליך ה${painLabel[S.pain]} שלך, מומלץ להוסיף:
+      <div style="background:rgba(33,150,176,0.08);border:1px solid rgba(33,150,176,0.22);border-radius:12px;padding:12px 16px;margin-bottom:16px;">
+        <div style="font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:4px;display:flex;align-items:center;gap:7px;">
+          <svg style="flex-shrink:0" width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#2db3cd" stroke-width="2"/><line x1="12" y1="8" x2="12" y2="12" stroke="#2db3cd" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="16" x2="12.01" y2="16" stroke="#2db3cd" stroke-width="2.5" stroke-linecap="round"/></svg>
+          כלים מומלצים להשלמת האוטומציה:
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
-          ${missing.map(m => `<span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:4px 11px;font-size:12px;color:#2db3cd;font-weight:600;">${m}</span>`).join('')}
-        </div>
-        <div style="font-size:11.5px;color:rgba(255,255,255,0.38);line-height:1.5;">נשתמש <strong style="color:rgba(255,255,255,0.5);">אך ורק</strong> בכלים שבחרת — האוטומציה תותאם לארסנל הנוכחי שלך</div>
+        <div style="margin-bottom:8px;">${rows}</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.32);line-height:1.5;padding-top:2px;">נשתמש <strong style="color:rgba(255,255,255,0.45);">אך ורק</strong> בכלים שבחרת — האוטומציה תותאם לארסנל הנוכחי שלך</div>
       </div>
     `;
   }
@@ -1257,6 +1343,9 @@
     const modal = document.getElementById('lead-modal');
     modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
+    // Hide cookie banner so it doesn't block modal inputs (banner z-index > modal z-index)
+    const cookieWrap = document.getElementById('clix-cookie-wrap');
+    if (cookieWrap) cookieWrap.style.display = 'none';
     document.addEventListener('keydown', _onModalEscape);
     setTimeout(() => { const f = document.getElementById('mf-name'); if (f) f.focus(); }, 100);
   }
@@ -1265,6 +1354,9 @@
     document.getElementById('lead-modal').style.display = 'none';
     document.body.style.overflow = '';
     document.removeEventListener('keydown', _onModalEscape);
+    // Restore cookie banner if it was hidden
+    const cookieWrap = document.getElementById('clix-cookie-wrap');
+    if (cookieWrap) cookieWrap.style.display = '';
     if (_modalTrigger) { _modalTrigger.focus(); _modalTrigger = null; }
   }
 
@@ -2522,11 +2614,13 @@
         s1.style.minHeight = '0';
         s1.style.height = 'calc(100vh - 80px - ' + h + 'px)';
         s1.style.overflowY = 'auto';
+        s1.style.scrollbarWidth = 'none';
         s1.style.paddingBottom = '12px';
       } else {
         s1.style.minHeight = '';
         s1.style.height = '';
         s1.style.overflowY = '';
+        s1.style.scrollbarWidth = '';
         s1.style.paddingBottom = '';
       }
     }
@@ -2553,5 +2647,48 @@
   </script>
   <!-- ── Accessibility live region ── -->
   <div id="aria-live-region" aria-live="polite" aria-atomic="true" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;"></div>
+
+  <script>
+    const FOCUSABLE_NAV = 'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])';
+    function trapNavFocus(e) {
+      const menu = document.getElementById('mobile-menu');
+      const focusable = Array.from(menu.querySelectorAll(FOCUSABLE_NAV));
+      if (!focusable.length) return;
+      const first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.key === 'Tab') {
+        if (e.shiftKey ? document.activeElement === first : document.activeElement === last) {
+          e.preventDefault();
+          (e.shiftKey ? last : first).focus();
+        }
+      } else if (e.key === 'Escape') {
+        closeMobileMenu();
+      }
+    }
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      if (menu.classList.contains('open')) {
+        closeMobileMenu();
+      } else {
+        const btn = document.getElementById('hamburger-btn');
+        menu.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        btn.setAttribute('aria-expanded', 'true');
+        btn.setAttribute('aria-label', 'סגור תפריט ניווט');
+        document.addEventListener('keydown', trapNavFocus);
+        const firstLink = menu.querySelector('a');
+        if (firstLink) firstLink.focus();
+      }
+    }
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn  = document.getElementById('hamburger-btn');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
+      btn.setAttribute('aria-expanded', 'false');
+      btn.setAttribute('aria-label', 'פתח תפריט ניווט');
+      document.removeEventListener('keydown', trapNavFocus);
+      btn.focus();
+    }
+  </script>
 </body>
 </html>
