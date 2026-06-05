@@ -2587,41 +2587,39 @@
       if (newsletter && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { const _be = document.getElementById('banner-email'); _be.style.borderColor = '#ef4444'; _be.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.2)'; _be.scrollIntoView({block:'nearest'}); return; }
       btn.disabled = true;
       btn.style.opacity = '0.6';
-      try {
-        await sendData({ form: 'banner', name, phone, business, newsletter, email });
-        if (window.innerWidth <= 767) {
-          const bannerForm = document.getElementById('banner-submit').closest('.cta-banner-form');
-          const bannerHeadline = document.querySelector('.cta-banner-headline');
-          const bannerSuccess = document.getElementById('banner-success');
-          if (bannerForm) bannerForm.style.display = 'none';
-          if (bannerHeadline) bannerHeadline.style.display = 'none';
-          if (bannerSuccess) {
-            const bannerInner = bannerSuccess.closest('.cta-banner-inner');
-            var savedHeight = bannerInner ? bannerInner.offsetHeight : 0;
-            bannerSuccess.style.display = 'flex';
-            if (bannerInner) {
-              bannerInner.style.display = 'flex';
-              bannerInner.style.flexDirection = 'column';
-              bannerInner.style.flexWrap = 'nowrap';
-              bannerInner.style.justifyContent = 'center';
-              bannerInner.style.alignItems = 'center';
-              bannerInner.style.minHeight = savedHeight + 'px';
-            }
-            const animated = bannerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
-            animated.forEach(function(el) { el.style.animation = 'none'; });
-            void bannerSuccess.offsetWidth;
-            animated.forEach(function(el) { el.style.animation = ''; });
+      // Show success immediately (optimistic UI) — send data in background
+      if (window.innerWidth <= 767) {
+        const bannerForm = document.getElementById('banner-submit').closest('.cta-banner-form');
+        const bannerHeadline = document.querySelector('.cta-banner-headline');
+        const bannerSuccess = document.getElementById('banner-success');
+        if (bannerForm) bannerForm.style.display = 'none';
+        if (bannerHeadline) bannerHeadline.style.display = 'none';
+        if (bannerSuccess) {
+          const bannerInner = bannerSuccess.closest('.cta-banner-inner');
+          var savedHeight = bannerInner ? bannerInner.offsetHeight : 0;
+          bannerSuccess.style.display = 'flex';
+          if (bannerInner) {
+            bannerInner.style.display = 'flex';
+            bannerInner.style.flexDirection = 'column';
+            bannerInner.style.flexWrap = 'nowrap';
+            bannerInner.style.justifyContent = 'center';
+            bannerInner.style.alignItems = 'center';
+            bannerInner.style.minHeight = savedHeight + 'px';
           }
-        } else {
-          document.getElementById('banner-name').value = '';
-          document.getElementById('banner-phone').value = '';
-          document.getElementById('banner-business').value = '';
-          showToast();
+          const animated = bannerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
+          animated.forEach(function(el) { el.style.animation = 'none'; });
+          void bannerSuccess.offsetWidth;
+          animated.forEach(function(el) { el.style.animation = ''; });
         }
-      } finally {
-        btn.disabled = false;
-        btn.style.opacity = '';
+      } else {
+        document.getElementById('banner-name').value = '';
+        document.getElementById('banner-phone').value = '';
+        document.getElementById('banner-business').value = '';
+        showToast();
       }
+      btn.disabled = false;
+      btn.style.opacity = '';
+      sendData({ form: 'banner', name, phone, business, newsletter, email });
     }
 
     function showContactFieldError(inputId, msgText) {
@@ -2660,19 +2658,17 @@
       btn.style.opacity = '0.6';
       btn.style.cursor = 'not-allowed';
       const message = document.getElementById('contact-message').value.trim();
-      try {
-        await sendData({ form: 'contact', name, phone, email, message, newsletter });
-        if (window.innerWidth <= 767) {
-          showContactCardSuccess();
-        } else {
-          showToast();
-        }
-        e.target.reset();
-      } finally {
-        btn.disabled = false;
-        btn.style.opacity = '';
-        btn.style.cursor = '';
+      // Show success immediately (optimistic UI) — send data in background
+      if (window.innerWidth <= 767) {
+        showContactCardSuccess();
+      } else {
+        showToast();
       }
+      e.target.reset();
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      sendData({ form: 'contact', name, phone, email, message, newsletter });
     }
 
     /* Shuffle testimonial cards — auto every 7s, pause 20s on touch */
