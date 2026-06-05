@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <title>Clix Automations | פתרונות אוטומציה לעסקים</title>
   <link rel="icon" href="favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
@@ -4384,9 +4385,10 @@
     });
   })();
 
-  // Always start at top on page load/refresh
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  // Always start at top on page load/refresh (scrollRestoration set in <head>)
+  document.documentElement.style.scrollBehavior = 'auto';
   window.scrollTo(0, 0);
+  document.documentElement.style.scrollBehavior = '';
   </script>
 
   <script>
