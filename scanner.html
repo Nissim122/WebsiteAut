@@ -532,8 +532,10 @@
 
 
     /* ── Results ── */
-    #screen-4 { gap: 14px; overflow-y: auto; max-height: calc(100vh - 100px); padding-bottom: 70px; scrollbar-width: none; }
-    #screen-4::-webkit-scrollbar { display: none; }
+    #screen-4 { gap: 14px; overflow-y: auto; max-height: calc(100vh - 100px); padding-bottom: 70px; scrollbar-width: thin; scrollbar-color: rgba(33,150,176,0.35) transparent; }
+    #screen-4::-webkit-scrollbar { width: 4px; }
+    #screen-4::-webkit-scrollbar-track { background: transparent; }
+    #screen-4::-webkit-scrollbar-thumb { background: rgba(33,150,176,0.35); border-radius: 4px; }
 
     /* ── Screen-4 Hero ── */
     .s4-hero { padding: 12px 0 4px; text-align: center; }
@@ -1503,7 +1505,7 @@
 
   function closeLeadModal() {
     document.getElementById('lead-modal').style.display = 'none';
-    document.body.style.overflow = '';
+    if (window.innerWidth >= 768) document.body.style.overflow = (_curScreen === 4) ? 'hidden' : '';
     document.removeEventListener('keydown', _onModalEscape);
     // Restore cookie banner if it was hidden
     const cookieWrap = document.getElementById('clix-cookie-wrap');
@@ -2040,6 +2042,9 @@
     updateProg(id);
     document.documentElement.style.overscrollBehavior = 'none';
     document.body.style.overscrollBehavior = 'none';
+    if (window.innerWidth >= 768) {
+      document.body.style.overflow = (id === 4) ? 'hidden' : '';
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('prog-bar').style.marginBottom = (id === 4) ? '14px' : '';
 
@@ -2829,7 +2834,7 @@
       const menu = document.getElementById('mobile-menu');
       const btn  = document.getElementById('hamburger-btn');
       menu.classList.remove('open');
-      document.body.style.overflow = '';
+      if (window.innerWidth >= 768) document.body.style.overflow = (_curScreen === 4) ? 'hidden' : '';
       btn.setAttribute('aria-expanded', 'false');
       btn.setAttribute('aria-label', 'פתח תפריט ניווט');
       document.removeEventListener('keydown', trapNavFocus);
