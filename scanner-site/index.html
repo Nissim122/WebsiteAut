@@ -2535,7 +2535,7 @@
               <span style="font-family:Inter,Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.04em;color:#ffffff !important;">Clix</span><span style="font-family:Inter,Arial,sans-serif;font-size:17px;font-weight:400;letter-spacing:-0.02em;color:#e0176b !important;">Automations</span>
             </div>
             <div style="font-size:26px;font-weight:700;color:#ffffff !important;margin-bottom:8px;">${topFlows.length} האוטומציות המובילות לעסק שלך</div>
-            <div style="font-size:14px;color:#8e96a6 !important;line-height:1.6;">ניתחנו את הכלים שלך ובחרנו את האוטומציות עם הפוטנציאל הגדול ביותר —<br>לפי סדר עדיפות</div>
+            <div style="font-size:14px;color:#8e96a6 !important;line-height:1.6;">ניתחנו את הכלים שלך ובחרנו<br>את האוטומציות עם הפוטנציאל הגדול ביותר — לפי סדר עדיפות</div>
           </td>
         </tr>
         <tr>
@@ -2626,20 +2626,41 @@
     // Banner may already be in the DOM (showBanner ran before DOMContentLoaded fired late)
     applyCookieBannerPadding();
 
-    // Desktop: intercept wheel events and route to the correct scroll container
+    // Desktop: intercept wheel events with smooth easing (lerp via rAF)
+    var _s4Target = 0, _s4RAF = null;
+    var _docTarget = 0, _docRAF = null;
+
+    function _animS4() {
+      var s4 = document.getElementById('screen-4');
+      if (!s4) { _s4RAF = null; return; }
+      var diff = _s4Target - s4.scrollTop;
+      if (Math.abs(diff) < 0.5) { s4.scrollTop = _s4Target; _s4RAF = null; return; }
+      s4.scrollTop += diff * 0.14;
+      _s4RAF = requestAnimationFrame(_animS4);
+    }
+    function _animDoc() {
+      var html = document.documentElement;
+      var diff = _docTarget - html.scrollTop;
+      if (Math.abs(diff) < 0.5) { html.scrollTop = _docTarget; _docRAF = null; return; }
+      html.scrollTop += diff * 0.14;
+      _docRAF = requestAnimationFrame(_animDoc);
+    }
+
     window.addEventListener('wheel', function(e) {
       if (window.innerWidth < 768) return;
       if (_curScreen === 4) {
         var s4 = document.getElementById('screen-4');
         if (s4 && s4.scrollHeight > s4.clientHeight) {
           e.preventDefault();
-          s4.scrollTop += e.deltaY;
+          _s4Target = Math.max(0, Math.min(_s4Target + e.deltaY, s4.scrollHeight - s4.clientHeight));
+          if (!_s4RAF) _s4RAF = requestAnimationFrame(_animS4);
         }
       } else {
         var html = document.documentElement;
         if (html.scrollHeight > html.clientHeight) {
           e.preventDefault();
-          html.scrollTop = Math.max(0, Math.min(html.scrollTop + e.deltaY, html.scrollHeight - html.clientHeight));
+          _docTarget = Math.max(0, Math.min(_docTarget + e.deltaY, html.scrollHeight - html.clientHeight));
+          if (!_docRAF) _docRAF = requestAnimationFrame(_animDoc);
         }
       }
     }, { passive: false });
