@@ -14,6 +14,9 @@ const dst = join(root, 'scanner-site');
 // Read scanner.html
 let html = readFileSync(join(src, 'scanner.html'), 'utf8');
 
+// Remove site nav (not part of standalone scanner)
+html = html.replace(/[ \t]*<!-- Main site nav -->[\s\S]*?<\/nav>\n?/, '');
+
 // Update URLs for standalone domain
 html = html.replaceAll('https://clix-automations.com/scanner.html', 'https://scanner.clix-automations.com/');
 html = html.replace('src="/cookie-consent.js"', 'src="cookie-consent.js"');
