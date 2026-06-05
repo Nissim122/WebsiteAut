@@ -1479,7 +1479,6 @@
       pain:       S.pain,
       score:      S.ctx?.score,
       flow:       S.selectedFlow,
-      email_html:          buildEmailHtml(name, phone, _biz, email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
       customer_email_html: buildCustomerEmailHtml(name, S.tools, S.intent, S.pain),
     };
     try {
@@ -2429,7 +2428,6 @@
       pain:       S.pain,
       score:      S.ctx?.score,
       flow:       S.selectedFlow,
-      email_html:          buildEmailHtml(_name, _phone, biz, _email, S.ctx?.score ?? 0, S.ctx?.metrics?.hours ?? '0', S.tools, S.ctx?.flows ?? []),
       customer_email_html: buildCustomerEmailHtml(_name, S.tools, S.intent, S.pain),
     };
 
@@ -2444,95 +2442,6 @@
     trackEvent('scanner_lead_submitted', { score: S.ctx?.score, flow: S.selectedFlow });
     clearState();
     goTo(6);
-  }
-
-  // ── Build email HTML for webhook ──
-  function buildEmailHtml(name, phone, business, email, score, hours, tools, flows) {
-    const TOOL_NAMES = { whatsapp:'WhatsApp', gmail:'Gmail', monday:'Monday', hubspot:'HubSpot', airtable:'Airtable', sheets:'Google Sheets', excel:'Excel', instagram:'Instagram', slack:'Slack', calendly:'Calendly', fillout:'Fillout', make:'Make.com', excel:'Excel' };
-    const toolLabels = tools.map(t => TOOL_NAMES[t] || t).join(', ');
-
-    const automationRows = flows.map((f, i) => {
-      const stepsHtml = f.steps.map((s, si) => `
-                    <div style="margin-bottom:8px;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:rgba(45,179,205,0.12);border:1px solid rgba(45,179,205,0.35);font-size:10px;font-weight:700;color:#2db3cd;text-align:center;line-height:20px;margin-left:10px;">${si+1}</span><span style="font-size:13px;color:rgba(255,255,255,0.75);">${s}</span></div>`).join('');
-      return `
-            <table width="100%" cellpadding="0" cellspacing="0" style="background:#141d35;border-radius:12px;margin-bottom:14px;border:1px solid rgba(45,179,205,0.18);overflow:hidden;">
-              <tr><td>
-                <table width="100%" cellpadding="0" cellspacing="0">
-                  <tr><td style="background:linear-gradient(90deg,rgba(45,179,205,0.15) 0%,rgba(45,179,205,0.03) 100%);padding:14px 20px;border-bottom:1px solid rgba(255,255,255,0.07);">
-                    <span style="display:inline-block;background:#2db3cd;color:#fff;font-size:11px;font-weight:700;border-radius:50%;width:22px;height:22px;line-height:22px;text-align:center;margin-left:8px;">${i+1}</span>
-                    <span style="font-size:15px;font-weight:700;color:#ffffff;">${f.title}</span>
-                    <span style="float:left;background:rgba(224,23,107,0.15);border:1px solid rgba(224,23,107,0.3);border-radius:20px;padding:3px 10px;font-size:11px;color:#e0176b;font-weight:600;">~${f.save}h/שבוע</span>
-                  </td></tr>
-                  <tr><td style="padding:12px 20px 16px;">${stepsHtml}</td></tr>
-                </table>
-              </td></tr>
-            </table>`;
-    }).join('');
-
-    return `<!DOCTYPE html>
-<html dir="rtl" lang="he">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#080e1c;font-family:Arial,Helvetica,sans-serif;direction:rtl;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#080e1c;padding:28px 12px;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="background:#0e1628;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);">
-        <tr>
-          <td style="background:linear-gradient(135deg,#0e1628 0%,#141d35 100%);padding:32px 36px 28px;text-align:center;border-bottom:1px solid rgba(45,179,205,0.2);">
-            <div style="font-size:11px;color:#2db3cd;font-weight:700;letter-spacing:0.12em;margin-bottom:10px;">CLIX AUTOMATIONS</div>
-            <div style="font-size:24px;font-weight:700;color:#ffffff;margin-bottom:6px;">ניתוח אוטומציות לעסק שלך</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.45);">ליד חדש השאיר פרטים — סורק האוטומציות</div>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:24px 36px 0;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="65%" style="vertical-align:top;padding-left:12px;">
-                  <div style="background:#141d35;border-radius:12px;padding:18px 20px;border:1px solid rgba(255,255,255,0.07);">
-                    <div style="font-size:11px;color:#2db3cd;font-weight:700;letter-spacing:0.1em;margin-bottom:12px;">פרטי הליד</div>
-                    <div style="font-size:15px;color:#ffffff;font-weight:600;margin-bottom:4px;">${name}</div>
-                    <div style="font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:2px;">${business}</div>
-                    <div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07);">
-                      <a href="tel:${phone}" style="font-size:13px;color:#2db3cd;text-decoration:none;display:block;margin-bottom:4px;">📞 ${phone}</a>
-                      ${email ? `<a href="mailto:${email}" style="font-size:13px;color:#2db3cd;text-decoration:none;">✉ ${email}</a>` : ''}
-                    </div>
-                    ${toolLabels ? `<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07);font-size:12px;color:rgba(255,255,255,0.4);">כלים: ${toolLabels}</div>` : ''}
-                  </div>
-                </td>
-                <td width="5%"></td>
-                <td width="30%" style="vertical-align:top;">
-                  <div style="background:#141d35;border-radius:12px;padding:18px 16px;border:1px solid rgba(255,255,255,0.07);text-align:center;">
-                    <div style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:700;letter-spacing:0.08em;margin-bottom:10px;">ציון פוטנציאל</div>
-                    <div style="font-size:42px;font-weight:700;color:#e0176b;line-height:1;">${score}</div>
-                    <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:12px;">/100</div>
-                    <div style="font-size:11px;color:rgba(255,255,255,0.4);border-top:1px solid rgba(255,255,255,0.07);padding-top:10px;">חיסכון<br><span style="font-size:18px;font-weight:700;color:#2db3cd;">~${hours}h</span><br><span style="font-size:10px;">בשבוע</span></div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:20px 36px 4px;">
-            <div style="font-size:11px;color:#2db3cd;font-weight:700;letter-spacing:0.1em;margin-bottom:14px;">אוטומציות מומלצות לעסק זה</div>
-            ${automationRows}
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:8px 36px 28px;text-align:center;">
-            <a href="https://shortlink.uk/1qqQi" style="display:inline-block;background:#e0176b;color:#fff;font-size:14px;font-weight:700;text-decoration:none;border-radius:8px;padding:13px 32px;letter-spacing:0.02em;">צור קשר עם הליד ←</a>
-          </td>
-        </tr>
-        <tr>
-          <td style="padding:16px 36px 20px;text-align:center;border-top:1px solid rgba(255,255,255,0.07);">
-            <div style="font-size:11px;color:rgba(255,255,255,0.25);">נשלח אוטומטית · סורק האוטומציות של Clix</div>
-          </td>
-        </tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
   }
 
   // ── Build customer-facing email HTML ──
