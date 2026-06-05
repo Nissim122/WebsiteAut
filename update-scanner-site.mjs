@@ -17,6 +17,12 @@ let html = readFileSync(join(src, 'scanner.html'), 'utf8');
 // Remove site nav (not part of standalone scanner)
 html = html.replace(/[ \t]*<!-- Main site nav -->[\s\S]*?<\/nav>\n?/, '');
 
+// Remove 130px top margin from progress bar (was there to clear the fixed site nav)
+html = html.replace(
+  /gap: 0; margin-top: 130px; margin-bottom: 32px;/,
+  'gap: 0; margin-top: 32px; margin-bottom: 32px;'
+);
+
 // Update URLs for standalone domain
 html = html.replaceAll('https://clix-automations.com/scanner.html', 'https://scanner.clix-automations.com/');
 html = html.replace('src="/cookie-consent.js"', 'src="cookie-consent.js"');
