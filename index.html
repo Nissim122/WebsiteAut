@@ -2834,6 +2834,7 @@
     role="dialog"
     aria-modal="true"
     aria-labelledby="offer-title"
+    onclick="if(event.target===this) closeOfferPopup()"
     style="
       display: none;
       position: fixed;
@@ -3099,7 +3100,6 @@
           card.style.transform  = 'translateY(0) scale(1)';
         });
 
-        overlay.addEventListener('click', closeOfferPopup);
       }
 
       window.closeOfferPopup = function () {
