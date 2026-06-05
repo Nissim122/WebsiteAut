@@ -1989,7 +1989,6 @@
       document.documentElement.style.overflow = _s4Desktop ? 'hidden' : '';
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    _s4Target = 0; _docTarget = 0;
     document.getElementById('prog-bar').style.marginBottom = (id === 4) ? '14px' : '';
 
     if (id === 4) {
@@ -2650,42 +2649,13 @@
     // Banner may already be in the DOM (showBanner ran before DOMContentLoaded fired late)
     applyCookieBannerPadding();
 
-    // Desktop: intercept wheel events with smooth easing (lerp via rAF)
-    var _s4Target = 0, _s4RAF = null;
-    var _docTarget = 0, _docRAF = null;
-
-    function _animS4() {
-      var s4 = document.getElementById('screen-4');
-      if (!s4) { _s4RAF = null; return; }
-      var diff = _s4Target - s4.scrollTop;
-      if (Math.abs(diff) < 0.5) { s4.scrollTop = _s4Target; _s4RAF = null; return; }
-      s4.scrollTop += diff * 0.14;
-      _s4RAF = requestAnimationFrame(_animS4);
-    }
-    function _animDoc() {
-      var html = document.documentElement;
-      var diff = _docTarget - html.scrollTop;
-      if (Math.abs(diff) < 0.5) { html.scrollTop = _docTarget; _docRAF = null; return; }
-      html.scrollTop += diff * 0.14;
-      _docRAF = requestAnimationFrame(_animDoc);
-    }
-
+    // Desktop: on screen-4 the viewport is overflow:hidden, so redirect wheel to the inner container
     window.addEventListener('wheel', function(e) {
-      if (window.innerWidth < 768) return;
-      if (_curScreen === 4) {
-        var s4 = document.getElementById('screen-4');
-        if (s4 && s4.scrollHeight > s4.clientHeight) {
-          e.preventDefault();
-          _s4Target = Math.max(0, Math.min(_s4Target + e.deltaY, s4.scrollHeight - s4.clientHeight));
-          if (!_s4RAF) _s4RAF = requestAnimationFrame(_animS4);
-        }
-      } else {
-        var html = document.documentElement;
-        if (html.scrollHeight > html.clientHeight) {
-          e.preventDefault();
-          _docTarget = Math.max(0, Math.min(_docTarget + e.deltaY, html.scrollHeight - html.clientHeight));
-          if (!_docRAF) _docRAF = requestAnimationFrame(_animDoc);
-        }
+      if (_curScreen !== 4 || window.innerWidth < 768) return;
+      var s4 = document.getElementById('screen-4');
+      if (s4 && s4.scrollHeight > s4.clientHeight) {
+        e.preventDefault();
+        s4.scrollTop += e.deltaY;
       }
     }, { passive: false });
 
