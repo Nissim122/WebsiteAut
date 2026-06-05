@@ -1887,12 +1887,9 @@
       if (h) h.focus();
     }, 100);
     updateProg(id);
-    const lockScroll = (id === 1 || id === 4);
-    document.documentElement.style.overflow = lockScroll ? 'hidden' : '';
     document.documentElement.style.overscrollBehavior = 'none';
-    document.body.style.overflow = lockScroll ? 'hidden' : '';
     document.body.style.overscrollBehavior = 'none';
-    if (!lockScroll) window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     document.getElementById('prog-bar').style.marginBottom = (id === 4) ? '14px' : '';
 
     if (id === 4) {
@@ -2592,9 +2589,7 @@
     updateProg(1);
     updateUnlockHint();
     hideDecorativeSVGs();
-    document.documentElement.style.overflow = 'hidden';
     document.documentElement.style.overscrollBehavior = 'none';
-    document.body.style.overflow = 'hidden';
     document.body.style.overscrollBehavior = 'none';
 
     trackEvent('scanner_start');
