@@ -5,8 +5,9 @@
  */
 import { readFileSync, writeFileSync, cpSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
+import { fileURLToPath } from 'url';
 
-const root = new URL('.', import.meta.url).pathname.replace(/^\/([A-Z]:)/, '$1');
+const root = fileURLToPath(new URL('.', import.meta.url));
 const src = root;
 const dst = join(root, 'scanner-site');
 
@@ -26,7 +27,7 @@ console.log('✓ index.html updated');
 const staticFiles = ['cookie-consent.js', 'favicon.ico', 'favicon.svg', 'favicon-32.png', 'favicon-192.png'];
 for (const f of staticFiles) {
   if (existsSync(join(src, f))) {
-    cpSync(join(src, f), join(dst, f));
+    try { cpSync(join(src, f), join(dst, f)); } catch {}
   }
 }
 console.log('✓ static files copied');
