@@ -60,6 +60,11 @@
 - הגדלת `w`/`h` מעבר לגודל הבועה → זום-אין (נחתך מהצדדים, ממורכז).
 - הקטנת `w`/`h` מתחת לגודל הבועה → רווח לבן סביב הלוגו.
 
+## Scanner Deploy — Hard Rule
+- **כל שינוי ב-`scanner.html` חייב להידחף לשני הריפואים** — ללא יוצא מן הכלל.
+- לאחר כל עריכה ב-`scanner.html`: להריץ `.\deploy-scanner.ps1 "תיאור השינוי"` — הסקריפט מסנכרן ל-`scanner-site` ודוחף את שניהם.
+- אין לסיים משימה שקשורה לסורק לפני שה-deploy רץ בהצלחה.
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
 - Do not "improve" a reference design — match it
