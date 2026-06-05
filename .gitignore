@@ -9,3 +9,4 @@ temp_*.txt
 ga-credentials.json
 oauth-client.json
 ga-token.json
+*.ps1
