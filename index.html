@@ -2505,6 +2505,7 @@
         const bannerInner = bannerSuccess.closest('.cta-banner-inner');
         var savedHeight = bannerInner ? bannerInner.offsetHeight : 0;
         bannerSuccess.style.display = 'flex';
+        if (window.gtag) gtag('event', 'lead_submit', { form: 'banner' });
         if (bannerInner) {
           bannerInner.style.display = 'flex';
           bannerInner.style.flexDirection = 'column';
@@ -2561,6 +2562,7 @@
       const message = document.getElementById('contact-message').value.trim();
       // Show success immediately (optimistic UI) — send data in background
       showContactCardSuccess();
+      if (window.gtag) gtag('event', 'lead_submit', { form: 'contact' });
       e.target.reset();
       btn.disabled = false;
       btn.style.opacity = '';
@@ -3183,6 +3185,7 @@
         if (offerSub)   offerSub.style.display   = 'none';
         if (offerSuccess) {
           offerSuccess.style.display = 'block';
+          if (window.gtag) gtag('event', 'lead_submit', { form: 'popup' });
           var animated = offerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
           animated.forEach(function(el) { el.style.animation = 'none'; });
           void offerSuccess.offsetWidth;

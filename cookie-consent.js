@@ -23,6 +23,7 @@
 
     initScrollTracking();
     initSectionTracking();
+    initConversionTracking();
   }
 
   // Fires a scroll_depth event at 25 / 50 / 75 / 90 %
@@ -70,6 +71,51 @@
     document.querySelectorAll('section[id]').forEach(function (el) {
       obs.observe(el);
     });
+  }
+
+  // ─── Conversion Tracking ─────────────────────────────────────────────────────
+  function initConversionTracking() {
+    // CTA button clicks (nav, hero, blog preview, results)
+    document.querySelectorAll('a.btn-cta, button.btn-cta').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var label = el.textContent.trim().slice(0, 50);
+        var href  = el.getAttribute('href') || '';
+        window.gtag('event', 'cta_click', { label: label, destination: href });
+      });
+    });
+
+    // Scanner link clicks
+    document.querySelectorAll('a[href*="scanner.clix-automations.com"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'scanner_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
+    // Chat widget — first open only
+    var origToggleChat = window.toggleChat;
+    var chatTracked = false;
+    if (typeof origToggleChat === 'function') {
+      window.toggleChat = function () {
+        origToggleChat.apply(this, arguments);
+        if (!chatTracked) {
+          chatTracked = true;
+          window.gtag('event', 'chat_open');
+        }
+      };
+    }
+
+    // Popup open — watch style changes via MutationObserver
+    var popup = document.getElementById('offer-popup');
+    if (popup) {
+      var popupTracked = false;
+      new MutationObserver(function () {
+        if (!popupTracked && popup.style.display !== 'none' && popup.style.opacity !== '0') {
+          popupTracked = true;
+          window.gtag('event', 'popup_open');
+        }
+      }).observe(popup, { attributes: true, attributeFilter: ['style'] });
+    }
   }
 
   // ─── Consent Banner ───────────────────────────────────────────────────────────

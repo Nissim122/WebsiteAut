@@ -10,8 +10,21 @@ const EXCLUDE_CITY = 'Hadera';
 const clientFile = resolve(__dirname, 'oauth-client.json');
 const tokenFile  = resolve(__dirname, 'ga-token.json');
 
-const { client_id, client_secret } = JSON.parse(readFileSync(clientFile)).installed;
-const tokens = JSON.parse(readFileSync(tokenFile));
+let client_id, client_secret, tokens;
+try {
+  ({ client_id, client_secret } = JSON.parse(readFileSync(clientFile)).installed);
+} catch {
+  console.error('❌ oauth-client.json חסר או פגום.');
+  console.error('   הורד אותו מ-Google Cloud Console → APIs & Services → Credentials');
+  process.exit(1);
+}
+try {
+  tokens = JSON.parse(readFileSync(tokenFile));
+} catch {
+  console.error('❌ ga-token.json חסר או פגום — הטוקן טרם הופק או נמחק.');
+  console.error('   כדי לחדש גישה, הרץ:  node analytics-auth.mjs');
+  process.exit(1);
+}
 
 const oauth2Client = new google.auth.OAuth2(client_id, client_secret);
 oauth2Client.setCredentials(tokens);
@@ -530,4 +543,21 @@ async function main() {
   console.log(`\n💾 הדוח נשמר: reports/${reportLabel}.txt`);
 }
 
-main().catch(console.error);
+main().catch(err => {
+  const msg = err?.message || String(err);
+  const isTokenError =
+    msg.includes('invalid_grant') ||
+    msg.includes('Token has been expired') ||
+    msg.includes('Invalid Credentials') ||
+    err?.status === 401 || err?.code === 401;
+
+  if (isTokenError) {
+    console.error('\n❌ הטוקן של GA4 פג תוקף או בוטל.');
+    console.error('   כדי לחדש גישה, הרץ:  node analytics-auth.mjs');
+    console.error('   ואז הרץ שוב:          node analytics-report.mjs');
+  } else {
+    console.error('\n❌ שגיאה לא צפויה:');
+    console.error(msg);
+  }
+  process.exit(1);
+});
