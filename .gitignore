@@ -6,6 +6,7 @@ docs/
 references/
 temp_b64.txt
 temp_*.txt
+temp-*.html
 ga-credentials.json
 oauth-client.json
 ga-token.json
