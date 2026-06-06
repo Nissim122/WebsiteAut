@@ -92,6 +92,22 @@
       });
     });
 
+    // WhatsApp clicks
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'whatsapp_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
+    // Phone clicks
+    document.querySelectorAll('a[href^="tel:"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'phone_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
     // Chat widget — first open only
     var origToggleChat = window.toggleChat;
     var chatTracked = false;

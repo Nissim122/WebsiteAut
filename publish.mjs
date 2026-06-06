@@ -93,6 +93,7 @@ function buildPostHtml(post, cat, heDate, postSlug, imageSlug, relatedPosts) {
     gtag('js', new Date());
     gtag('config', 'G-SJT8YRED9B');
   </script>
+  <script src="blog-tracking.js" defer></script>
 
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Clix Automations" />

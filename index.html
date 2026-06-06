@@ -2404,6 +2404,14 @@
         } catch (_) {}
       }
 
+      if (window.gtag) {
+        window.gtag('event', 'lead_submitted', {
+          form: payload.form || 'unknown',
+          has_email: !!(payload.email),
+          has_name:  !!(payload.name)
+        });
+      }
+
       const body = JSON.stringify({ ...payload, to_email: NOTIFY_EMAIL, source: 'Clix Automations Website' });
       const opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body };
       try {
