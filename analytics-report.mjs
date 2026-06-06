@@ -29,6 +29,14 @@ if (args[0] === '--week') {
   startDate   = fmt(d7);
   endDate     = 'today';
   reportLabel = `שבוע ${fmt(d7)} → ${fmt(now)}`;
+} else if (args[0] === '--days' && args[1]) {
+  const n   = parseInt(args[1]);
+  const now = new Date();
+  const dN  = new Date(now); dN.setDate(now.getDate() - (n - 1));
+  const fmt = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  startDate   = fmt(dN);
+  endDate     = 'today';
+  reportLabel = `${n}-ימים-${fmt(dN)}-${fmt(now)}`;
 } else if (args[0] === '--month' && args[1]) {
   const [year, month] = args[1].split('-');
   const lastDay = new Date(parseInt(year), parseInt(month), 0).getDate();
