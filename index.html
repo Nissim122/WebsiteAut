@@ -2886,7 +2886,8 @@
       opacity: 0;
       transform: translateY(32px) scale(0.95);
       transition: opacity 0.42s cubic-bezier(0.34,1.4,0.64,1), transform 0.42s cubic-bezier(0.34,1.4,0.64,1);
-      overflow: hidden;
+      overflow-y: auto;
+      max-height: 90vh;
     ">
 
       <!-- Ambient glow top -->
@@ -2934,7 +2935,7 @@
       ">שיחה אחת יכולה לחסוך לך<br><span style="color:#e0176b;">חודשים של עבודה מיותרת</span></h2>
 
       <!-- Sub -->
-      <p style="
+      <p id="offer-sub" style="
         font-size: 0.97rem;
         color: rgba(255,255,255,0.58);
         line-height: 1.65;
@@ -3065,7 +3066,7 @@
 
       <!-- Success state (hidden) -->
       <div id="offer-success" style="display:none; padding:1.5rem 0 0.75rem; position:relative; z-index:1; text-align:center; direction:rtl; font-family:'Heebo',sans-serif;">
-        <div style="margin-bottom:1.1rem;">
+        <div style="margin-bottom:1.1rem; display:flex; justify-content:center;">
           <svg width="64" height="64" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle class="so-check-circle" cx="26" cy="26" r="25"/>
             <path class="so-check-tick" d="M15 26l8 9 14-17"/>
@@ -3200,7 +3201,11 @@
         clearInterval(window._offerInterval);
         var offerForm = document.getElementById('offer-form');
         var offerSuccess = document.getElementById('offer-success');
+        var offerTitle = document.getElementById('offer-title');
+        var offerSub   = document.getElementById('offer-sub');
         if (offerForm) offerForm.style.display = 'none';
+        if (offerTitle) offerTitle.style.display = 'none';
+        if (offerSub)   offerSub.style.display   = 'none';
         if (offerSuccess) {
           offerSuccess.style.display = 'block';
           var animated = offerSuccess.querySelectorAll('.so-check-circle,.so-check-tick');
