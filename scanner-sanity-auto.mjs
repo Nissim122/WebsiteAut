@@ -271,6 +271,14 @@ async function testScreen4(page, F) {
   console.log('[sanity] Screen 4 (Results)');
   await goToScreen4(page);
 
+  // 4.2: 3 pain cards in results
+  const painCards = await page.$$eval('.s4-pain-card', c => c.length);
+  painCards === 3 ? pass(`4.2: ${painCards} s4-pain-cards`) : fail(F, `4.2: Expected 3 s4-pain-cards, got ${painCards}`);
+
+  // 4.5: 4 locked automations (.s4-locked-item)
+  const lockedCount = await page.$$eval('.s4-locked-item', c => c.length);
+  lockedCount === 4 ? pass(`4.5: ${lockedCount} locked automations found`) : fail(F, `4.5: Expected 4 .s4-locked-item, found ${lockedCount}`);
+
   // 4.6: CTA button present
   const cta = await page.$('#screen-4 button[onclick*="openLeadModal"]');
   cta ? pass('4.6: CTA button present') : fail(F, '4.6: CTA button not found');
@@ -321,6 +329,20 @@ async function testModal(page, F) {
   const chk2 = await page.$eval('#mf-privacy', el => el.checked);
   !chk2 ? pass('M.10: Privacy toggles off') : fail(F, 'M.10: Second click should uncheck privacy');
 
+  // M.8: Partial submit — fill name only, phone+email should error
+  // Wait for err classes from M.6 to auto-clear (they have 2s timeout in the scanner)
+  await sleep(2200);
+  await openModal(page);
+  await page.type('#mf-name', 'Only Name');
+  await page.click('#msub-btn'); await sleep(200);
+  const nameOk    = await page.$eval('#mf-name',  el => !el.classList.contains('err'));
+  const phoneErr8 = await page.$eval('#mf-phone', el => el.classList.contains('err'));
+  const emailErr8 = await page.$eval('#mf-email', el => el.classList.contains('err'));
+  nameOk    ? pass('M.8: name (filled) has no error')    : fail(F, 'M.8: name should not have err class when filled');
+  phoneErr8 ? pass('M.8: phone (empty) shows error')     : fail(F, 'M.8: #mf-phone should have .err when empty');
+  emailErr8 ? pass('M.8: email (empty) shows error')     : fail(F, 'M.8: #mf-email should have .err when empty');
+  await page.evaluate(() => { document.getElementById('mf-name').value = ''; });
+
   // M.4: Escape closes
   await page.keyboard.press('Escape'); await sleep(200);
   const closedEsc = await page.$eval('#lead-modal', m => m.style.display === 'none');
@@ -369,9 +391,36 @@ async function testScreen6(page, F) {
   const back = await page.$('#screen-6 button[onclick*="goTo(4)"]');
   back ? pass('6.3: Back to results button') : fail(F, '6.3: Back to results button not found');
 
-  // 6.4: Reset button
+  // 6.3: Back to results navigates to screen 4
+  const backBtn = await page.$('#screen-6 button[onclick*="goTo(4)"]');
+  if (backBtn) {
+    await page.click('#screen-6 button[onclick*="goTo(4)"]'); await sleep(300);
+    const onS4 = await page.$eval('#screen-4', el => el.classList.contains('active'));
+    onS4 ? pass('6.3: Back to results → screen-4 active') : fail(F, '6.3: Back to results did not navigate to screen-4');
+    // Navigate back to screen 6 directly (avoid re-submitting form)
+    await page.evaluate(() => goTo(6));
+    await page.waitForSelector('#screen-6.active', { timeout: 2000 });
+  } else {
+    fail(F, '6.3: Back to results button not found');
+  }
+
+  // 6.4: Reset button exists and resets to screen 1 with no tools/pain selected
   const reset = await page.$('#screen-6 button[onclick*="reset"], #screen-6 button[onclick*="Reset"]');
-  reset ? pass('6.4: Reset button') : fail(F, '6.4: Reset button not found in screen-6');
+  if (reset) {
+    pass('6.4: Reset button');
+    await page.click('#screen-6 button[onclick*="reset"], #screen-6 button[onclick*="Reset"]'); await sleep(300);
+    const onS1 = await page.$eval('#screen-1', el => el.classList.contains('active'));
+    onS1 ? pass('6.4r: Reset → screen-1 active') : fail(F, '6.4r: Reset did not return to screen-1');
+    const anySelected = await page.$$eval('.pain-card.sel', c => c.length);
+    anySelected === 0 ? pass('6.4r: No pain card selected after reset') : fail(F, `6.4r: ${anySelected} pain card(s) still selected after reset`);
+    const toolsState = await page.evaluate(() => {
+      const s = JSON.parse(localStorage.getItem('clix_scanner') || 'null');
+      return s;
+    });
+    (!toolsState || !toolsState.tools?.length) ? pass('6.4r: localStorage cleared/empty after reset') : fail(F, `6.4r: localStorage still has tools after reset: ${JSON.stringify(toolsState)}`);
+  } else {
+    fail(F, '6.4: Reset button not found in screen-6');
+  }
 }
 
 
@@ -441,16 +490,162 @@ async function testHappyPath(page, F) {
   }
 }
 
+async function testProgBar(page, F) {
+  console.log('[sanity] Progress Bar (updateProg)');
+
+  // 1.5: Screen 1 — ps0 active, ps1/ps2 inactive
+  await page.waitForSelector('#screen-1.active', { timeout: 3000 });
+  const s1 = await page.evaluate(() => ({
+    ps0: document.getElementById('ps0')?.className,
+    ps1: document.getElementById('ps1')?.className,
+    ps2: document.getElementById('ps2')?.className,
+    ac:  document.getElementById('ps0')?.getAttribute('aria-current'),
+  }));
+  s1.ps0?.includes('active') ? pass('1.5: ps0 active on screen 1') : fail(F, `1.5: ps0 should be active on screen 1, got "${s1.ps0}"`);
+  !s1.ps1?.includes('active') && !s1.ps1?.includes('done') ? pass('1.5: ps1 inactive') : fail(F, `1.5: ps1 should be inactive, got "${s1.ps1}"`);
+  s1.ac === 'step' ? pass('A.7: ps0 has aria-current="step" on screen 1') : fail(F, `A.7: ps0 aria-current="${s1.ac}" on screen 1`);
+
+  // 2.9: Screen 2 — ps0 done, ps1 active
+  await goToScreen2(page);
+  const s2 = await page.evaluate(() => ({
+    ps0: document.getElementById('ps0')?.className,
+    ps1: document.getElementById('ps1')?.className,
+    ps2: document.getElementById('ps2')?.className,
+    ac:  document.getElementById('ps1')?.getAttribute('aria-current'),
+  }));
+  s2.ps0?.includes('done') ? pass('2.9: ps0 done on screen 2') : fail(F, `2.9: ps0 should be done on screen 2, got "${s2.ps0}"`);
+  s2.ps1?.includes('active') ? pass('2.9: ps1 active on screen 2') : fail(F, `2.9: ps1 should be active on screen 2, got "${s2.ps1}"`);
+  !s2.ps2?.includes('active') && !s2.ps2?.includes('done') ? pass('2.9: ps2 inactive') : fail(F, `2.9: ps2 should be inactive, got "${s2.ps2}"`);
+  s2.ac === 'step' ? pass('A.7: ps1 has aria-current="step" on screen 2') : fail(F, `A.7: ps1 aria-current="${s2.ac}" on screen 2`);
+
+  // 3.3: Screen 3 — progress bar hidden (opacity 0)
+  const tools = await page.$$('.tool-card');
+  await tools[0].click(); await sleep(80);
+  await page.click('#tools-btn');
+  await page.waitForSelector('#screen-3.active', { timeout: 2000 });
+  const s3opacity = await page.$eval('#prog-bar', el => el.style.opacity);
+  s3opacity === '0' ? pass('3.3: Progress bar opacity=0 on screen 3') : fail(F, `3.3: prog-bar opacity should be 0 on screen 3, got "${s3opacity}"`);
+
+  // 4.8: Screen 4 — ps0 done, ps1 done, ps2 active
+  await page.waitForSelector('#screen-4.active', { timeout: 4500 });
+  const s4 = await page.evaluate(() => ({
+    ps0: document.getElementById('ps0')?.className,
+    ps1: document.getElementById('ps1')?.className,
+    ps2: document.getElementById('ps2')?.className,
+    ac:  document.getElementById('ps2')?.getAttribute('aria-current'),
+  }));
+  s4.ps0?.includes('done') ? pass('4.8: ps0 done on screen 4') : fail(F, `4.8: ps0 should be done on screen 4, got "${s4.ps0}"`);
+  s4.ps1?.includes('done') ? pass('4.8: ps1 done on screen 4') : fail(F, `4.8: ps1 should be done on screen 4, got "${s4.ps1}"`);
+  s4.ps2?.includes('active') ? pass('4.8: ps2 active on screen 4') : fail(F, `4.8: ps2 should be active on screen 4, got "${s4.ps2}"`);
+  s4.ac === 'step' ? pass('A.7: ps2 has aria-current="step" on screen 4') : fail(F, `A.7: ps2 aria-current="${s4.ac}" on screen 4`);
+}
+
+async function testStorage(page, F) {
+  console.log('[sanity] localStorage Persistence');
+
+  // After picking pain → localStorage saved with correct pain
+  await page.waitForSelector('#screen-1.active', { timeout: 3000 });
+  await page.click('.pain-card[data-pain="scheduling"]');
+  await page.waitForSelector('#screen-2.active', { timeout: 2000 });
+  const stored1 = await page.evaluate(() => JSON.parse(localStorage.getItem('clix_scanner') || 'null'));
+  stored1?.pain === 'scheduling' ? pass('Storage/1: pain saved to localStorage') : fail(F, `Storage/1: Expected pain="scheduling" in localStorage, got ${JSON.stringify(stored1)}`);
+  Array.isArray(stored1?.tools) ? pass('Storage/1: tools array present') : fail(F, 'Storage/1: tools array missing from localStorage');
+
+  // After selecting a tool + navigating → tools persisted (saveState runs on goTo, not on toggle)
+  const tools = await page.$$('.tool-card');
+  await tools[0].click(); await sleep(150);
+  // Navigate back to screen 1 to trigger saveState with cur='1'
+  await page.click('button[onclick="goTo(1)"]');
+  await page.waitForSelector('#screen-1.active', { timeout: 2000 });
+  const stored2 = await page.evaluate(() => JSON.parse(localStorage.getItem('clix_scanner') || 'null'));
+  stored2?.tools?.length >= 1 ? pass('Storage/2: tool persisted after navigation') : fail(F, `Storage/2: tool not persisted, got ${JSON.stringify(stored2?.tools)}`);
+  // re-enter screen 2 for next test
+  await page.click('.pain-card[data-pain="scheduling"]');
+  await page.waitForSelector('#screen-2.active', { timeout: 2000 });
+
+  // Screen 3 + 6 should NOT save (only 1, 2, 4 do)
+  await page.click('#tools-btn');
+  await page.waitForSelector('#screen-3.active', { timeout: 2000 });
+  await page.waitForSelector('#screen-4.active', { timeout: 4500 });
+  const stored4 = await page.evaluate(() => JSON.parse(localStorage.getItem('clix_scanner') || 'null'));
+  stored4?.screen === '4' ? pass('Storage/3: screen=4 saved on results') : fail(F, `Storage/3: Expected screen="4", got "${stored4?.screen}"`);
+}
+
+async function testBackState(page, F) {
+  console.log('[sanity] Back navigation preserves state');
+
+  // Navigate to screen 2
+  await goToScreen2(page);
+
+  // Select 2 tools
+  const tools = await page.$$('.tool-card');
+  if (tools.length < 2) { fail(F, 'backstate: Not enough tool cards'); return; }
+  await tools[0].click(); await tools[1].click(); await sleep(150);
+
+  // Go back to screen 1 → pain card still visually selected
+  await page.click('button[onclick="goTo(1)"]');
+  await page.waitForSelector('#screen-1.active', { timeout: 2000 });
+  const painStillSel = await page.$$eval('.pain-card.sel', c => c.length);
+  painStillSel >= 1 ? pass('2.7: Pain card still selected after back') : fail(F, '2.7: Pain card lost selection after back');
+
+  // Go forward to screen 2 → tools still selected
+  await page.click('.pain-card.sel'); // re-click same pain
+  await page.waitForSelector('#screen-2.active', { timeout: 2000 });
+  const toolsStillSel = await page.$$eval('.tool-card.sel', c => c.length);
+  toolsStillSel >= 2 ? pass(`2.8: ${toolsStillSel} tools still selected after back+forward`) : fail(F, `2.8: Expected ≥2 tools preserved, found ${toolsStillSel}`);
+}
+
+async function testAccessibility(page, F) {
+  console.log('[sanity] Accessibility attributes');
+
+  // A.2: pain-card role="button" + aria-pressed
+  const painRole = await page.$$eval('.pain-card', cards =>
+    cards.every(c => c.getAttribute('role') === 'button' && c.hasAttribute('aria-pressed'))
+  );
+  painRole ? pass('A.2: All pain-cards have role=button + aria-pressed') : fail(F, 'A.2: Some pain-cards missing role="button" or aria-pressed');
+
+  // A.3: tool-card role="button" + aria-pressed (need screen 2)
+  await goToScreen2(page);
+  const toolRole = await page.$$eval('.tool-card', cards =>
+    cards.every(c => c.getAttribute('role') === 'button' && c.hasAttribute('aria-pressed'))
+  );
+  toolRole ? pass('A.3: All tool-cards have role=button + aria-pressed') : fail(F, 'A.3: Some tool-cards missing role="button" or aria-pressed');
+
+  // Return to screen 1 before calling goToScreen4 (which expects screen-1.active as starting point)
+  await page.click('button[onclick="goTo(1)"]');
+  await page.waitForSelector('#screen-1.active', { timeout: 2000 });
+
+  // A.5: Modal has role=dialog + aria-modal + aria-labelledby
+  await goToScreen4(page);
+  await openModal(page);
+  const modalAttrs = await page.$eval('#lead-modal', el => ({
+    role:        el.getAttribute('role'),
+    ariaModal:   el.getAttribute('aria-modal'),
+    labelledBy:  el.getAttribute('aria-labelledby'),
+  }));
+  modalAttrs.role === 'dialog'  ? pass('A.5: modal role="dialog"') : fail(F, `A.5: modal role="${modalAttrs.role}" (expected "dialog")`);
+  modalAttrs.ariaModal === 'true' ? pass('A.5: modal aria-modal="true"') : fail(F, `A.5: modal aria-modal="${modalAttrs.ariaModal}"`);
+  modalAttrs.labelledBy ? pass('A.5: modal has aria-labelledby') : fail(F, 'A.5: modal missing aria-labelledby');
+
+  // A.6: Close button has aria-label
+  const closeLabel = await page.$eval('button[aria-label="סגור חלון"]', el => el.getAttribute('aria-label')).catch(() => null);
+  closeLabel ? pass('A.6: Close button has aria-label="סגור חלון"') : fail(F, 'A.6: Close button missing aria-label');
+}
+
 // ── Section dispatch ──────────────────────────────────────────────────────────
 
 const SUITE = {
-  screen1:  testScreen1,
-  screen2:  testScreen2,
-  toolhint: testToolHint,
-  screen3:  testScreen3,
-  screen4:  testScreen4,
-  modal:    testModal,
-  screen6:  testScreen6,
+  screen1:     testScreen1,
+  screen2:     testScreen2,
+  toolhint:    testToolHint,
+  screen3:     testScreen3,
+  screen4:     testScreen4,
+  modal:       testModal,
+  screen6:     testScreen6,
+  progbar:     testProgBar,
+  storage:     testStorage,
+  backstate:   testBackState,
+  accessibility: testAccessibility,
 };
 
 function parseArgs(args) {
@@ -463,7 +658,11 @@ function parseArgs(args) {
     if (s === 'screen4' || s.includes('result')  || s.includes('screen4') || s.includes('screen 4') || s.match(/\b4\./)) run.add('screen4');
     if (s === 'toolhint'|| s.includes('hint')    || s.includes('toolhint'))                                              run.add('toolhint');
     if (s === 'modal'   || s.includes('modal')   || s.includes('lead')    || s.match(/\bm\./i))                          run.add('modal');
-    if (s === 'screen6' || s.includes('success') || s.includes('screen6') || s.includes('screen 6') || s.match(/\b6\./)) run.add('screen6');
+    if (s === 'screen6'     || s.includes('success')     || s.includes('screen6')     || s.includes('screen 6')  || s.match(/\b6\./))    run.add('screen6');
+    if (s === 'progbar'     || s.includes('prog')        || s.includes('progress')    || s.includes('bar'))                                  run.add('progbar');
+    if (s === 'storage'     || s.includes('storage')     || s.includes('localstorage')|| s.includes('persist'))                              run.add('storage');
+    if (s === 'backstate'   || s.includes('back')        || s.includes('state')       || s.includes('preserve'))                             run.add('backstate');
+    if (s === 'accessibility'|| s.includes('access')     || s.includes('aria')        || s.includes('a11y'))                                 run.add('accessibility');
   }
   return [...run];
 }
