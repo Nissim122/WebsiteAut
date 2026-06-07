@@ -585,24 +585,85 @@ async function testWebhooks(_page, F) {
     }
   }
 
-  // WH.5: POST with missing body → still 200/502, NOT 500 "Not configured" (env var is set)
-  try {
-    const res = await fetch(`${PROD}/api/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: '{}',
-      signal: AbortSignal.timeout(10000),
-    });
-    if (res.status === 200 || res.status === 502) {
-      pass(`WH.5: /api/contact POST → ${res.status} (env var set, upstream reachable)`);
-    } else if (res.status === 500) {
-      const body = await res.text().catch(() => '');
-      fail(F, `WH.5: /api/contact POST → 500 — env var likely missing: ${body.slice(0, 120)}`);
-    } else {
-      fail(F, `WH.5: /api/contact POST → unexpected ${res.status}`);
+  // WH.5–8: POST with empty body → 200 or 502, NOT 500 "Not configured" (env var must be set)
+  const postChecks = [
+    { id: 'WH.5', path: '/api/contact' },
+    { id: 'WH.6', path: '/api/chat' },
+    { id: 'WH.7', path: '/api/chat-notify' },
+    { id: 'WH.8', path: '/api/scanner' },
+  ];
+  for (const ep of postChecks) {
+    try {
+      const res = await fetch(`${PROD}${ep.path}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: '{}',
+        signal: AbortSignal.timeout(10000),
+      });
+      if (res.status === 200 || res.status === 502) {
+        pass(`${ep.id}: ${ep.path} POST → ${res.status} (env var set, proxy active)`);
+      } else if (res.status === 500) {
+        const body = await res.text().catch(() => '');
+        if (body.includes('Not configured')) {
+          fail(F, `${ep.id}: ${ep.path} POST → 500 "Not configured" — env var missing in Vercel`);
+        } else {
+          fail(F, `${ep.id}: ${ep.path} POST → 500 unexpected: ${body.slice(0, 120)}`);
+        }
+      } else {
+        fail(F, `${ep.id}: ${ep.path} POST → unexpected ${res.status}`);
+      }
+    } catch (err) {
+      fail(F, `${ep.id}: ${ep.path} POST → network error: ${err.message}`);
     }
-  } catch (err) {
-    fail(F, `WH.5: /api/contact POST → network error: ${err.message}`);
+  }
+}
+
+// SECRETS: verify sensitive credential files are gitignored and not tracked
+async function testSecrets(_page, F) {
+  console.log('[sanity] Secrets / credential files');
+
+  const { readFileSync, existsSync } = await import('fs');
+  const { resolve } = await import('path');
+  const { execSync } = await import('child_process');
+
+  const CRED_FILES = [
+    { id: 'SC.1', file: 'ga-credentials.json',  desc: 'GA4 service-account key' },
+    { id: 'SC.2', file: 'oauth-client.json',     desc: 'OAuth client credentials' },
+    { id: 'SC.3', file: 'ga-token.json',         desc: 'GA4 OAuth token' },
+  ];
+
+  // Read .gitignore once
+  const gitignorePath = resolve(__dirname, '.gitignore');
+  const gitignore = existsSync(gitignorePath)
+    ? readFileSync(gitignorePath, 'utf8').split('\n').map(l => l.trim())
+    : [];
+
+  // Get list of files tracked in git
+  let trackedFiles = '';
+  try {
+    trackedFiles = execSync('git ls-files', { cwd: __dirname, encoding: 'utf8' });
+  } catch {
+    fail(F, 'SC.0: Could not run git ls-files');
+  }
+
+  for (const { id, file, desc } of CRED_FILES) {
+    // Check 1: exists locally (should be present for analytics to work)
+    const exists = existsSync(resolve(__dirname, file));
+    exists
+      ? pass(`${id}: ${file} (${desc}) exists locally`)
+      : fail(F, `${id}: ${file} (${desc}) missing locally — analytics may break`);
+
+    // Check 2: listed in .gitignore
+    const ignored = gitignore.some(line => line === file || line === `/${file}`);
+    ignored
+      ? pass(`${id}: ${file} is listed in .gitignore`)
+      : fail(F, `${id}: ${file} NOT in .gitignore — risk of accidental commit`);
+
+    // Check 3: NOT tracked in git
+    const tracked = trackedFiles.split('\n').some(l => l.trim() === file);
+    !tracked
+      ? pass(`${id}: ${file} is not tracked in git`)
+      : fail(F, `${id}: ${file} IS tracked in git — credentials exposed in repo!`);
   }
 }
 
@@ -620,6 +681,7 @@ const SUITE = {
   offer:        testOffer,
   chat:         testChat,
   webhooks:     testWebhooks,
+  secrets:      testSecrets,
 };
 
 // ── CLI argument parsing ──────────────────────────────────────────────────────
@@ -642,6 +704,7 @@ function parseArgs(argv) {
     if (k.includes('offer') || k.includes('popup')) run.add('offer');
     if (k.includes('chat'))    run.add('chat');
     if (k.includes('webhook') || k.includes('api') || k.includes('proxy')) run.add('webhooks');
+    if (k.includes('secret') || k.includes('cred') || k.includes('token') || k.includes('ga-')) run.add('secrets');
   }
   if (run.size === 0) Object.keys(SUITE).forEach(x => run.add(x));
   return run;
