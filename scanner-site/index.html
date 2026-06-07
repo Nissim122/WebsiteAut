@@ -845,6 +845,26 @@
       #screen-2 .btn-row {
         padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
       }
+      /* Fix: shrink tool icon containers so the 4-column grid doesn't overflow at 375px.
+         70px outer div + 12px card padding = 82px > ~77px column width → gutter overflow in RTL. */
+      .tool-card > div > span > div:first-child {
+        width: 56px !important;
+        height: 56px !important;
+      }
+      .tool-card > div > span > div:first-child > div {
+        width: 44px !important;
+        height: 44px !important;
+      }
+      .tool-card span img {
+        width: 36px !important;
+        height: 36px !important;
+      }
+    }
+    @media (max-width: 374px) {
+      .tool-card span img {
+        width: 31px !important;
+        height: 31px !important;
+      }
     }
 
     /* ── Site-wide nav ── */
