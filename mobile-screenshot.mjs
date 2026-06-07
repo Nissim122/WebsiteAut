@@ -1,0 +1,41 @@
+import puppeteer from 'puppeteer';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const url = process.argv[2] || 'http://localhost:3000/scanner.html';
+const label = process.argv[3] ? `-${process.argv[3]}` : '-mobile';
+
+const screenshotDir = path.join(__dirname, 'temporary screenshots');
+if (!fs.existsSync(screenshotDir)) fs.mkdirSync(screenshotDir, { recursive: true });
+
+let n = 1;
+while (fs.existsSync(path.join(screenshotDir, `screenshot-${n}${label}.png`))) n++;
+const outPath = path.join(screenshotDir, `screenshot-${n}${label}.png`);
+
+const browser = await puppeteer.launch({
+  headless: true,
+  executablePath: 'C:/Users/nisim/.cache/puppeteer/chrome/win64-146.0.7680.153/chrome-win64/chrome.exe',
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+  timeout: 60000,
+});
+
+const page = await browser.newPage();
+// iPhone 12 — 390px wide (physical 1170, scale 3). Use 375 for iPhone 12 mini / older.
+await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+await new Promise(r => setTimeout(r, 800));
+await page.screenshot({ path: outPath, fullPage: true });
+
+// Check scroll width vs viewport width
+const scrollInfo = await page.evaluate(() => ({
+  bodyScrollWidth: document.body.scrollWidth,
+  htmlScrollWidth: document.documentElement.scrollWidth,
+  viewportWidth: window.innerWidth,
+}));
+console.log('Scroll info:', scrollInfo);
+
+await browser.close();
+console.log(`Screenshot saved: ${outPath}`);

@@ -18,7 +18,10 @@ const oauth2Client = new google.auth.OAuth2(client_id, client_secret, 'http://lo
 
 const authUrl = oauth2Client.generateAuthUrl({
   access_type: 'offline',
-  scope: ['https://www.googleapis.com/auth/analytics.readonly'],
+  scope: [
+    'https://www.googleapis.com/auth/analytics.readonly',
+    'https://www.googleapis.com/auth/analytics.edit',
+  ],
   prompt: 'consent',
 });
 
