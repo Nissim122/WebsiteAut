@@ -7,6 +7,15 @@
   <title>Clix Automations | פתרונות אוטומציה לעסקים</title>
   <script src="favicon.js"></script>
 
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-SJT8YRED9B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-SJT8YRED9B');
+  </script>
+
   <!-- SEO Core -->
   <meta name="description" content="קליקס אוטומציות — מומחים לאוטומציה עסקית בישראל. בונים אוטומציות ב-Make.com, WhatsApp ו-CRM לעסקים קטנים ובינוניים. ייעוץ ראשון ללא עלות." />
   <meta name="keywords" content="קליקס, קליקס אוטומציות, Clix Automations, אוטומציות עסקיות, אוטומציה עסקית, מה זה אוטומציה עסקית, אוטומציות ב-Make, Make.com ישראל, חיבור מערכות, Monday CRM, אוטומציית WhatsApp, אוטומציה לעסקים קטנים, ייעוץ אוטומציה, עסקית, שלכם, העסק, לעסק, תהליכי, בעסק, אישית, מערכות, עסקים, לקוחות, עבודה, שעות, אוטומטי, תהליכים, ניהול, איך, תהליך, מערכת, לכל, האוטומציה" />
@@ -4405,6 +4414,68 @@
 
     // Fallback: activate after 2 s even if some images never fire
     setTimeout(function () { if (pending > 0) { pending = 0; activate(); } }, 2000);
+  })();
+  </script>
+
+  <script>
+  /* ── GA4 custom event tracking ── */
+  (function () {
+    function track(name, params) {
+      if (typeof gtag === 'function') gtag('event', name, params);
+    }
+
+    // section_view — fires once per section as user scrolls into view
+    var sectionIds = ['hero', 'process', 'results', 'blog-preview', 'faq', 'contact'];
+    var sectionObs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          track('section_view', { section_id: e.target.id });
+          sectionObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    sectionIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) sectionObs.observe(el);
+    });
+
+    // scroll_depth at 25 / 50 / 75 / 90 %
+    var fired = {};
+    var depths = [25, 50, 75, 90];
+    function checkDepth() {
+      var total = document.documentElement.scrollHeight - window.innerHeight;
+      if (total <= 0) return;
+      var pct = Math.round((window.scrollY / total) * 100);
+      for (var i = 0; i < depths.length; i++) {
+        var d = depths[i];
+        if (pct >= d && !fired[d]) {
+          fired[d] = true;
+          track('scroll_depth', { percent_scrolled: d });
+        }
+      }
+    }
+    window.addEventListener('scroll', checkDepth, { passive: true });
+
+    // whatsapp_click
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        track('whatsapp_click', { source: 'main_site' });
+      });
+    });
+
+    // cta_click — all .btn-cta links (excluding form submit buttons)
+    document.querySelectorAll('a.btn-cta').forEach(function (el) {
+      el.addEventListener('click', function () {
+        track('cta_click', { destination: el.getAttribute('href') || '' });
+      });
+    });
+
+    // scanner_click — links to scanner
+    document.querySelectorAll('a[href*="scanner"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        track('scanner_click', { source: 'main_site' });
+      });
+    });
   })();
   </script>
 
