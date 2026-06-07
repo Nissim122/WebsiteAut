@@ -10,7 +10,18 @@ import { fileURLToPath } from 'url';
 
 const __dirname  = dirname(fileURLToPath(import.meta.url));
 const PROPERTY_ID = '532994689';
-const WEBHOOK     = 'https://hook.eu2.make.com/fjzgk1sor8kx6hqfghk1sji0b36wlh7b';
+
+// Load .env if present (dev environment — production uses actual env vars)
+const envFile = resolve(__dirname, '.env');
+if (existsSync(envFile)) {
+  for (const line of readFileSync(envFile, 'utf8').split('\n')) {
+    const [k, ...v] = line.trim().split('=');
+    if (k && v.length && !process.env[k]) process.env[k] = v.join('=');
+  }
+}
+
+const WEBHOOK = process.env.MAKE_MONTHLY_WEBHOOK;
+if (!WEBHOOK) { console.error('❌ MAKE_MONTHLY_WEBHOOK לא מוגדר ב-.env'); process.exit(1); }
 const SENT_FILE   = resolve(__dirname, '.last-report-sent');
 
 const { client_id, client_secret } = JSON.parse(readFileSync(resolve(__dirname, 'oauth-client.json'))).installed;
