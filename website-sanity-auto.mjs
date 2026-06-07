@@ -530,6 +530,30 @@ async function testChat(page, F) {
 async function testWebhooks(_page, F) {
   console.log('[sanity] Webhook proxy endpoints (production)');
 
+  // WH.0: .env exists and MAKE_MONTHLY_WEBHOOK is set (server-side script config)
+  try {
+    const { readFileSync, existsSync } = await import('fs');
+    const { resolve } = await import('path');
+    const envPath = resolve(__dirname, '.env');
+    existsSync(envPath)
+      ? pass('WH.0: .env file exists (not tracked in git)')
+      : fail(F, 'WH.0: .env missing — MAKE_MONTHLY_WEBHOOK not configured');
+
+    if (existsSync(envPath)) {
+      const vars = {};
+      for (const line of readFileSync(envPath, 'utf8').split('\n')) {
+        const [k, ...v] = line.trim().split('=');
+        if (k && v.length) vars[k] = v.join('=');
+      }
+      const w = vars['MAKE_MONTHLY_WEBHOOK'];
+      w && w.startsWith('https://hook.')
+        ? pass('WH.0: MAKE_MONTHLY_WEBHOOK set and looks valid')
+        : fail(F, 'WH.0: MAKE_MONTHLY_WEBHOOK missing or invalid in .env');
+    }
+  } catch (err) {
+    fail(F, `WH.0: .env check error — ${err.message}`);
+  }
+
   const PROD = 'https://clix-automations.com';
   const endpoints = [
     { id: 'WH.1', name: 'contact',     path: '/api/contact' },
