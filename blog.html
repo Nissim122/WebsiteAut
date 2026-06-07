@@ -1193,12 +1193,13 @@
     msg.style.display = 'block';
 
     try {
-      await fetch('https://hook.eu2.make.com/8riy934ep42udscjswvnht60c98fvxgx', {
+      await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify([{
           form: 'WEB_BLOG',
           email: email,
+          website: '',
           newsletter: true,
           source: 'Clix Automations Website'
         }])

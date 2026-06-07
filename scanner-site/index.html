@@ -1515,7 +1515,7 @@
       await fetch('/api/scanner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, website: '' }),
       });
     } catch (_) {}
     trackEvent('scanner_lead_submitted', { score: S.ctx?.score, flow: S.selectedFlow });
@@ -2467,7 +2467,7 @@
       await fetch('/api/scanner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({ ...payload, website: '' }),
       });
     } catch (_) { /* proceed regardless */ }
 

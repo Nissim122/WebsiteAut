@@ -2421,7 +2421,7 @@
         });
       }
 
-      const body = JSON.stringify({ ...payload, to_email: NOTIFY_EMAIL, source: 'Clix Automations Website' });
+      const body = JSON.stringify({ ...payload, website: '', to_email: NOTIFY_EMAIL, source: 'Clix Automations Website' });
       const opts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body };
       try {
         await fetch(WEBHOOK, opts).catch(err => console.error('Webhook error:', err));

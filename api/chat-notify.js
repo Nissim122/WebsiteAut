@@ -1,5 +1,9 @@
+import { checkOrigin, checkRateLimit } from './_lib/guard.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
+  if (!checkOrigin(req)) return res.status(403).end();
+  if (!checkRateLimit(req, 20)) return res.status(429).end();
 
   const webhook = process.env.MAKE_CHAT_NOTIFY_WEBHOOK;
   if (!webhook) return res.status(500).json({ error: 'Not configured' });
