@@ -2388,7 +2388,7 @@
     })();
 
     /* ── Shared submission logic ── */
-    const WEBHOOK  = 'https://hook.eu2.make.com/lciwv5l6jcxq81413xwxw2fqqh6yux8p';
+    const WEBHOOK  = '/api/contact';
     const NOTIFY_EMAIL = 'nisimelec77@gmail.com';
 
     async function sendData(payload) {
@@ -3640,8 +3640,8 @@
 
   <script>
     (function () {
-      var CHAT_WEBHOOK  = 'https://hook.eu2.make.com/wdp5b419qpeeiiyytrn2v896y5jv1cvd';
-      var CHAT_WEBHOOK2 = 'https://hook.eu2.make.com/my3tajrqh7iqrt20hrpda8np3bfybw9b';
+      var CHAT_WEBHOOK  = '/api/chat';
+      var CHAT_WEBHOOK2 = '/api/chat-notify';
       var chatOpen = false;
       var sessionId = 'chat_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
 

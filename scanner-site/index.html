@@ -1512,7 +1512,7 @@
       customer_email_html: buildCustomerEmailHtml(name, S.tools, S.intent, S.pain),
     };
     try {
-      await fetch('https://hook.eu2.make.com/91jl6hyz635jlh8v9lopkm02f9wr5m9i', {
+      await fetch('/api/scanner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -2464,7 +2464,7 @@
     };
 
     try {
-      await fetch('https://hook.eu2.make.com/91jl6hyz635jlh8v9lopkm02f9wr5m9i', {
+      await fetch('/api/scanner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
