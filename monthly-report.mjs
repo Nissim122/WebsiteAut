@@ -4,14 +4,15 @@
  * node monthly-report.mjs 2026-05    ← חודש ספציפי
  */
 import { google } from 'googleapis';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname  = dirname(fileURLToPath(import.meta.url));
-const PROPERTY_ID = '532994689';
-const WEBHOOK     = 'https://hook.eu2.make.com/fjzgk1sor8kx6hqfghk1sji0b36wlh7b';
+const PROPERTY_ID  = '532994689';
+const WEBHOOK      = 'https://hook.eu2.make.com/fjzgk1sor8kx6hqfghk1sji0b36wlh7b';
 const EXCLUDE_CITY = 'Hadera';
+const SENT_FILE    = resolve(__dirname, '.last-report-sent');
 
 const { client_id, client_secret } = JSON.parse(readFileSync(resolve(__dirname, 'oauth-client.json'))).installed;
 const tokens = JSON.parse(readFileSync(resolve(__dirname, 'ga-token.json')));
@@ -44,6 +45,19 @@ const prev = getMonthRange(prevStr);
 const MONTHS_HE = ['','ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
 const [cy, cm] = targetStr.split('-').map(Number);
 const monthLabel = `${MONTHS_HE[cm]} ${cy}`;
+
+// ── Guard: מניעת כפל שליחה ──
+// כשמריצים ידנית עם ארגומנט (חודש ספציפי) — תמיד שולח
+const forceMode = !!arg;
+if (!forceMode) {
+  if (existsSync(SENT_FILE)) {
+    const lastSent = readFileSync(SENT_FILE, 'utf8').trim();
+    if (lastSent === targetStr) {
+      console.log(`\n⏭  דוח ${targetStr} כבר נשלח (${SENT_FILE}). מדלג.`);
+      process.exit(0);
+    }
+  }
+}
 
 console.log(`\n📊 דוח חודשי: ${monthLabel} (${curr.start} → ${curr.end})`);
 
@@ -255,8 +269,12 @@ async function main() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   });
-  if (res.ok) console.log('✅ נשלח בהצלחה!\n');
-  else console.error('❌ שגיאה בשליחה:', res.status, await res.text());
+  if (res.ok) {
+    console.log('✅ נשלח בהצלחה!\n');
+    writeFileSync(SENT_FILE, targetStr, 'utf8');
+  } else {
+    console.error('❌ שגיאה בשליחה:', res.status, await res.text());
+  }
 }
 
 main().catch(err => {
