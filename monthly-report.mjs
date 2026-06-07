@@ -9,10 +9,9 @@ import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname  = dirname(fileURLToPath(import.meta.url));
-const PROPERTY_ID  = '532994689';
-const WEBHOOK      = 'https://hook.eu2.make.com/fjzgk1sor8kx6hqfghk1sji0b36wlh7b';
-const EXCLUDE_CITY = 'Hadera';
-const SENT_FILE    = resolve(__dirname, '.last-report-sent');
+const PROPERTY_ID = '532994689';
+const WEBHOOK     = 'https://hook.eu2.make.com/fjzgk1sor8kx6hqfghk1sji0b36wlh7b';
+const SENT_FILE   = resolve(__dirname, '.last-report-sent');
 
 const { client_id, client_secret } = JSON.parse(readFileSync(resolve(__dirname, 'oauth-client.json'))).installed;
 const tokens = JSON.parse(readFileSync(resolve(__dirname, 'ga-token.json')));
@@ -75,14 +74,6 @@ async function runReport(dateRange, dimensions, metrics, dimensionFilter) {
   return data.rows || [];
 }
 
-function cityFilter(exclude) {
-  return {
-    notExpression: {
-      filter: { fieldName: 'city', stringFilter: { value: exclude, matchType: 'EXACT' } }
-    }
-  };
-}
-
 function eventFilter(name) {
   return { filter: { fieldName: 'eventName', stringFilter: { value: name, matchType: 'EXACT' } } };
 }
@@ -121,7 +112,6 @@ async function fetchBasicMetrics(dateRange) {
         { name: 'totalUsers' },
         { name: 'newUsers' },
       ],
-      dimensionFilter: cityFilter(EXCLUDE_CITY),
     }
   });
   const row = data.rows?.[0];
@@ -141,7 +131,6 @@ async function fetchEvents(dateRange) {
       dateRanges: [dateRange],
       dimensions: [{ name: 'eventName' }],
       metrics: [{ name: 'eventCount' }],
-      dimensionFilter: cityFilter(EXCLUDE_CITY),
       limit: 50,
     }
   });
@@ -157,10 +146,9 @@ async function fetchBlogPages(dateRange) {
       dateRanges: [dateRange],
       dimensions: [{ name: 'pagePath' }, { name: 'pageTitle' }],
       metrics: [{ name: 'screenPageViews' }],
-      dimensionFilter: andFilter(
-        cityFilter(EXCLUDE_CITY),
-        { filter: { fieldName: 'pagePath', stringFilter: { value: '/posts/', matchType: 'BEGINS_WITH' } } }
-      ),
+      dimensionFilter: {
+        filter: { fieldName: 'pagePath', stringFilter: { value: '/posts/', matchType: 'BEGINS_WITH' } },
+      },
       limit: 10,
     }
   });
@@ -176,7 +164,6 @@ async function fetchSources(dateRange) {
       dateRanges: [dateRange],
       dimensions: [{ name: 'sessionDefaultChannelGroup' }],
       metrics: [{ name: 'sessions' }],
-      dimensionFilter: cityFilter(EXCLUDE_CITY),
       limit: 10,
     }
   });

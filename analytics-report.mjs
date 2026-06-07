@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROPERTY_ID = '532994689';
-const EXCLUDE_CITY = 'Hadera';
 
 const clientFile = resolve(__dirname, 'oauth-client.json');
 const tokenFile  = resolve(__dirname, 'ga-token.json');
@@ -67,15 +66,6 @@ if (args[0] === '--week') {
 const fmtTime    = s => s < 60 ? `${s}ש'` : `${Math.floor(s / 60)}ד' ${s % 60}ש'`;
 const deviceIcon = d => ({ desktop: '🖥️', mobile: '📱', tablet: '📟' }[d] || d);
 
-const excludeHaderaFilter = {
-  notExpression: {
-    filter: {
-      fieldName: 'city',
-      stringFilter: { matchType: 'EXACT', value: EXCLUDE_CITY },
-    },
-  },
-};
-
 // ── שאילתה 1: כלל האתר ───────────────────────────────────────────────────────
 async function getSiteWideReport() {
   const [overviewRes, locationRes] = await Promise.all([
@@ -91,7 +81,6 @@ async function getSiteWideReport() {
           { name: 'newUsers' },
           { name: 'sessions' },
         ],
-        dimensionFilter: excludeHaderaFilter,
         dateRanges: [{ startDate, endDate }],
       },
     }),
@@ -100,7 +89,6 @@ async function getSiteWideReport() {
       requestBody: {
         dimensions: [{ name: 'city' }, { name: 'country' }],
         metrics: [{ name: 'screenPageViews' }],
-        dimensionFilter: excludeHaderaFilter,
         dateRanges: [{ startDate, endDate }],
         orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
         limit: 20,
@@ -168,7 +156,6 @@ async function getTrafficSources() {
         { name: 'screenPageViews' },
         { name: 'engagementRate' },
       ],
-      dimensionFilter: excludeHaderaFilter,
       dateRanges: [{ startDate, endDate }],
       orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
     },
@@ -218,16 +205,9 @@ async function getArticlesReport() {
         { name: 'newUsers' },
       ],
       dimensionFilter: {
-        andGroup: {
-          expressions: [
-            {
-              filter: {
-                fieldName: 'pagePath',
-                stringFilter: { matchType: 'CONTAINS', value: '/posts/' },
-              },
-            },
-            excludeHaderaFilter,
-          ],
+        filter: {
+          fieldName: 'pagePath',
+          stringFilter: { matchType: 'CONTAINS', value: '/posts/' },
         },
       },
       dateRanges: [{ startDate, endDate }],
@@ -301,12 +281,7 @@ async function getScannerReport() {
           { name: 'sessions' },
         ],
         dimensionFilter: {
-          andGroup: {
-            expressions: [
-              { filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: 'scanner' } } },
-              excludeHaderaFilter,
-            ],
-          },
+          filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: 'scanner' } },
         },
         dateRanges: [{ startDate, endDate }],
       },
@@ -317,12 +292,7 @@ async function getScannerReport() {
         dimensions: [{ name: 'eventName' }],
         metrics: [{ name: 'eventCount' }],
         dimensionFilter: {
-          andGroup: {
-            expressions: [
-              { filter: { fieldName: 'eventName', stringFilter: { matchType: 'BEGINS_WITH', value: 'scanner_' } } },
-              excludeHaderaFilter,
-            ],
-          },
+          filter: { fieldName: 'eventName', stringFilter: { matchType: 'BEGINS_WITH', value: 'scanner_' } },
         },
         dateRanges: [{ startDate, endDate }],
       },
@@ -369,7 +339,7 @@ function buildReport(site, sources, articles, scanner) {
   const lines = [];
   const today = new Date().toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-  lines.push(`📊 דוח ביקורים — ${today}  (ללא ביקורים מ-${EXCLUDE_CITY})`);
+  lines.push(`📊 דוח ביקורים — ${today}`);
   lines.push('='.repeat(72));
 
   // ── כלל האתר ──
