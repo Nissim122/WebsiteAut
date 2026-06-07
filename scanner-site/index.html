@@ -2546,6 +2546,7 @@
             </table>`;
     }).join('');
 
+    const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     const firstName = name ? name.split(' ')[0] : '';
     return `<!DOCTYPE html>
 <html dir="rtl" lang="he">
@@ -2572,6 +2573,7 @@
             <div style="margin-bottom:18px;">
               <span style="font-family:Inter,Arial,sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.04em;color:#ffffff !important;">Clix</span><span style="font-family:Inter,Arial,sans-serif;font-size:17px;font-weight:400;letter-spacing:-0.02em;color:#e0176b !important;">Automations</span>
             </div>
+            ${firstName ? `<div style="font-size:13px;color:#2db3cd !important;font-weight:600;letter-spacing:0.05em;margin-bottom:14px;">שלום ${esc(firstName)},</div>` : ''}
             <div style="font-size:26px;font-weight:700;color:#ffffff !important;margin-bottom:8px;">${topFlows.length} האוטומציות המובילות לעסק שלך</div>
             <div style="font-size:14px;color:#b4bcc8 !important;line-height:1.6;">ניתחנו את הכלים שלך ובחרנו<br>את האוטומציות עם הפוטנציאל הגדול ביותר — לפי סדר עדיפות</div>
           </td>
