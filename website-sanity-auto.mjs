@@ -61,7 +61,8 @@ async function openPage(browser, { mobile = false, suppressOffer = true } = {}) 
   await page.setRequestInterception(true);
   page.on('request', req => {
     const u = req.url();
-    if (u.includes('make.com') || u.includes('google-analytics') || u.includes('googletagmanager') || u.includes('fingerprint')) {
+    // Mock all external services AND local /api/* proxy routes (Vercel Functions not available on local static server)
+    if (u.includes('make.com') || u.includes('google-analytics') || u.includes('googletagmanager') || u.includes('fingerprint') || u.match(/\/api\/(contact|chat|chat-notify|scanner)/)) {
       req.respond({ status: 200, contentType: 'application/json', body: '{}' });
     } else {
       req.continue().catch(() => {});
@@ -524,6 +525,63 @@ async function testChat(page, F) {
       : fail(F, `CH.6: isBlocked() returned ${blocked} with count=100`);
 }
 
+// WEBHOOKS: verify Vercel API proxy endpoints are live and correctly deployed
+// Uses GET probe → expects 405 (function exists, rejects non-POST) — never fires Make.com
+async function testWebhooks(_page, F) {
+  console.log('[sanity] Webhook proxy endpoints (production)');
+
+  const PROD = 'https://clix-automations.com';
+  const endpoints = [
+    { id: 'WH.1', name: 'contact',     path: '/api/contact' },
+    { id: 'WH.2', name: 'chat',        path: '/api/chat' },
+    { id: 'WH.3', name: 'chat-notify', path: '/api/chat-notify' },
+    { id: 'WH.4', name: 'scanner',     path: '/api/scanner' },
+  ];
+
+  for (const ep of endpoints) {
+    try {
+      const res = await fetch(`${PROD}${ep.path}`, { method: 'GET', signal: AbortSignal.timeout(8000) });
+      if (res.status === 405) {
+        pass(`${ep.id}: /api/${ep.name} → 405 (deployed, rejects GET correctly)`);
+      } else if (res.status === 404) {
+        fail(F, `${ep.id}: /api/${ep.name} → 404 — function not deployed`);
+      } else if (res.status === 500) {
+        // 500 with our "Not configured" body means the function IS deployed but env var missing
+        const body = await res.text().catch(() => '');
+        if (body.includes('Not configured')) {
+          fail(F, `${ep.id}: /api/${ep.name} → 500 "Not configured" — env var MAKE_${ep.name.replace(/-/g, '_').toUpperCase()}_WEBHOOK missing in Vercel`);
+        } else {
+          fail(F, `${ep.id}: /api/${ep.name} → 500 — unexpected server error: ${body.slice(0, 120)}`);
+        }
+      } else {
+        fail(F, `${ep.id}: /api/${ep.name} → unexpected status ${res.status}`);
+      }
+    } catch (err) {
+      fail(F, `${ep.id}: /api/${ep.name} → network error: ${err.message}`);
+    }
+  }
+
+  // WH.5: POST with missing body → still 200/502, NOT 500 "Not configured" (env var is set)
+  try {
+    const res = await fetch(`${PROD}/api/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: '{}',
+      signal: AbortSignal.timeout(10000),
+    });
+    if (res.status === 200 || res.status === 502) {
+      pass(`WH.5: /api/contact POST → ${res.status} (env var set, upstream reachable)`);
+    } else if (res.status === 500) {
+      const body = await res.text().catch(() => '');
+      fail(F, `WH.5: /api/contact POST → 500 — env var likely missing: ${body.slice(0, 120)}`);
+    } else {
+      fail(F, `WH.5: /api/contact POST → unexpected ${res.status}`);
+    }
+  } catch (err) {
+    fail(F, `WH.5: /api/contact POST → network error: ${err.message}`);
+  }
+}
+
 // ── Suite registry ────────────────────────────────────────────────────────────
 
 const SUITE = {
@@ -537,6 +595,7 @@ const SUITE = {
   banner:       testBanner,
   offer:        testOffer,
   chat:         testChat,
+  webhooks:     testWebhooks,
 };
 
 // ── CLI argument parsing ──────────────────────────────────────────────────────
@@ -557,7 +616,8 @@ function parseArgs(argv) {
     if (k.includes('contact')) run.add('contact');
     if (k.includes('banner') || k.includes('cta')) run.add('banner');
     if (k.includes('offer') || k.includes('popup')) run.add('offer');
-    if (k.includes('chat'))  run.add('chat');
+    if (k.includes('chat'))    run.add('chat');
+    if (k.includes('webhook') || k.includes('api') || k.includes('proxy')) run.add('webhooks');
   }
   if (run.size === 0) Object.keys(SUITE).forEach(x => run.add(x));
   return run;

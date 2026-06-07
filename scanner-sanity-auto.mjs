@@ -52,7 +52,9 @@ async function openPage(browser) {
   });
   await page.setRequestInterception(true);
   page.on('request', req => {
-    if (req.url().includes('make.com') || req.url().includes('google-analytics') || req.url().includes('googletagmanager')) {
+    const u = req.url();
+    // Mock external services AND /api/scanner (Vercel Function — not available on local static server)
+    if (u.includes('make.com') || u.includes('google-analytics') || u.includes('googletagmanager') || u.includes('/api/scanner')) {
       req.respond({ status: 200, contentType: 'text/plain', body: 'ok' });
     } else {
       req.continue().catch(() => {});
