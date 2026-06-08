@@ -2163,7 +2163,7 @@
       var c2x = bx - dir * h, c2y = by;
       var oppX = fromLeft ? b.cx + R : b.cx - R;
       var s1 = fromLeft ? 0 : 1;
-      var s2 = fromLeft ? 1 : 0;
+      var s2 = s1;
       segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by +
                 ' A ' + R + ' ' + R + ' 0 0 ' + s1 + ' ' + oppX + ' ' + b.cy +
                 ' A ' + R + ' ' + R + ' 0 0 ' + s2 + ' ' + bx + ' ' + b.cy);
