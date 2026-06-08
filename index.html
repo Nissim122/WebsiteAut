@@ -658,11 +658,11 @@
       .bubble-tag { display: none !important; }
       /* Hero section height */
       .hero-section { min-height: auto !important; padding-top: 2.25rem !important; padding-bottom: 3rem !important; }
-      /* Hero buttons — keep both on one row, centered */
-      .hero-btns-row { flex-wrap: nowrap !important; gap: 0.5rem !important; justify-content: center !important; width: 100% !important; padding: 0 1.25rem !important; box-sizing: border-box !important; }
-      .hero-btns-row .btn-cta { font-size: 0.82rem !important; padding: 0.6rem 1rem !important; white-space: nowrap; }
-      .hero-btns-row .btn-scanner-pulse { font-size: 0.82rem !important; padding: 0.6rem 0.85rem !important; white-space: nowrap; }
-      .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 15px !important; height: 15px !important; }
+      /* Hero buttons — centered, wrap to two rows if needed */
+      .hero-btns-row { flex-wrap: wrap !important; gap: 0.6rem !important; justify-content: center !important; width: 100% !important; padding: 0 1.25rem !important; box-sizing: border-box !important; }
+      .hero-btns-row .btn-cta { font-size: 1.07rem !important; padding: 0.78rem 1.3rem !important; white-space: nowrap; }
+      .hero-btns-row .btn-scanner-pulse { font-size: 1.07rem !important; padding: 0.78rem 1.1rem !important; white-space: nowrap; }
+      .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 20px !important; height: 20px !important; }
 
       /* CTA Banner */
       .cta-banner-inner {
@@ -760,9 +760,9 @@
     /* ── iPhone 12 ומטה (≤390px) — עטיפה לשתי שורות + הקטנה ב-10% ── */
     @media (max-width: 390px) {
       .hero-btns-row { flex-wrap: wrap !important; }
-      .hero-btns-row .btn-cta { font-size: 0.74rem !important; padding: 0.54rem 0.9rem !important; }
-      .hero-btns-row .btn-scanner-pulse { font-size: 0.74rem !important; padding: 0.54rem 0.77rem !important; }
-      .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 14px !important; height: 14px !important; }
+      .hero-btns-row .btn-cta { font-size: 0.96rem !important; padding: 0.7rem 1.17rem !important; }
+      .hero-btns-row .btn-scanner-pulse { font-size: 0.96rem !important; padding: 0.7rem 1rem !important; }
+      .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 18px !important; height: 18px !important; }
     }
 
     /* ── Tablet breakpoint (768–1024px) ── */
@@ -1182,7 +1182,18 @@
     <a href="#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
     <a href="blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
     <a href="https://scanner.clix-automations.com/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">סורק האוטומציות</a>
-    <a href="#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
+    <a href="#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">צרו קשר</a>
+    <div style="padding: 1rem 1.5rem; display: flex; justify-content: flex-end;">
+      <a href="https://www.instagram.com/nisim.bengayev/" target="_blank" rel="noopener" aria-label="אינסטגרם"
+         style="display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:11px;background:rgba(33,150,176,0.12);border:1px solid rgba(33,150,176,0.25);color:rgba(255,255,255,0.6);transition:color 0.2s,transform 0.2s;"
+         onmouseenter="this.style.color='#2196b0';this.style.transform='scale(1.1)'" onmouseleave="this.style.color='rgba(255,255,255,0.6)';this.style.transform='scale(1)'">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+      </a>
+    </div>
   </div>
 
 
