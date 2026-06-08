@@ -596,8 +596,11 @@ async function testWebhooks(_page, F) {
     try {
       const res = await fetch(`${PROD}${ep.path}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{}',
+        headers: {
+          'Content-Type': 'application/json',
+          'Origin': PROD,
+        },
+        body: JSON.stringify({ website: '' }),
         signal: AbortSignal.timeout(10000),
       });
       if (res.status === 200 || res.status === 502) {
