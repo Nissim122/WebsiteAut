@@ -757,8 +757,9 @@
       body { padding-top: 116px !important; }
     }
 
-    /* ── iPhone 12 ומטה (≤390px) — הקטנת כפתורי Hero ב-10% ── */
+    /* ── iPhone 12 ומטה (≤390px) — עטיפה לשתי שורות + הקטנה ב-10% ── */
     @media (max-width: 390px) {
+      .hero-btns-row { flex-wrap: wrap !important; }
       .hero-btns-row .btn-cta { font-size: 0.74rem !important; padding: 0.54rem 0.9rem !important; }
       .hero-btns-row .btn-scanner-pulse { font-size: 0.74rem !important; padding: 0.54rem 0.77rem !important; }
       .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 14px !important; height: 14px !important; }
