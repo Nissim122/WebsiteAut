@@ -1559,7 +1559,6 @@
   //  TOOLS DATA
   // ═══════════════════════════════════════════════════════════════
   const TOOLS = [
-    { id:'origami',   lbl:'Origami',   svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(155,89,255,0.13);border:1.5px solid rgba(155,89,255,0.4);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/origami.png" width="36" height="36" style="object-fit:contain;" /></div></div>' },
     { id:'hubspot',   lbl:'HubSpot',   svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,122,89,0.13);border:1.5px solid rgba(255,122,89,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/hubspot.png" width="22" height="22" style="object-fit:contain;" /></div></div>' },
     { id:'pipedrive',  lbl:'Pipedrive',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(37,193,111,0.13);border:1.5px solid rgba(37,193,111,0.35);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/pipedrive.png" width="22" height="22" style="object-fit:contain;" /></div></div>' },
     { id:'fireberry', lbl:'Fireberry', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(0,0,0,0.08);border:1.5px solid rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/fireberry.webp" width="24" height="8" style="object-fit:contain;" /></div></div>' },
@@ -2127,9 +2126,11 @@
     const CIRCLE_R = 35;
     const pts = cards.map(function(card) {
       var r = card.getBoundingClientRect();
+      var iconDiv = card.children[0];
+      var ir = iconDiv ? iconDiv.getBoundingClientRect() : r;
       return {
         cx: r.left - gridRect.left + r.width / 2,
-        cy: r.top  - gridRect.top  + 46
+        cy: ir.top - gridRect.top + ir.height / 2
       };
     });
 
