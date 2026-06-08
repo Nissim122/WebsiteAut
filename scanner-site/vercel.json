@@ -3,6 +3,9 @@
   "outputDirectory": ".",
   "framework": null,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/api/scanner", "destination": "https://clix-automations.com/api/scanner" }
+  ],
   "headers": [
     {
       "source": "/brand_assets/(.*)",
