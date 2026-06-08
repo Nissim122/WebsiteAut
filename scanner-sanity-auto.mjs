@@ -386,8 +386,8 @@ async function testScreen6(page, F) {
   }
 
   // 6.2: Schedule button
-  const schedBtn = await page.$('#screen-6 a[href*="shortlink.uk"]');
-  schedBtn ? pass('6.2: Schedule button present') : fail(F, '6.2: Schedule (shortlink) button not found');
+  const schedBtn = await page.$('#screen-6 a[href*="fillout.com"]');
+  schedBtn ? pass('6.2: Schedule button present') : fail(F, '6.2: Schedule (fillout) button not found');
 
   // 6.3: Back to results
   const back = await page.$('#screen-6 button[onclick*="goTo(4)"]');
