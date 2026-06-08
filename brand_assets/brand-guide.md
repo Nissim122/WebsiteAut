@@ -301,7 +301,7 @@ body { background: #0e1628; }
     <div class="nav-links-desktop">
       <a href="/">דף הבית</a>
       <a href="/#process">תהליך</a>
-      <a href="/scanner.html" class="nav-active">רדאר העסק</a>
+      <a href="/scanner.html" class="nav-active">סורק האוטומציות</a>
     </div>
     <!-- CTA -->
     <a href="/#contact" class="btn-cta">לפרטים נוספים <span class="btn-arrow">◄</span></a>
