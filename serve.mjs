@@ -63,7 +63,13 @@ http.createServer((req, res) => {
     }
     let urlPath = req.url.split('?')[0];
     if (urlPath === '/') urlPath = '/index.html';
-    const filePath = path.join(__dirname, urlPath);
+    const root = path.resolve(__dirname);
+    const filePath = path.resolve(root, urlPath.replace(/^\/+/, ''));
+    if (!filePath.startsWith(root + path.sep) && filePath !== root) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' });
+      res.end('Forbidden');
+      return;
+    }
     const ext = path.extname(filePath);
     const contentType = MIME[ext] || 'application/octet-stream';
     fs.readFile(filePath, (err, data) => {

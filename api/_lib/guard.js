@@ -8,9 +8,14 @@ const ALLOWED_ORIGINS = [
 const rateLimitMap = new Map();
 
 export function checkOrigin(req) {
-  const origin = req.headers['origin'] || req.headers['referer'] || '';
-  if (!origin) return false;
-  return ALLOWED_ORIGINS.some(o => origin.startsWith(o));
+  const raw = req.headers['origin'] || req.headers['referer'] || '';
+  if (!raw) return false;
+  try {
+    const { origin } = new URL(raw);
+    return ALLOWED_ORIGINS.includes(origin);
+  } catch {
+    return false;
+  }
 }
 
 export function checkRateLimit(req, limit = 3, windowMs = 60_000) {
