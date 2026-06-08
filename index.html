@@ -658,6 +658,11 @@
       .bubble-tag { display: none !important; }
       /* Hero section height */
       .hero-section { min-height: auto !important; padding-top: 2.25rem !important; padding-bottom: 3rem !important; }
+      /* Hero buttons — keep both on one row */
+      .hero-btns-row { flex-wrap: nowrap !important; gap: 0.55rem !important; }
+      .hero-btns-row .btn-cta { font-size: 0.82rem !important; padding: 0.6rem 1rem !important; white-space: nowrap; }
+      .hero-btns-row .btn-scanner-pulse { font-size: 0.82rem !important; padding: 0.6rem 0.85rem !important; white-space: nowrap; }
+      .hero-btns-row .btn-scanner-pulse .sparkle-icon { width: 15px !important; height: 15px !important; }
 
       /* CTA Banner */
       .cta-banner-inner {
@@ -1243,7 +1248,7 @@
         </p>
 
         <div style="display: inline-flex; flex-direction: column; align-items: center; gap: 1.2rem;">
-          <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
+          <div class="hero-btns-row" style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
             <a href="#contact" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 1.8rem;">
               לתיאום פגישה <span class="btn-arrow">◄</span>
             </a>
