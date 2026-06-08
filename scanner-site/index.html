@@ -2131,7 +2131,7 @@
       var ir = iconDiv ? iconDiv.getBoundingClientRect() : r;
       return {
         cx: r.left - gridRect.left + r.width / 2,
-        cy: ir.top - gridRect.top + ir.height / 2
+        cy: ir.top - gridRect.top + ir.height / 2 + r.height * 0.16
       };
     });
 
