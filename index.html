@@ -169,6 +169,34 @@
       border-color: #2196b0;
       background: rgba(33,150,176,0.08);
     }
+    .btn-scanner-pulse {
+      background: linear-gradient(135deg, rgba(33,150,176,0.12) 0%, rgba(14,22,40,0.6) 100%);
+      border: 1.5px solid rgba(33,150,176,0.45);
+      color: rgba(255,255,255,0.9);
+      font-weight: 700;
+      box-shadow: 0 2px 12px rgba(33,150,176,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
+      transition: border-color 0.25s, background 0.25s, box-shadow 0.25s, transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .btn-scanner-pulse:hover {
+      background: linear-gradient(135deg, rgba(33,150,176,0.22) 0%, rgba(14,22,40,0.7) 100%);
+      border-color: rgba(33,150,176,0.75);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(33,150,176,0.22), inset 0 1px 0 rgba(255,255,255,0.09);
+    }
+    .btn-scanner-pulse:active {
+      transform: scale(0.97);
+    }
+    @keyframes sparkleAnim {
+      0%   { transform: scale(1)    rotate(0deg);  opacity: 0.85; }
+      20%  { transform: scale(1.4)  rotate(15deg); opacity: 1;    }
+      40%  { transform: scale(0.82) rotate(-9deg); opacity: 0.65; }
+      60%  { transform: scale(1.22) rotate(7deg);  opacity: 1;    }
+      80%  { transform: scale(0.94) rotate(-3deg); opacity: 0.8;  }
+      100% { transform: scale(1)    rotate(0deg);  opacity: 0.85; }
+    }
+    .sparkle-icon {
+      animation: sparkleAnim 3.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+    }
 
     /* Floating tag bubbles */
     .bubble-tag {
@@ -1107,7 +1135,7 @@
         <a href="#process" data-section="process">תהליך</a>
         <a href="#results" data-section="results">תוצאות</a>
         <a href="blog.html" style="color: rgba(255,255,255,0.75);">בלוג</a>
-        <a href="https://scanner.clix-automations.com/" style="color: rgba(255,255,255,0.75);">רדאר העסק</a>
+        <a href="https://scanner.clix-automations.com/" style="color: rgba(255,255,255,0.75);">סורק האוטומציות</a>
         <a href="#contact" data-section="contact">צרו קשר</a>
       </div>
 
@@ -1140,7 +1168,7 @@
     <a href="#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
     <a href="#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
     <a href="blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
-    <a href="https://scanner.clix-automations.com/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">רדאר העסק</a>
+    <a href="https://scanner.clix-automations.com/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">סורק האוטומציות</a>
     <a href="#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
   </div>
 
@@ -1219,8 +1247,11 @@
             <a href="#contact" class="btn-cta" style="font-size: 1rem; padding: 0.75rem 1.8rem;">
               לתיאום פגישה <span class="btn-arrow">◄</span>
             </a>
-            <a href="#process" class="btn-outline">
-              איך זה עובד?
+            <a href="https://scanner.clix-automations.com/" target="_blank" rel="noopener" class="btn-outline btn-scanner-pulse">
+              <svg width="20" height="20" viewBox="0 0 15 15" fill="none" aria-hidden="true" class="sparkle-icon" style="flex-shrink:0;">
+                <path d="M7.5 1C7.5 1 7.9 4.1 9.4 5.6C10.9 7.1 14 7.5 14 7.5C14 7.5 10.9 7.9 9.4 9.4C7.9 10.9 7.5 14 7.5 14C7.5 14 7.1 10.9 5.6 9.4C4.1 7.9 1 7.5 1 7.5C1 7.5 4.1 7.1 5.6 5.6C7.1 4.1 7.5 1 7.5 1Z" fill="currentColor"/>
+              </svg>
+              קבל כיווני אוטומציה לעסק שלך
             </a>
           </div>
 
