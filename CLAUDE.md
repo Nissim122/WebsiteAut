@@ -65,6 +65,10 @@
 - לאחר כל עריכה ב-`scanner.html`: להריץ `.\deploy-scanner.ps1 "תיאור השינוי"` — הסקריפט מסנכרן ל-`scanner-site` ודוחף את שניהם.
 - אין לסיים משימה שקשורה לסורק לפני שה-deploy רץ בהצלחה.
 
+## Git — Hard Rules
+- **אסור לדחוף (push) ללא בקשה מפורשת.** commit בלבד כברירת מחדל — push רק כשהמשתמש אומר "תדחוף" / "push".
+- הכלל חל גם על scanner deploy: לא להריץ `git push` או `git -C scanner-site push` אוטומטית.
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
 - Do not "improve" a reference design — match it
