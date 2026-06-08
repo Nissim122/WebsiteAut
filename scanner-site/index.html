@@ -302,7 +302,7 @@
 
     /* ── Tools grid ── */
     #screen-2.active { min-height: calc(100vh - 80px); }
-    #tools-grid { margin-bottom: 0; position: relative; isolation: isolate; }
+    #tools-grid { margin-bottom: 0; position: relative; z-index: 0; }
     #screen-2 .btn-row {
       position: sticky;
       bottom: 0;
@@ -2134,22 +2134,25 @@
 
     var segs = [];
     var connDots = [];
+    var gw = gridRect.width;
     for (var i = 0; i < pts.length - 1; i++) {
       var a = pts[i], b = pts[i + 1];
       var dx = b.cx - a.cx;
+      // Safe radius: orbit must not exceed grid left/right bounds
+      var R = Math.max(Math.min(CIRCLE_R, b.cx - 2, gw - b.cx - 2), 8);
       var ax, bx, fromLeft;
       if (Math.abs(dx) < 15) {
-        var goRight = a.cx < gridRect.width / 2;
+        var goRight = a.cx < gw / 2;
         ax = a.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
-        bx = b.cx + (goRight ? CIRCLE_R : -CIRCLE_R);
+        bx = b.cx + (goRight ? R : -R);
         fromLeft = !goRight;
       } else if (dx > 0) {
         ax = a.cx + CIRCLE_R;
-        bx = b.cx - CIRCLE_R;
+        bx = b.cx - R;
         fromLeft = true;
       } else {
         ax = a.cx - CIRCLE_R;
-        bx = b.cx + CIRCLE_R;
+        bx = b.cx + R;
         fromLeft = false;
       }
       var ay = a.cy, by = b.cy;
@@ -2157,15 +2160,12 @@
       var dir = bx >= ax ? 1 : -1;
       var c1x = ax + dir * h, c1y = ay;
       var c2x = bx - dir * h, c2y = by;
-      // two arcs = full 360° wrap around destination circle, returning to entry point
-      // entry from left: counterclockwise half (→ right via top) then clockwise half (→ left via bottom)
-      // entry from right: clockwise half (→ left via bottom) then counterclockwise half (→ right via top)
-      var oppX = fromLeft ? b.cx + CIRCLE_R : b.cx - CIRCLE_R;
+      var oppX = fromLeft ? b.cx + R : b.cx - R;
       var s1 = fromLeft ? 0 : 1;
       var s2 = fromLeft ? 1 : 0;
       segs.push('M ' + ax + ' ' + ay + ' C ' + c1x + ' ' + c1y + ',' + c2x + ' ' + c2y + ',' + bx + ' ' + by +
-                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + s1 + ' ' + oppX + ' ' + b.cy +
-                ' A ' + CIRCLE_R + ' ' + CIRCLE_R + ' 0 0 ' + s2 + ' ' + bx + ' ' + b.cy);
+                ' A ' + R + ' ' + R + ' 0 0 ' + s1 + ' ' + oppX + ' ' + b.cy +
+                ' A ' + R + ' ' + R + ' 0 0 ' + s2 + ' ' + bx + ' ' + b.cy);
       connDots.push({ x: ax, y: ay });
       connDots.push({ x: bx, y: by });
     }
