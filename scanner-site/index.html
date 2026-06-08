@@ -319,6 +319,18 @@
       margin-bottom: 16px;
       padding: 4px 2px;
     }
+    .tools-cat-label {
+      grid-column: 1 / -1;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--blue-l);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 18px 0 6px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2px;
+    }
+    .tools-cat-label:first-child { padding-top: 2px; }
     .tool-card {
       background: transparent;
       border: 1.5px solid transparent;
@@ -1578,6 +1590,17 @@
     { id:'clickup',  lbl:'ClickUp',   svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(128,90,210,0.13);border:1.5px solid rgba(128,90,210,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/CLIKUP.jpg" width="24" height="10" style="object-fit:contain;" /></div></div>' },
   ];
 
+  const TOOL_CATEGORIES = [
+    { id:'crm',        label:'ניהול לקוחות, לידים ומכירות',     tools:['hubspot','pipedrive','fireberry','monday','airtable'] },
+    { id:'finance',    label:'פיננסים: גבייה, סליקה וחשבוניות', tools:['morning','rivhit','grow'] },
+    { id:'messaging',  label:"תקשורת, צ'אטים והודעות",           tools:['whatsapp','telegram','manychat','slack'] },
+    { id:'scheduling', label:'זימון תורים וניהול יומנים',        tools:['calendly','tor4you'] },
+    { id:'operations', label:'ניהול פרויקטים, משימות ומידע',     tools:['trello','notion','excel','clickup'] },
+    { id:'marketing',  label:'שיווק, דיוור וטפסים',              tools:['mailchimp','smoove','ravmeser','fillout'] },
+    { id:'social',     label:'ערוצי מדיה חברתית',                tools:['instagram','facebook','linkedin'] },
+    { id:'infra',      label:'תשתיות, תקשורת וכלי עזר',          tools:['gmail','outlook','make','zoom','chatgpt'] },
+  ];
+
   // ═══════════════════════════════════════════════════════════════
   //  TOOL RESOLUTION HELPERS
   // ═══════════════════════════════════════════════════════════════
@@ -2041,20 +2064,29 @@
   //  SCREEN 1
   // ═══════════════════════════════════════════════════════════════
   function renderTools() {
-    document.getElementById('tools-grid').innerHTML = TOOLS.map(t => `
-      <div class="tool-card ${S.tools.includes(t.id) ? 'sel' : ''}" tabindex="0"
-           role="button" aria-pressed="${S.tools.includes(t.id)}" aria-label="${t.lbl}"
-           data-tid="${t.id}"
-           onclick="toggleTool('${t.id}',this)"
-           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTool('${t.id}',this)}">
-        <div style="display:flex; align-items:center; justify-content:center;">
-          ${t.img
-            ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
-            : `<span aria-hidden="true">${t.svg.replace(/<img /, `<img alt="${t.lbl}" `)}</span>`}
-        </div>
-        <span class="tool-name" aria-hidden="true">${t.lbl}</span>
-      </div>
-    `).join('');
+    let html = '';
+    for (const cat of TOOL_CATEGORIES) {
+      html += `<div class="tools-cat-label">${cat.label}</div>`;
+      for (const tid of cat.tools) {
+        const t = TOOLS.find(x => x.id === tid);
+        if (!t) continue;
+        html += `
+          <div class="tool-card ${S.tools.includes(t.id) ? 'sel' : ''}" tabindex="0"
+               role="button" aria-pressed="${S.tools.includes(t.id)}" aria-label="${t.lbl}"
+               data-tid="${t.id}"
+               onclick="toggleTool('${t.id}',this)"
+               onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTool('${t.id}',this)}">
+            <div style="display:flex; align-items:center; justify-content:center;">
+              ${t.img
+                ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
+                : `<span aria-hidden="true">${t.svg.replace(/<img /, `<img alt="${t.lbl}" `)}</span>`}
+            </div>
+            <span class="tool-name" aria-hidden="true">${t.lbl}</span>
+          </div>
+        `;
+      }
+    }
+    document.getElementById('tools-grid').innerHTML = html;
     updateConnectionPaths();
   }
 
