@@ -1710,10 +1710,10 @@
   function bestTask(tools)       { return bestTool(['trello','notion','clickup','excel','other_operations'], tools, 'מערכת ניהול'); }
   // data tools from operations (airtable belongs to CRM — not here)
   function bestData(tools)       { return bestTool(['excel','notion','other_operations'], tools, 'Google Sheets'); }
-  // notifications: messaging + infra
-  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook','other_messaging','other_infra'], tools, 'הודעה'); }
-  // lead sources: social + messaging + marketing forms
-  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','googleforms','whatsapp','telegram','other_social','other_marketing','other_messaging'], tools, 'פנייה'); }
+  // notifications: messaging (all) + infra email
+  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','manychat','greenapi','twilio','gmail','outlook','other_messaging','other_infra'], tools, 'הודעה'); }
+  // lead sources: social + all messaging + marketing forms
+  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','googleforms','whatsapp','telegram','manychat','greenapi','twilio','other_social','other_marketing','other_messaging'], tools, 'פנייה'); }
   // scheduling: calendly, tor4you, torli
   function bestScheduling(tools) { return bestTool(['calendly','tor4you','torli','other_scheduling'], tools, 'Calendly'); }
 
