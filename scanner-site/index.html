@@ -428,6 +428,21 @@
       transform: scale(7) !important;
       transform-origin: center !important;
     }
+    .tool-card[data-tid="activetrail"] span img {
+      width: 130px !important;
+      height: 78px !important;
+      object-fit: contain !important;
+    }
+    .tool-card[data-tid="googleforms"] span img {
+      width: 130px !important;
+      height: 130px !important;
+      object-fit: contain !important;
+    }
+    .tool-card[data-tid="brevo"] span img {
+      width: 110px !important;
+      height: 110px !important;
+      object-fit: contain !important;
+    }
 
     .tool-card:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
     .tool-card:active { transform: scale(1.01); }
@@ -1618,9 +1633,9 @@
     { id:'invoice4u',lbl:'Invoice4u', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(33,150,176,0.13);border:1.5px solid rgba(33,150,176,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/Invoice4u.png" width="75" height="75" style="object-fit:contain;flex-shrink:0;max-width:none;max-height:none;" /></div></div>' },
     { id:'takbul',   lbl:'תקבול',     svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(150,100,220,0.13);border:1.5px solid rgba(150,100,220,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/takbul.png" width="22" height="22" style="object-fit:contain;" /></div></div>' },
     { id:'clickup',      lbl:'ClickUp',      svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(128,90,210,0.13);border:1.5px solid rgba(128,90,210,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/CLIKUP.jpg" width="24" height="10" style="object-fit:contain;" /></div></div>' },
-    { id:'activetrail',  lbl:'ActiveTrail',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(30,40,100,0.15);border:1.5px solid rgba(30,40,100,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/AT.webp" style="width:50px;height:30px;object-fit:contain;display:block;" /></div></div>' },
-    { id:'googleforms',  lbl:'Google Forms', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(103,58,183,0.13);border:1.5px solid rgba(103,58,183,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/googleForme.png" style="width:110px;height:110px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
-    { id:'brevo',        lbl:'Brevo',        svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(25,176,113,0.13);border:1.5px solid rgba(25,176,113,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/brevo.png" style="width:110px;height:110px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
+    { id:'activetrail',  lbl:'ActiveTrail',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(30,40,100,0.15);border:1.5px solid rgba(30,40,100,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/AT.webp" style="width:75px;height:45px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
+    { id:'googleforms',  lbl:'Google Forms', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(103,58,183,0.13);border:1.5px solid rgba(103,58,183,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/googleForme.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
+    { id:'brevo',        lbl:'Brevo',        svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(25,176,113,0.13);border:1.5px solid rgba(25,176,113,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/brevo.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
   ];
 
   const TOOL_CATEGORIES = [
