@@ -907,6 +907,10 @@
         width: 36px !important;
         height: 36px !important;
       }
+      .tool-card[data-tid="greenapi"] span img {
+        width: 31px !important;
+        height: 31px !important;
+      }
     }
     @media (max-width: 375px) {
       .tool-card span img {
@@ -1396,38 +1400,48 @@
     };
 
     // Per pain: groups of tools — at least one from each group is needed
+    // Aligned with TOOL_CATEGORIES:
+    //   crm: hubspot, pipedrive, fireberry, monday, airtable, origami
+    //   finance: morning, rivhit, grow, cardcom, sumit, icount, invoice4u, takbul
+    //   messaging: whatsapp, telegram, manychat, slack, greenapi, twilio
+    //   scheduling: calendly, tor4you, torli
+    //   operations: trello, notion, excel, clickup
+    //   marketing: mailchimp, smoove, ravmeser, fillout, activetrail, googleforms, brevo
+    //   social: instagram, facebook, linkedin
+    //   infra: gmail, outlook, make, zoom, chatgpt
     const painGroups = {
-      leads:      [['whatsapp','telegram','manychat','ravmeser','instagram','facebook','fillout'],
-                   ['hubspot','pipedrive','fireberry','monday','morning','airtable']],
-      followup:   [['whatsapp','telegram','manychat','ravmeser'],
-                   ['hubspot','pipedrive','fireberry','monday','morning','airtable'],
-                   ['gmail','outlook','mailchimp','smoove']],
-      service:    [['whatsapp','telegram','manychat','ravmeser'],
-                   ['gmail','outlook'],
-                   ['slack','monday','morning','trello','notion','clickup']],
-      scheduling: [['calendly','tor4you'],
-                   ['whatsapp','telegram','manychat','ravmeser']],
-      reports:    [['sheets','excel','airtable','notion'],
-                   ['gmail','outlook','mailchimp','smoove']],
-      sales:      [['hubspot','pipedrive','fireberry','monday','morning','airtable'],
-                   ['whatsapp','telegram','manychat','ravmeser'],
-                   ['gmail','outlook']],
-      tasks:      [['monday','morning','trello','notion','clickup','airtable']],
-      invoices:   [['rivhit'], ['gmail','outlook']],
-      marketing:  [['instagram','facebook','linkedin'],
-                   ['mailchimp','smoove','gmail']],
+      leads:      [['instagram','facebook','linkedin','whatsapp','telegram','manychat','slack','greenapi','twilio','fillout','googleforms','ravmeser','other_social','other_messaging','other_marketing'],
+                   ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm']],
+      followup:   [['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'],
+                   ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'],
+                   ['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing']],
+      service:    [['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'],
+                   ['gmail','outlook','other_infra'],
+                   ['trello','notion','excel','clickup','other_operations']],
+      scheduling: [['calendly','tor4you','torli','other_scheduling'],
+                   ['whatsapp','telegram','manychat','greenapi','twilio','ravmeser','other_messaging']],
+      reports:    [['excel','notion','other_operations'],
+                   ['gmail','outlook','mailchimp','smoove','activetrail','brevo','other_infra','other_marketing']],
+      sales:      [['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'],
+                   ['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'],
+                   ['gmail','outlook','other_infra']],
+      tasks:      [['trello','notion','excel','clickup','other_operations']],
+      invoices:   [['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'],
+                   ['gmail','outlook','other_infra']],
+      marketing:  [['instagram','facebook','linkedin','other_social'],
+                   ['mailchimp','smoove','activetrail','brevo','ravmeser','fillout','googleforms','other_marketing']],
     };
 
     const groupCategories = {
-      leads:      ['ערוץ קבלת לידים', 'CRM'],
-      followup:   ['הודעות', 'CRM', 'מייל'],
-      service:    ['הודעות', 'מייל', 'ניהול משימות'],
-      scheduling: ['תיאום פגישות', 'הודעות'],
-      reports:    ['נתונים ודוחות', 'מייל'],
-      sales:      ['CRM', 'הודעות', 'מייל'],
-      tasks:      ['ניהול משימות'],
-      invoices:   ['חשבוניות', 'מייל'],
-      marketing:  ['רשתות חברתיות', 'מייל'],
+      leads:      ["תקשורת, צ'אטים והודעות", 'ניהול לקוחות / CRM'],
+      followup:   ["תקשורת, צ'אטים והודעות", 'ניהול לקוחות / CRM', 'שיווק, דיוור וטפסים'],
+      service:    ["תקשורת, צ'אטים והודעות", 'תשתיות, תקשורת וכלי עזר', 'ניהול פרויקטים, משימות ומידע'],
+      scheduling: ['זימון תורים וניהול יומנים', "תקשורת, צ'אטים והודעות"],
+      reports:    ['ניהול פרויקטים, משימות ומידע', 'שיווק, דיוור וטפסים'],
+      sales:      ['ניהול לקוחות / CRM', "תקשורת, צ'אטים והודעות", 'תשתיות, תקשורת וכלי עזר'],
+      tasks:      ['ניהול פרויקטים, משימות ומידע'],
+      invoices:   ['פיננסים: גבייה, סליקה וחשבוניות', 'תשתיות, תקשורת וכלי עזר'],
+      marketing:  ['ערוצי מדיה חברתית', 'שיווק, דיוור וטפסים'],
     };
 
     const groups     = painGroups[S.pain];
@@ -1636,17 +1650,25 @@
     { id:'activetrail',  lbl:'ActiveTrail',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(30,40,100,0.15);border:1.5px solid rgba(30,40,100,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/AT.webp" style="width:75px;height:45px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
     { id:'googleforms',  lbl:'Google Forms', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(103,58,183,0.13);border:1.5px solid rgba(103,58,183,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/googleForme.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
     { id:'brevo',        lbl:'Brevo',        svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(25,176,113,0.13);border:1.5px solid rgba(25,176,113,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/brevo.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
+    { id:'other_crm',        lbl:'CRM שלך',               svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_finance',    lbl:'מערכת הפיננסים שלך',    svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_messaging',  lbl:'הצ\'אט שלך',             svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_scheduling', lbl:'מערכת הזימון שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_operations', lbl:'מערכת הניהול שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_marketing',  lbl:'כלי השיווק שלך',          svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_social',     lbl:'הרשת החברתית שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_infra',      lbl:'כלי העזר שלך',                svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
   ];
 
   const TOOL_CATEGORIES = [
-    { id:'crm',        label:'ניהול לקוחות \\ CRM',              tools:['hubspot','pipedrive','fireberry','monday','airtable','origami'] },
-    { id:'finance',    label:'פיננסים: גבייה, סליקה וחשבוניות', tools:['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul'] },
-    { id:'messaging',  label:"תקשורת, צ'אטים והודעות",           tools:['whatsapp','telegram','manychat','slack','greenapi','twilio'] },
-    { id:'scheduling', label:'זימון תורים וניהול יומנים',        tools:['calendly','tor4you','torli'] },
-    { id:'operations', label:'ניהול פרויקטים, משימות ומידע',     tools:['trello','notion','excel','clickup'] },
-    { id:'marketing',  label:'שיווק, דיוור וטפסים',              tools:['mailchimp','smoove','ravmeser','fillout','activetrail','googleforms','brevo'] },
-    { id:'social',     label:'ערוצי מדיה חברתית',                tools:['instagram','facebook','linkedin'] },
-    { id:'infra',      label:'תשתיות, תקשורת וכלי עזר',          tools:['gmail','outlook','make','zoom','chatgpt'] },
+    { id:'crm',        label:'ניהול לקוחות \\ CRM',              tools:['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'] },
+    { id:'finance',    label:'פיננסים: גבייה, סליקה וחשבוניות', tools:['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'] },
+    { id:'messaging',  label:"תקשורת, צ'אטים והודעות",           tools:['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'] },
+    { id:'scheduling', label:'זימון תורים וניהול יומנים',        tools:['calendly','tor4you','torli','other_scheduling'] },
+    { id:'operations', label:'ניהול פרויקטים, משימות ומידע',     tools:['trello','notion','excel','clickup','other_operations'] },
+    { id:'marketing',  label:'שיווק, דיוור וטפסים',              tools:['mailchimp','smoove','ravmeser','fillout','activetrail','googleforms','brevo','other_marketing'] },
+    { id:'social',     label:'ערוצי מדיה חברתית',                tools:['instagram','facebook','linkedin','other_social'] },
+    { id:'infra',      label:'תשתיות, תקשורת וכלי עזר',          tools:['gmail','outlook','make','zoom','chatgpt','other_infra'] },
   ];
 
   // ═══════════════════════════════════════════════════════════════
@@ -1657,14 +1679,24 @@
     for (const c of candidates) { if (tools.includes(c)) return getToolLabel(c); }
     return fallback;
   }
-  function bestCRM(tools)        { return bestTool(['hubspot','pipedrive','fireberry','monday','morning','airtable'], tools, 'CRM'); }
-  function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','ravmeser'], tools, 'WhatsApp'); }
-  function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove'], tools, 'מייל'); }
-  function bestTask(tools)       { return bestTool(['monday','morning','trello','notion','clickup','airtable'], tools, 'מערכת ניהול'); }
-  function bestData(tools)       { return bestTool(['sheets','airtable','excel','notion'], tools, 'Google Sheets'); }
-  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook'], tools, 'הודעה'); }
-  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','whatsapp'], tools, 'פנייה'); }
-  function bestScheduling(tools) { return bestTool(['calendly','tor4you'], tools, 'Calendly'); }
+  // crm: hubspot, pipedrive, fireberry, monday, airtable, origami
+  function bestCRM(tools)        { return bestTool(['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'], tools, 'CRM'); }
+  // finance: morning, rivhit, grow, cardcom, sumit, icount, invoice4u, takbul
+  function bestFinance(tools)    { return bestTool(['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'], tools, 'מערכת פיננסית'); }
+  // messaging: whatsapp, telegram, manychat, slack, greenapi, twilio
+  function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'], tools, 'WhatsApp'); }
+  // email spans infra (gmail, outlook) + marketing (mailchimp, smoove, activetrail, brevo, ravmeser)
+  function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing'], tools, 'מייל'); }
+  // operations: trello, notion, excel, clickup (monday/airtable belong to CRM — not here)
+  function bestTask(tools)       { return bestTool(['trello','notion','clickup','excel','other_operations'], tools, 'מערכת ניהול'); }
+  // data tools from operations (airtable belongs to CRM — not here)
+  function bestData(tools)       { return bestTool(['excel','notion','other_operations'], tools, 'Google Sheets'); }
+  // notifications: messaging (all) + infra email
+  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','manychat','greenapi','twilio','gmail','outlook','other_messaging','other_infra'], tools, 'הודעה'); }
+  // lead sources: social + all messaging + marketing forms
+  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','googleforms','whatsapp','telegram','manychat','greenapi','twilio','other_social','other_marketing','other_messaging'], tools, 'פנייה'); }
+  // scheduling: calendly, tor4you, torli
+  function bestScheduling(tools) { return bestTool(['calendly','tor4you','torli','other_scheduling'], tools, 'Calendly'); }
 
   // ═══════════════════════════════════════════════════════════════
   //  PAIN MAP NODES — dynamic per pain + tools
@@ -1673,14 +1705,16 @@
     const CYAN  = '#2db3cd';
     const PINK  = '#e0176b';
     const GREEN = '#28c76f';
-    const msg   = bestMessaging(tools);
-    const crm   = bestCRM(tools);
-    const email = bestEmail(tools);
-    const task  = bestTask(tools);
-    const data  = bestData(tools);
-    const notif = bestNotif(tools);
-    const reportSources = crm === data ? crm : `${crm} ו-${data}`;
-    const src   = bestLeadSource(tools);
+    const msg     = bestMessaging(tools);
+    const crm     = bestCRM(tools);
+    const finance = bestFinance(tools);
+    const email   = bestEmail(tools);
+    const task    = bestTask(tools);
+    const data    = bestData(tools);
+    const notif   = bestNotif(tools);
+    const _dataOps = ['excel','notion','other_operations'];
+    const reportSources = tools.some(t => _dataOps.includes(t)) ? `${crm} ו-${data}` : crm;
+    const src     = bestLeadSource(tools);
     const sched = bestScheduling(tools);
     const maps = {
       leads: [
@@ -1777,7 +1811,7 @@
       invoices: [
         { iconKey:'userPlus',  iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:'עבודה הסתיימה — טריגר אוטומטי',            desc:'אין צורך לזכור, אין צורך לבקש.' },
         { conn:'מיידי' },
-        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`Make.com מייצר חשבונית מ-${crm}`,          desc:'פרטי לקוח, סכום ותנאים — נשלפים אוטומטית.', central:true },
+        { iconKey:'zap',       iconClr:CYAN,  nodeClass:'cyan',    iconClass:'cyan-i',  title:`Make.com מייצר חשבונית ב-${finance}`,      desc:'פרטי לקוח, סכום ותנאים — נשלפים אוטומטית.', central:true },
         { conn:'תוך שניות' },
         { iconKey:'msgCircle', iconClr:PINK,  nodeClass:'pink',    iconClass:'pink-i',  title:`חשבונית נשלחת ב-${email}`,                desc:'מגיעה מיד לתיבת הלקוח — מסודרת.' },
         { conn:'אוטומטי', lineClr:'rgba(224,23,107,0.28)' },
@@ -1808,14 +1842,15 @@
   //  RESOLVE FLOW STEPS — real tool names in after-column
   // ═══════════════════════════════════════════════════════════════
   function resolveFlowSteps(flowId, tools) {
-    const msg   = bestMessaging(tools);
-    const crm   = bestCRM(tools);
-    const email = bestEmail(tools);
-    const task  = bestTask(tools);
-    const data  = bestData(tools);
-    const notif = bestNotif(tools);
-    const src   = bestLeadSource(tools);
-    const sched = bestScheduling(tools);
+    const msg     = bestMessaging(tools);
+    const crm     = bestCRM(tools);
+    const finance = bestFinance(tools);
+    const email   = bestEmail(tools);
+    const task    = bestTask(tools);
+    const data    = bestData(tools);
+    const notif   = bestNotif(tools);
+    const src     = bestLeadSource(tools);
+    const sched   = bestScheduling(tools);
     const steps = {
       'wa-lead':   [`ליד שולח הודעה ב-${msg}`,            'Make.com מזהה ומחלץ פרטים',      `נוצרת רשומה ב-${crm} אוטומטית`,           `הודעת תודה נשלחת ב-${msg} תוך 30 שניות`],
       'followup':  [`ליד לא ענה — זוהה ב-${crm}`,         'Make.com מפעיל מנוע פולואפ',      `הודעת פולואפ נשלחת ב-${msg}`,             `הסטטוס ב-${crm} מתעדכן אוטומטית`],
@@ -1825,6 +1860,8 @@
       'report':    ['טריגר אוטומטי ביום שתגדיר',           `Make.com מאסף נתונים מ-${data}`,  `${data} מתעדכן ומחושב`,                   `דוח נשלח ב-${email}`],
       'schedule':  [`לקוח בוחר שעה ב-${sched}`,           'Make.com מאשר ושולח הכנה',         `תזכורת 24 שעות לפני ב-${msg}`,            `פולואפ אחרי הפגישה ב-${msg}`],
       'triage':    [`הודעה נכנסת ב-${msg} / ${email}`,    'Make.com מסווג לפי נושא',          `מועבר לנציג הנכון ב-${task}`,             'תגובה ראשונית אוטומטית תוך 30 שניות'],
+      'invoice':   [`סגירת עסקה זוהתה ב-${crm}`,         `Make.com מייצר חשבונית ב-${finance}`,`החשבונית נשלחת ב-${email} אוטומטית`,      `תזכורת תשלום נשלחת ב-${msg} בזמן הנכון`],
+      'content':   [`תוכן מוכן מגיע ל-Make.com`,          'מתוזמן לפרסום בכל ערוץ אוטומטית',  `עדכון ביצועים נשלח ב-${email}`,           `לידים חמים מנותבים ל-${crm} מיידית`],
     };
     return steps[flowId] || null;
   }
@@ -1833,11 +1870,13 @@
   //  RENDER PAIN CARDS — dynamic per pain + tools
   // ═══════════════════════════════════════════════════════════════
   function renderPainCards(pain, tools) {
-    const crm  = bestCRM(tools);
-    const msg  = bestMessaging(tools);
-    const data = bestData(tools);
-    const email = bestEmail(tools);
-    const reportSources = crm === data ? crm : `${crm} ו-${data}`;
+    const crm     = bestCRM(tools);
+    const finance = bestFinance(tools);
+    const msg     = bestMessaging(tools);
+    const data    = bestData(tools);
+    const email   = bestEmail(tools);
+    const _dataOps = ['excel','notion','other_operations'];
+    const reportSources = tools.some(t => _dataOps.includes(t)) ? `${crm} ו-${data}` : crm;
     const warnSvg  = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="${c}" stroke-width="2" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="${c}" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="${c}" stroke-width="2.5" stroke-linecap="round"/></svg>`;
     const clockSvg = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="${c}" stroke-width="2"/><path d="M12 7v5l3 3" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
     const linkSvg  = c => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="${c}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="2" y1="2" x2="22" y2="22" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
@@ -1892,7 +1931,7 @@
       invoices: [
         card(clockSvg(P), 'חשבוניות נשלחות באיחור',             'כל חשבונית נוצרת ידנית — עיכוב ישיר בקבלת תשלום.',         clockFoot, 'תזרים מזומנים: נפגע'),
         card(warnSvg(P),  'לקוחות לא משלמים בזמן',              'בלי תזכורות אוטומטיות — חובות פתוחים גדלים.',               warnFoot,  'ימי גבייה: גבוה'),
-        card(linkSvg(P),  `אין מעקב על חשבוניות ב-${data}`,   'מי חייב כמה? מתי הוגדר? אין תשובה ברורה.',                  linkFoot,  'שליטה פיננסית: נמוכה'),
+        card(linkSvg(P),  `אין מעקב על חשבוניות ב-${finance}`, 'מי חייב כמה? מתי הוגדר? אין תשובה ברורה.',                  linkFoot,  'שליטה פיננסית: נמוכה'),
       ],
       marketing: [
         card(clockSvg(P), 'קמפיינים מנוהלים ידנית',             'כל הודעה ומייל נכתב ונשלח ידנית — מגביל נפח ועקביות.',     clockFoot, 'יעילות שיווק: נמוכה'),
@@ -1921,16 +1960,16 @@
 
   // ── Category-based relevance: matches any equivalent tool, not exact id ──
   function flowRelevance(flowId, tools) {
-    const hasMsg   = tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t));
-    const hasCRM   = tools.some(t => ['hubspot','pipedrive','fireberry','monday','morning','airtable'].includes(t));
-    const hasEmail = tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t));
-    const hasData  = tools.some(t => ['sheets','excel','airtable','notion'].includes(t));
-    const hasIgFb  = tools.some(t => ['instagram','facebook'].includes(t));   // DM-capable channels only
-    const hasSoc   = tools.some(t => ['instagram','facebook','linkedin'].includes(t));
-    const hasSched = tools.some(t => ['calendly','tor4you'].includes(t));
-    const hasForm  = tools.some(t => ['fillout','facebook','instagram','linkedin'].includes(t));
-    const hasTask  = tools.some(t => ['monday','morning','trello','notion','clickup','airtable'].includes(t));
-    const hasInvoice = tools.some(t => ['rivhit'].includes(t));
+    const hasMsg     = tools.some(t => ['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'].includes(t));
+    const hasCRM     = tools.some(t => ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'].includes(t));
+    const hasEmail   = tools.some(t => ['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing'].includes(t));
+    const hasData    = tools.some(t => ['excel','notion','other_operations'].includes(t));
+    const hasIgFb    = tools.some(t => ['instagram','facebook'].includes(t));
+    const hasSoc     = tools.some(t => ['instagram','facebook','linkedin','other_social'].includes(t));
+    const hasSched   = tools.some(t => ['calendly','tor4you','torli','other_scheduling'].includes(t));
+    const hasForm    = tools.some(t => ['fillout','googleforms','facebook','instagram','linkedin','other_marketing'].includes(t));
+    const hasTask    = tools.some(t => ['trello','notion','clickup','excel','other_operations'].includes(t));
+    const hasFinance = tools.some(t => ['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'].includes(t));
     const map = {
       'wa-lead':   (hasMsg ? 12 : 0) + (hasCRM ? 6 : 0),                                        // max 18
       'followup':  (hasMsg ? 10 : 0) + (hasCRM ? 10 : 0) + (hasEmail ? 5 : 0),                 // max 25
@@ -1940,7 +1979,7 @@
       'report':    (hasData ? 12 : 0) + (hasEmail ? 6 : 0),                                      // max 18
       'schedule':  (hasSched ? 15 : 0) + (hasMsg ? 4 : 0),                                       // max 19
       'triage':    (hasMsg ? 10 : 0) + (hasEmail ? 8 : 0) + (hasTask ? 5 : 0),                  // max 23
-      'invoice':   (hasCRM ? 10 : 0) + (hasEmail ? 8 : 0) + (hasInvoice ? 5 : 0),              // max 23
+      'invoice':   (hasFinance ? 15 : 0) + (hasCRM ? 5 : 0) + (hasEmail ? 5 : 0),             // max 25
       'content':   (hasSoc ? 12 : 0) + (hasData ? 6 : 0) + (hasEmail ? 3 : 0),                 // max 21
     };
     return map[flowId] || 0;
@@ -1951,10 +1990,22 @@
     const base = { leads:72, service:65, scheduling:60, followup:68, reports:55, sales:70, tasks:58, invoices:62, marketing:68 };
     // Affinity scores for ALL tools in TOOLS array
     const aff = {
-      whatsapp:8, gmail:5, sheets:4, monday:7, make:10, airtable:6, instagram:6, hubspot:9,
-      slack:5, calendly:7, fillout:5, excel:3, pipedrive:8, fireberry:7, morning:6, trello:4,
-      notion:5, outlook:4, mailchimp:5, smoove:4, telegram:6, manychat:5, facebook:5,
-      linkedin:4, zoom:3, tor4you:6, chatgpt:7, ravmeser:5, rivhit:4, grow:3, clickup:5,
+      // crm
+      hubspot:9, pipedrive:8, fireberry:7, monday:7, airtable:6, origami:6,
+      // finance
+      morning:6, rivhit:5, grow:4, cardcom:4, sumit:4, icount:4, invoice4u:4, takbul:4,
+      // messaging
+      whatsapp:8, telegram:6, manychat:5, slack:5, greenapi:5, twilio:5,
+      // scheduling
+      calendly:7, tor4you:6, torli:5,
+      // operations
+      trello:4, notion:5, excel:4, clickup:5,
+      // marketing
+      mailchimp:5, smoove:4, ravmeser:5, fillout:5, activetrail:5, googleforms:4, brevo:4,
+      // social
+      instagram:6, facebook:5, linkedin:4,
+      // infra
+      gmail:5, outlook:4, make:10, zoom:3, chatgpt:7,
     };
     const ib = { leads:5, sales:4, service:3, time:2 };
 
@@ -1996,8 +2047,8 @@
     // Pain-relevant inputs: pick tools that match the pain context first
     const srcTools  = ['instagram','facebook','linkedin','fillout','whatsapp','telegram'];
     const schedTools = ['calendly','tor4you'];
-    const dataTools  = ['sheets','excel','airtable','notion'];
-    const crmTools   = ['hubspot','pipedrive','fireberry','monday','morning','airtable'];
+    const dataTools  = ['excel','notion','other_operations'];
+    const crmTools   = ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'];
     let inputPool;
     if (['leads','sales','marketing'].includes(pain)) inputPool = srcTools;
     else if (pain === 'scheduling')                   inputPool = [...schedTools, ...srcTools];
@@ -2014,8 +2065,8 @@
     const emailLabel = bestEmail(tools);
     if (tools.some(t => crmTools.includes(t))) outputs.push(crmLabel);
     else outputs.push('Google Sheets');
-    if (tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t))) outputs.push(msgLabel);
-    else if (tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t))) outputs.push(emailLabel);
+    if (tools.some(t => ['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'].includes(t))) outputs.push(msgLabel);
+    else if (tools.some(t => ['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing'].includes(t))) outputs.push(emailLabel);
     else outputs.push('הודעה אוטומטית');
 
     const proofs = {
