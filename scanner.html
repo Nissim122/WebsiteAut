@@ -1659,17 +1659,25 @@
     { id:'activetrail',  lbl:'ActiveTrail',  svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(30,40,100,0.15);border:1.5px solid rgba(30,40,100,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/AT.webp" style="width:75px;height:45px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
     { id:'googleforms',  lbl:'Google Forms', svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(103,58,183,0.13);border:1.5px solid rgba(103,58,183,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/googleForme.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
     { id:'brevo',        lbl:'Brevo',        svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(25,176,113,0.13);border:1.5px solid rgba(25,176,113,0.45);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><div style="width:55px;height:55px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;"><img src="brand_assets/icons/brevo.png" style="width:165px;height:165px;object-fit:contain;flex-shrink:0;max-width:none;max-height:none;display:block;" /></div></div>' },
+    { id:'other_crm',        lbl:'CRM שלך',               svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_finance',    lbl:'מערכת הפיננסים שלך',    svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_messaging',  lbl:'הצ\'אט שלך',             svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_scheduling', lbl:'מערכת הזימון שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_operations', lbl:'מערכת הניהול שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_marketing',  lbl:'כלי השיווק שלך',          svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_social',     lbl:'הרשת החברתית שלך',       svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
+    { id:'other_infra',      lbl:'הכלי שלך',                svg:'<div style="width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.04);border:1.5px dashed rgba(255,255,255,0.28);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:14px;font-weight:700;color:rgba(255,255,255,0.55);font-family:Heebo,sans-serif;letter-spacing:-0.02em;">אחר</span></div>' },
   ];
 
   const TOOL_CATEGORIES = [
-    { id:'crm',        label:'ניהול לקוחות \\ CRM',              tools:['hubspot','pipedrive','fireberry','monday','airtable','origami'] },
-    { id:'finance',    label:'פיננסים: גבייה, סליקה וחשבוניות', tools:['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul'] },
-    { id:'messaging',  label:"תקשורת, צ'אטים והודעות",           tools:['whatsapp','telegram','manychat','slack','greenapi','twilio'] },
-    { id:'scheduling', label:'זימון תורים וניהול יומנים',        tools:['calendly','tor4you','torli'] },
-    { id:'operations', label:'ניהול פרויקטים, משימות ומידע',     tools:['trello','notion','excel','clickup'] },
-    { id:'marketing',  label:'שיווק, דיוור וטפסים',              tools:['mailchimp','smoove','ravmeser','fillout','activetrail','googleforms','brevo'] },
-    { id:'social',     label:'ערוצי מדיה חברתית',                tools:['instagram','facebook','linkedin'] },
-    { id:'infra',      label:'תשתיות, תקשורת וכלי עזר',          tools:['gmail','outlook','make','zoom','chatgpt'] },
+    { id:'crm',        label:'ניהול לקוחות \\ CRM',              tools:['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'] },
+    { id:'finance',    label:'פיננסים: גבייה, סליקה וחשבוניות', tools:['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'] },
+    { id:'messaging',  label:"תקשורת, צ'אטים והודעות",           tools:['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'] },
+    { id:'scheduling', label:'זימון תורים וניהול יומנים',        tools:['calendly','tor4you','torli','other_scheduling'] },
+    { id:'operations', label:'ניהול פרויקטים, משימות ומידע',     tools:['trello','notion','excel','clickup','other_operations'] },
+    { id:'marketing',  label:'שיווק, דיוור וטפסים',              tools:['mailchimp','smoove','ravmeser','fillout','activetrail','googleforms','brevo','other_marketing'] },
+    { id:'social',     label:'ערוצי מדיה חברתית',                tools:['instagram','facebook','linkedin','other_social'] },
+    { id:'infra',      label:'תשתיות, תקשורת וכלי עזר',          tools:['gmail','outlook','make','zoom','chatgpt','other_infra'] },
   ];
 
   // ═══════════════════════════════════════════════════════════════
@@ -1680,14 +1688,14 @@
     for (const c of candidates) { if (tools.includes(c)) return getToolLabel(c); }
     return fallback;
   }
-  function bestCRM(tools)        { return bestTool(['hubspot','pipedrive','fireberry','monday','morning','airtable'], tools, 'CRM'); }
-  function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','ravmeser'], tools, 'WhatsApp'); }
-  function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove'], tools, 'מייל'); }
-  function bestTask(tools)       { return bestTool(['monday','morning','trello','notion','clickup','airtable'], tools, 'מערכת ניהול'); }
-  function bestData(tools)       { return bestTool(['sheets','airtable','excel','notion'], tools, 'Google Sheets'); }
-  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook'], tools, 'הודעה'); }
-  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','whatsapp'], tools, 'פנייה'); }
-  function bestScheduling(tools) { return bestTool(['calendly','tor4you'], tools, 'Calendly'); }
+  function bestCRM(tools)        { return bestTool(['hubspot','pipedrive','fireberry','monday','morning','airtable','other_crm'], tools, 'CRM'); }
+  function bestMessaging(tools)  { return bestTool(['whatsapp','telegram','manychat','ravmeser','other_messaging'], tools, 'WhatsApp'); }
+  function bestEmail(tools)      { return bestTool(['gmail','outlook','mailchimp','smoove','other_infra','other_marketing'], tools, 'מייל'); }
+  function bestTask(tools)       { return bestTool(['monday','morning','trello','notion','clickup','airtable','other_operations'], tools, 'מערכת ניהול'); }
+  function bestData(tools)       { return bestTool(['sheets','airtable','excel','notion','other_operations'], tools, 'Google Sheets'); }
+  function bestNotif(tools)      { return bestTool(['slack','whatsapp','telegram','gmail','outlook','other_messaging','other_infra'], tools, 'הודעה'); }
+  function bestLeadSource(tools) { return bestTool(['instagram','facebook','linkedin','fillout','whatsapp','other_social','other_marketing'], tools, 'פנייה'); }
+  function bestScheduling(tools) { return bestTool(['calendly','tor4you','torli','other_scheduling'], tools, 'Calendly'); }
 
   // ═══════════════════════════════════════════════════════════════
   //  PAIN MAP NODES — dynamic per pain + tools
