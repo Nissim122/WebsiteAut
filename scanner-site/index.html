@@ -1459,7 +1459,11 @@
     const categories = groupCategories[S.pain];
     if (!groups) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
 
-    const rows = categories.map(cat => `
+    const missingCats = categories.filter((cat, i) => !groups[i].some(t => S.tools.includes(t)));
+
+    if (!missingCats.length) { hint.innerHTML = ''; hint.style.display = 'none'; return; }
+
+    const rows = missingCats.map(cat => `
       <span style="background:rgba(33,150,176,0.15);border:1px solid rgba(33,150,176,0.35);border-radius:6px;padding:3px 10px;font-size:12px;color:#2db3cd;font-weight:600;white-space:nowrap;">${cat}</span>
     `).join('');
 
