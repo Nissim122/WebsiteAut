@@ -1879,6 +1879,8 @@
       'report':    ['טריגר אוטומטי ביום שתגדיר',           `Make.com מאסף נתונים מ-${data}`,  `${data} מתעדכן ומחושב`,                   `דוח נשלח ב-${email}`],
       'schedule':  [`לקוח בוחר שעה ב-${sched}`,           'Make.com מאשר ושולח הכנה',         `תזכורת 24 שעות לפני ב-${msg}`,            `פולואפ אחרי הפגישה ב-${msg}`],
       'triage':    [`הודעה נכנסת ב-${msg} / ${email}`,    'Make.com מסווג לפי נושא',          `מועבר לנציג הנכון ב-${task}`,             'תגובה ראשונית אוטומטית תוך 30 שניות'],
+      'invoice':   [`סגירת עסקה זוהתה ב-${crm}`,         `Make.com מייצר חשבונית ב-${finance}`,`החשבונית נשלחת ב-${email} אוטומטית`,      `תזכורת תשלום נשלחת ב-${msg} בזמן הנכון`],
+      'content':   [`תוכן מוכן מגיע ל-Make.com`,          'מתוזמן לפרסום בכל ערוץ אוטומטית',  `עדכון ביצועים נשלח ב-${email}`,           `לידים חמים מנותבים ל-${crm} מיידית`],
     };
     return steps[flowId] || null;
   }
@@ -1977,16 +1979,16 @@
 
   // ── Category-based relevance: matches any equivalent tool, not exact id ──
   function flowRelevance(flowId, tools) {
-    const hasMsg   = tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t));
-    const hasCRM   = tools.some(t => ['hubspot','pipedrive','fireberry','monday','morning','airtable'].includes(t));
-    const hasEmail = tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t));
-    const hasData  = tools.some(t => ['sheets','excel','airtable','notion'].includes(t));
-    const hasIgFb  = tools.some(t => ['instagram','facebook'].includes(t));   // DM-capable channels only
-    const hasSoc   = tools.some(t => ['instagram','facebook','linkedin'].includes(t));
-    const hasSched = tools.some(t => ['calendly','tor4you'].includes(t));
-    const hasForm  = tools.some(t => ['fillout','facebook','instagram','linkedin'].includes(t));
-    const hasTask  = tools.some(t => ['monday','morning','trello','notion','clickup','airtable'].includes(t));
-    const hasInvoice = tools.some(t => ['rivhit'].includes(t));
+    const hasMsg     = tools.some(t => ['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'].includes(t));
+    const hasCRM     = tools.some(t => ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'].includes(t));
+    const hasEmail   = tools.some(t => ['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing'].includes(t));
+    const hasData    = tools.some(t => ['excel','notion','other_operations'].includes(t));
+    const hasIgFb    = tools.some(t => ['instagram','facebook'].includes(t));
+    const hasSoc     = tools.some(t => ['instagram','facebook','linkedin','other_social'].includes(t));
+    const hasSched   = tools.some(t => ['calendly','tor4you','torli','other_scheduling'].includes(t));
+    const hasForm    = tools.some(t => ['fillout','googleforms','facebook','instagram','linkedin','other_marketing'].includes(t));
+    const hasTask    = tools.some(t => ['trello','notion','clickup','excel','other_operations'].includes(t));
+    const hasFinance = tools.some(t => ['morning','rivhit','grow','cardcom','sumit','icount','invoice4u','takbul','other_finance'].includes(t));
     const map = {
       'wa-lead':   (hasMsg ? 12 : 0) + (hasCRM ? 6 : 0),                                        // max 18
       'followup':  (hasMsg ? 10 : 0) + (hasCRM ? 10 : 0) + (hasEmail ? 5 : 0),                 // max 25
@@ -1996,7 +1998,7 @@
       'report':    (hasData ? 12 : 0) + (hasEmail ? 6 : 0),                                      // max 18
       'schedule':  (hasSched ? 15 : 0) + (hasMsg ? 4 : 0),                                       // max 19
       'triage':    (hasMsg ? 10 : 0) + (hasEmail ? 8 : 0) + (hasTask ? 5 : 0),                  // max 23
-      'invoice':   (hasCRM ? 10 : 0) + (hasEmail ? 8 : 0) + (hasInvoice ? 5 : 0),              // max 23
+      'invoice':   (hasFinance ? 15 : 0) + (hasCRM ? 5 : 0) + (hasEmail ? 5 : 0),             // max 25
       'content':   (hasSoc ? 12 : 0) + (hasData ? 6 : 0) + (hasEmail ? 3 : 0),                 // max 21
     };
     return map[flowId] || 0;
@@ -2007,10 +2009,22 @@
     const base = { leads:72, service:65, scheduling:60, followup:68, reports:55, sales:70, tasks:58, invoices:62, marketing:68 };
     // Affinity scores for ALL tools in TOOLS array
     const aff = {
-      whatsapp:8, gmail:5, sheets:4, monday:7, make:10, airtable:6, instagram:6, hubspot:9,
-      slack:5, calendly:7, fillout:5, excel:3, pipedrive:8, fireberry:7, morning:6, trello:4,
-      notion:5, outlook:4, mailchimp:5, smoove:4, telegram:6, manychat:5, facebook:5,
-      linkedin:4, zoom:3, tor4you:6, chatgpt:7, ravmeser:5, rivhit:4, grow:3, clickup:5,
+      // crm
+      hubspot:9, pipedrive:8, fireberry:7, monday:7, airtable:6, origami:6,
+      // finance
+      morning:6, rivhit:5, grow:4, cardcom:4, sumit:4, icount:4, invoice4u:4, takbul:4,
+      // messaging
+      whatsapp:8, telegram:6, manychat:5, slack:5, greenapi:5, twilio:5,
+      // scheduling
+      calendly:7, tor4you:6, torli:5,
+      // operations
+      trello:4, notion:5, excel:4, clickup:5,
+      // marketing
+      mailchimp:5, smoove:4, ravmeser:5, fillout:5, activetrail:5, googleforms:4, brevo:4,
+      // social
+      instagram:6, facebook:5, linkedin:4,
+      // infra
+      gmail:5, outlook:4, make:10, zoom:3, chatgpt:7,
     };
     const ib = { leads:5, sales:4, service:3, time:2 };
 
@@ -2052,8 +2066,8 @@
     // Pain-relevant inputs: pick tools that match the pain context first
     const srcTools  = ['instagram','facebook','linkedin','fillout','whatsapp','telegram'];
     const schedTools = ['calendly','tor4you'];
-    const dataTools  = ['sheets','excel','airtable','notion'];
-    const crmTools   = ['hubspot','pipedrive','fireberry','monday','morning','airtable'];
+    const dataTools  = ['excel','notion','other_operations'];
+    const crmTools   = ['hubspot','pipedrive','fireberry','monday','airtable','origami','other_crm'];
     let inputPool;
     if (['leads','sales','marketing'].includes(pain)) inputPool = srcTools;
     else if (pain === 'scheduling')                   inputPool = [...schedTools, ...srcTools];
@@ -2070,8 +2084,8 @@
     const emailLabel = bestEmail(tools);
     if (tools.some(t => crmTools.includes(t))) outputs.push(crmLabel);
     else outputs.push('Google Sheets');
-    if (tools.some(t => ['whatsapp','telegram','manychat','ravmeser'].includes(t))) outputs.push(msgLabel);
-    else if (tools.some(t => ['gmail','outlook','mailchimp','smoove'].includes(t))) outputs.push(emailLabel);
+    if (tools.some(t => ['whatsapp','telegram','manychat','slack','greenapi','twilio','other_messaging'].includes(t))) outputs.push(msgLabel);
+    else if (tools.some(t => ['gmail','outlook','mailchimp','smoove','activetrail','brevo','ravmeser','other_infra','other_marketing'].includes(t))) outputs.push(emailLabel);
     else outputs.push('הודעה אוטומטית');
 
     const proofs = {
