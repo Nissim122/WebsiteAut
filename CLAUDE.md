@@ -24,6 +24,29 @@
 - When comparing, be specific: "heading is 32px but reference shows ~24px", "card gap is 16px but should be 24px"
 - Check: spacing/padding, font size/weight/line-height, colors (exact hex), alignment, border-radius, shadows, image sizing
 
+## Screenshot — חובות לפני כל צילום (ללא יוצא מן הכלל)
+
+בכל צילום מסך עם Puppeteer, חייב לבצע את שניהם לפני הצילום:
+
+**1. אישור עוגיות** — לחיצה על כפתור האישור:
+```js
+await page.evaluate(() => {
+  document.querySelector('#clix-cookie-accept')?.click();
+});
+await new Promise(r => setTimeout(r, 500));
+```
+
+**2. הסרת focus outline** — מניעת המסגרת הצהובה על כותרות עם `tabindex="-1"`:
+```js
+await page.evaluate(() => {
+  const style = document.createElement('style');
+  style.textContent = '[tabindex="-1"]:focus { outline: none !important; }';
+  document.head.appendChild(style);
+});
+```
+
+שני הצעדים האלה הם **חובה** בכל סקריפט Puppeteer בפרויקט — גם אם העמוד לא נראה כמו שיש בו עוגיות או פוקוס.
+
 ## Output Defaults
 - Single `index.html` file, all styles inline, unless user says otherwise
 - Tailwind CSS via CDN: `<script src="https://cdn.tailwindcss.com"></script>`
@@ -68,6 +91,29 @@
 ## Git — Hard Rules
 - **אסור לדחוף (push) ללא בקשה מפורשת.** commit בלבד כברירת מחדל — push רק כשהמשתמש אומר "תדחוף" / "push".
 - הכלל חל גם על scanner deploy: לא להריץ `git push` או `git -C scanner-site push` אוטומטית.
+
+## Image Alt Text — Hard Rule
+
+**כל `<img>` חייב לכלול `alt` מתאים להקשר — ללא יוצא מן הכלל.**
+
+### לפי סוג התמונה:
+| סוג | דוגמת alt |
+|-----|-----------|
+| לוגו כלי (CRM, אוטומציה, תקשורת) | `alt="לוגו HubSpot"` |
+| אייקון כלי ב-scanner | `alt="HubSpot — כלי CRM לאוטומצית מכירות"` |
+| תמונת אוטומציה / תהליך | `alt="אוטומציית פולואפ ללידים"` / `alt="אוטומציית תיאום פגישות"` |
+| תמונת הירו / באנר | `alt="Clix Automations — אוטומציה לעסקים"` |
+| תמונה דקורטיבית בלבד | `alt=""` (ריק — מכוון) |
+
+### כללי הכתיבה:
+- **ספציפי להקשר** — לא `alt="image"` או `alt="icon"`. לתאר מה התמונה עושה, לא רק מה היא.
+- **עברית לתוכן עברי** — אם שאר הדף בעברית, ה-alt בעברית.
+- **כלים בסורק** — `alt="${lbl}"` מספיק לרינדור דינמי, אבל בקוד המקור (מחרוזות JS) — לכתוב את ה-alt ישירות בתוך תגית ה-`<img>`.
+- **אסור `alt=""` לתמונות עם תוכן** — רק לתמונות שהן אך ורק דקורטיביות ואין להן שום ערך ב-SEO.
+
+### סורק — כלל ספציפי:
+- כל כניסה ל-`TOOLS` array עם `svg` שמכיל `<img>` — ה-`<img>` חייב לכלול `alt="{lbl}"` ישירות בקוד המקור (לא רק דרך JS replace בזמן רינדור).
+- כלל זה מבטיח שגם SEO crawlers שלא מריצים JS יראו alt תקין.
 
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
