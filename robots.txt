@@ -3,7 +3,7 @@ Allow: /
 
 Sitemap: https://clix-automations.com/sitemap.xml
 
-# AI crawlers
+# AI crawlers — llms.txt available at /llms.txt
 User-agent: GPTBot
 Allow: /
 
@@ -21,6 +21,3 @@ Allow: /
 
 User-agent: anthropic-ai
 Allow: /
-
-# AI discovery
-LLMs: https://clix-automations.com/llms.txt
