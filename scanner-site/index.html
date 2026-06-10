@@ -2181,8 +2181,8 @@
                onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleTool('${t.id}',this)}">
             <div style="display:flex; align-items:center; justify-content:center;">
               ${t.img
-                ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}">`
-                : `<span aria-hidden="true">${t.svg.replace(/<img /, `<img alt="${t.lbl}" `)}</span>`}
+                ? `<img class="tool-img" src="${t.img}" alt="${t.lbl}" loading="lazy">`
+                : `<span aria-hidden="true">${t.svg.replace(/<img /, `<img loading="lazy" alt="${t.lbl}" `)}</span>`}
             </div>
             <span class="tool-name" aria-hidden="true">${t.lbl}</span>
           </div>
