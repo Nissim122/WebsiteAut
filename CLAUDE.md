@@ -121,6 +121,11 @@ await page.evaluate(() => {
 - זה חל על תמונת הכותרת הראשית ועל כל תמונה נוספת בגוף הפוסט.
 - תמונות OG/Twitter ב-`<meta>` — לא רלוונטי (הן לא `<img>`).
 
+## Cleanup Before Commit — Hard Rule
+- **סקריפטים חד-פעמיים** (verify-*, test-*, debug-*) שנכתבו לצורך בדיקה ספציפית ואין בהם יותר צורך — **למחוק** לפני ה-commit.
+- **פילטרים/סקריפטים לדוחות** שלא יופעלו שוב — **למחוק** או **להוסיף ל-`.gitignore`** לפי הצורך.
+- כלל זה חל על כל קובץ `.mjs`, `.js`, `.py`, `.ps1` שנוצר ad-hoc ואינו חלק מהתשתית הקבועה של הפרויקט.
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
 - Do not "improve" a reference design — match it
