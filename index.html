@@ -4535,7 +4535,7 @@
     // whatsapp_click
     document.querySelectorAll('a[href*="wa.me"]').forEach(function (el) {
       el.addEventListener('click', function () {
-        track('whatsapp_click', { source: 'main_site' });
+        track('whatsapp_click', { click_source: 'main_site' });
       });
     });
 
@@ -4549,7 +4549,7 @@
     // scanner_click — links to scanner
     document.querySelectorAll('a[href*="scanner"]').forEach(function (el) {
       el.addEventListener('click', function () {
-        track('scanner_click', { source: 'main_site' });
+        track('scanner_click', { click_source: 'main_site' });
       });
     });
   })();
