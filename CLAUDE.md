@@ -115,6 +115,12 @@ await page.evaluate(() => {
 - כל כניסה ל-`TOOLS` array עם `svg` שמכיל `<img>` — ה-`<img>` חייב לכלול `alt="{lbl}"` ישירות בקוד המקור (לא רק דרך JS replace בזמן רינדור).
 - כלל זה מבטיח שגם SEO crawlers שלא מריצים JS יראו alt תקין.
 
+## Blog Posts — Hard Rules
+
+- **כל `<img>` בפוסטי בלוג (`posts/*.html`) חייב לכלול `loading="lazy"`** — ללא יוצא מן הכלל.
+- זה חל על תמונת הכותרת הראשית ועל כל תמונה נוספת בגוף הפוסט.
+- תמונות OG/Twitter ב-`<meta>` — לא רלוונטי (הן לא `<img>`).
+
 ## Hard Rules
 - Do not add sections, features, or content not in the reference
 - Do not "improve" a reference design — match it
