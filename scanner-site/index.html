@@ -2749,23 +2749,6 @@
       </table>
     </td></tr>
   </table>
-
-  <script>
-    // Show site nav when ?nav=1 (arrived from main site), persist in sessionStorage
-    (function () {
-      var p = new URLSearchParams(window.location.search);
-      if (p.get('nav') === '1') sessionStorage.setItem('clix_nav', '1');
-      if (sessionStorage.getItem('clix_nav') === '1') {
-        var nav = document.getElementById('site-nav');
-        if (nav) {
-          nav.style.display = '';
-          // Restore top margin that clears the fixed nav
-          var wrapper = document.querySelector('.prog-bar');
-          if (wrapper) wrapper.style.marginTop = '130px';
-        }
-      }
-    })();
-  </script>
 </body>
 </html>`;
   }
@@ -2896,6 +2879,23 @@
       document.removeEventListener('keydown', trapNavFocus);
       btn.focus();
     }
+  </script>
+
+  <script>
+    // Show site nav when ?nav=1 (arrived from main site), persist in sessionStorage
+    (function () {
+      var p = new URLSearchParams(window.location.search);
+      if (p.get('nav') === '1') sessionStorage.setItem('clix_nav', '1');
+      if (sessionStorage.getItem('clix_nav') === '1') {
+        var nav = document.getElementById('site-nav');
+        if (nav) {
+          nav.style.display = '';
+          // Restore top margin that clears the fixed nav
+          var wrapper = document.querySelector('.prog-bar');
+          if (wrapper) wrapper.style.marginTop = '130px';
+        }
+      }
+    })();
   </script>
 </body>
 </html>

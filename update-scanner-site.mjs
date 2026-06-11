@@ -45,7 +45,8 @@ const navScript = `
     })();
   </script>
 `;
-html = html.replace('</body>', navScript + '</body>');
+const lastBodyIdx = html.lastIndexOf('</body>');
+html = html.slice(0, lastBodyIdx) + navScript + html.slice(lastBodyIdx);
 
 // Update URLs for standalone domain
 html = html.replaceAll('https://clix-automations.com/scanner.html', 'https://scanner.clix-automations.com/');
