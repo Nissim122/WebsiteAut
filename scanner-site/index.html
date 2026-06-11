@@ -1001,16 +1001,39 @@
   <div class="bg-grad"></div>
   <div class="grain"></div>
 
-
+  <!-- Main site nav -->
+  <nav class="site-nav" id="site-nav" style="display:none;" aria-label="תפריט ראשי">
+    <div class="nav-inner">
+      <a href="https://clix-automations.com/" aria-label="Clix Automations — דף הבית" style="text-decoration: none; display: flex; align-items: baseline; gap: 0.15rem; flex-shrink: 0; direction: ltr;">
+        <span style="font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.75rem; letter-spacing: -0.04em; color: #ffffff;">Clix</span><span style="font-family: 'Inter', sans-serif; font-weight: 400; font-size: 1.35rem; letter-spacing: -0.02em; color: #e0176b;">Automations</span>
+      </a>
+      <div style="display: flex; gap: 2.5rem;" class="hidden md:flex nav-links-desktop">
+        <a href="https://clix-automations.com/">דף הבית</a>
+        <a href="https://clix-automations.com/#process">תהליך</a>
+        <a href="https://clix-automations.com/#results">תוצאות</a>
+        <a href="https://clix-automations.com/blog.html">בלוג</a>
+        <a href="https://scanner.clix-automations.com/?nav=1" class="nav-active">סורק האוטומציות</a>
+        <a href="/#contact">צרו קשר</a>
+      </div>
+      <a href="https://clix-automations.com/#contact" class="btn-cta nav-cta-desktop" style="font-size: 0.85rem; padding: 0.5rem 1.25rem;">
+        לפרטים נוספים <span class="btn-arrow">◄</span>
+      </a>
+      <button class="hamburger-btn" id="hamburger-btn" onclick="toggleMobileMenu()" aria-label="פתח תפריט ניווט" aria-expanded="false" aria-controls="mobile-menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </nav>
 
   <!-- Mobile Navigation Menu -->
   <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="תפריט ניווט" style="position: fixed; top: 92px; left: 1rem; right: 1rem; background: rgba(14, 22, 40, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); z-index: 150; flex-direction: column; align-items: stretch; border: 1.5px solid #e0176b; border-top: none; border-radius: 0 0 14px 14px;">
-    <a href="/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">דף הבית</a>
-    <a href="/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
-    <a href="/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
-    <a href="/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
-    <a href="/scanner.html" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">סורק האוטומציות</a>
-    <a href="/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
+    <a href="https://clix-automations.com/" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">דף הבית</a>
+    <a href="https://clix-automations.com/#process" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תהליך</a>
+    <a href="https://clix-automations.com/#results" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">תוצאות</a>
+    <a href="https://clix-automations.com/blog.html" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">בלוג</a>
+    <a href="https://scanner.clix-automations.com/?nav=1" onclick="closeMobileMenu()" style="color: #e0176b; font-weight: 700; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.07); display: block;">סורק האוטומציות</a>
+    <a href="https://clix-automations.com/#contact" onclick="closeMobileMenu()" style="color: rgba(255,255,255,0.88); font-weight: 600; font-size: 1.05rem; text-decoration: none; padding: 1.1rem 1.5rem; text-align: right; display: block;">צרו קשר</a>
   </div>
 
   <div class="wrapper">
@@ -2726,6 +2749,23 @@
       </table>
     </td></tr>
   </table>
+
+  <script>
+    // Show site nav when ?nav=1 (arrived from main site), persist in sessionStorage
+    (function () {
+      var p = new URLSearchParams(window.location.search);
+      if (p.get('nav') === '1') sessionStorage.setItem('clix_nav', '1');
+      if (sessionStorage.getItem('clix_nav') === '1') {
+        var nav = document.getElementById('site-nav');
+        if (nav) {
+          nav.style.display = '';
+          // Restore top margin that clears the fixed nav
+          var wrapper = document.querySelector('.prog-bar');
+          if (wrapper) wrapper.style.marginTop = '130px';
+        }
+      }
+    })();
+  </script>
 </body>
 </html>`;
   }
