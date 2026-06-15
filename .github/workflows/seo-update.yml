@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: '0 8 1,15 * *'  # ה-1 וה-15 בחודש, 8:00 UTC (11:00 שעון ישראל)
   workflow_dispatch:          # הפעלה ידנית מ-GitHub
+    inputs:
+      dry_run:
+        description: 'Dry run — הצג שינויים בלי לשמור קבצים'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -26,12 +33,17 @@ jobs:
           node-version: '24'
 
       - name: Run SEO updater
-        run: node seo-updater.mjs
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="--dry-run"; fi
+          node seo-updater.mjs $ARGS
 
       - name: Sync scanner.html → scanner-site/index.html
+        if: github.event.inputs.dry_run != 'true'
         run: node update-scanner-site.mjs
 
       - name: Push scanner-site → automation-scanner repo
+        if: github.event.inputs.dry_run != 'true'
         env:
           TOKEN: ${{ secrets.SCANNER_DEPLOY_TOKEN }}
         run: |
@@ -51,6 +63,7 @@ jobs:
           )
 
       - name: Commit & push main repo
+        if: github.event.inputs.dry_run != 'true'
         run: |
           git config user.name "SEO Bot"
           git config user.email "bot@clix-automations.com"

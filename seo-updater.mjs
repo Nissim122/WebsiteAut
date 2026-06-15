@@ -474,6 +474,11 @@ async function main() {
   const valid = results.filter(Boolean);
   console.log(`\n✅ הצליח לסרוק: ${valid.length}/${competitors.length} אתרים`);
 
+  if (valid.length === 0) {
+    console.error('❌ כל אתרי המתחרים נכשלו — מבטל עדכון כדי לא לכתוב keywords ריקות');
+    process.exit(1);
+  }
+
   // בנה מפת תדירות ממתחרים
   const allTexts = valid.flatMap(r => [
     r.title || '', r.description || '', r.headings || '', r.paragraphs || '',
@@ -499,7 +504,7 @@ async function main() {
 
   const postUrls = await updatePostPages(config, competitorKeywords);
 
-  const allModified = [indexUrl, blogUrl, scannerUrl, ...postUrls].filter(Boolean);
+  const allModified = [indexUrl, blogUrl, scannerUrl, ...(postUrls || [])].filter(Boolean);
   await updateSitemapLastmod(allModified);
 
   console.log('\n' + '═'.repeat(50));
