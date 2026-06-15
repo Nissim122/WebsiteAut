@@ -23,6 +23,7 @@
 
     initScrollTracking();
     initSectionTracking();
+    initConversionTracking();
   }
 
   // Fires a scroll_depth event at 25 / 50 / 75 / 90 %
@@ -72,6 +73,67 @@
     });
   }
 
+  // ─── Conversion Tracking ─────────────────────────────────────────────────────
+  function initConversionTracking() {
+    // CTA button clicks (nav, hero, blog preview, results)
+    document.querySelectorAll('a.btn-cta, button.btn-cta').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var label = el.textContent.trim().slice(0, 50);
+        var href  = el.getAttribute('href') || '';
+        window.gtag('event', 'cta_click', { label: label, destination: href });
+      });
+    });
+
+    // Scanner link clicks
+    document.querySelectorAll('a[href*="scanner.clix-automations.com"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'scanner_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
+    // WhatsApp clicks
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'whatsapp_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
+    // Phone clicks
+    document.querySelectorAll('a[href^="tel:"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        var section = el.closest('[id]');
+        window.gtag('event', 'phone_click', { location: section ? section.id : 'unknown' });
+      });
+    });
+
+    // Chat widget — first open only
+    var origToggleChat = window.toggleChat;
+    var chatTracked = false;
+    if (typeof origToggleChat === 'function') {
+      window.toggleChat = function () {
+        origToggleChat.apply(this, arguments);
+        if (!chatTracked) {
+          chatTracked = true;
+          window.gtag('event', 'chat_open');
+        }
+      };
+    }
+
+    // Popup open — watch style changes via MutationObserver
+    var popup = document.getElementById('offer-popup');
+    if (popup) {
+      var popupTracked = false;
+      new MutationObserver(function () {
+        if (!popupTracked && popup.style.display !== 'none' && popup.style.opacity !== '0') {
+          popupTracked = true;
+          window.gtag('event', 'popup_open');
+        }
+      }).observe(popup, { attributes: true, attributeFilter: ['style'] });
+    }
+  }
+
   // ─── Consent Banner ───────────────────────────────────────────────────────────
   function accept() {
     localStorage.setItem(CONSENT_KEY, ACCEPTED);
@@ -114,6 +176,9 @@
 
     var card = document.createElement('div');
     card.setAttribute('dir', 'rtl');
+    card.setAttribute('role', 'dialog');
+    card.setAttribute('aria-modal', 'true');
+    card.setAttribute('aria-labelledby', 'clix-cookie-title');
     card.style.cssText = [
       'pointer-events:all',
       'width:100%',
@@ -146,7 +211,7 @@
           '<circle cx="12.5" cy="11.5" r="0.75" fill="rgba(255,255,255,0.45)"/>',
         '</svg>',
         '<div>',
-          '<p style="font-size:0.95rem;font-weight:700;margin-bottom:0.25rem;line-height:1.3;">אנו משתמשים בעוגיות אנליטיקה</p>',
+          '<p id="clix-cookie-title" style="font-size:0.95rem;font-weight:700;margin-bottom:0.25rem;line-height:1.3;">אנו משתמשים בעוגיות אנליטיקה</p>',
           '<p style="font-size:0.82rem;line-height:1.65;color:rgba(255,255,255,0.6);">',
             'אנו משתמשים ב-Google Analytics כדי להבין אילו עמודים שימושיים ולשפר את האתר. הנתונים אנונימיים ומעובדים על ידי Google Analytics.',
             ' <a href="/privacy.html" style="color:#2196b0;text-decoration:underline;font-weight:600;">מדיניות פרטיות</a>',
@@ -189,6 +254,10 @@
       requestAnimationFrame(function () {
         card.style.opacity = '1';
         card.style.transform = 'translateY(0)';
+        setTimeout(function () {
+          var btn = document.getElementById('clix-cookie-accept');
+          if (btn) btn.focus();
+        }, 400);
       });
     });
 
