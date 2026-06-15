@@ -15,11 +15,10 @@ jobs:
       contents: write
 
     steps:
-      - name: Checkout (with submodules)
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
-          token: ${{ secrets.SCANNER_DEPLOY_TOKEN }}
+        # אין token מפורש — משתמש ב-github.token שתמיד קיים ויש לו contents:write
+        # אין submodules — scanner-site מנוהל כקבצים רגילים (אין .gitmodules)
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -32,24 +31,30 @@ jobs:
       - name: Sync scanner.html → scanner-site/index.html
         run: node update-scanner-site.mjs
 
-      - name: Commit & push scanner-site (submodule)
+      - name: Push scanner-site → automation-scanner repo
+        env:
+          TOKEN: ${{ secrets.SCANNER_DEPLOY_TOKEN }}
         run: |
+          if [ -z "${TOKEN}" ]; then
+            echo "⚠️  SCANNER_DEPLOY_TOKEN לא מוגדר — מדלג על push לscanner-site"
+            exit 0
+          fi
           git config user.name "SEO Bot"
           git config user.email "bot@clix-automations.com"
-          cd scanner-site
-          git remote set-url origin https://x-access-token:${{ secrets.SCANNER_DEPLOY_TOKEN }}@github.com/${{ github.repository_owner }}/automation-scanner.git
+          git clone --depth 1 https://x-access-token:${TOKEN}@github.com/${{ github.repository_owner }}/automation-scanner.git /tmp/automation-scanner
+          cp -r scanner-site/. /tmp/automation-scanner/
+          cd /tmp/automation-scanner
           git add -A
           git diff --staged --quiet && echo "No changes in scanner-site" || (
             git commit -m "seo: עדכון מילות מפתח $(date +'%Y-%m-%d')" &&
-            git push origin HEAD
+            git push
           )
-          cd ..
 
       - name: Commit & push main repo
         run: |
           git config user.name "SEO Bot"
           git config user.email "bot@clix-automations.com"
-          git add index.html blog.html scanner.html scanner-site posts/ sitemap.xml
+          git add index.html blog.html scanner.html scanner-site/ posts/ sitemap.xml
           git diff --staged --quiet && echo "No changes" || (
             git commit -m "seo: עדכון מילות מפתח $(date +'%Y-%m-%d')" &&
             git push
