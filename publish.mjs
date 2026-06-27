@@ -9,6 +9,7 @@
 import { readFile, writeFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
+import sharp from 'sharp';
 
 const dateArg = process.argv[2];
 if (!dateArg || !/^\d{4}-\d{2}-\d{2}-\d+$/.test(dateArg)) {
@@ -34,6 +35,59 @@ const CATEGORIES = {
   whatsapp: { label: 'WhatsApp עסקי', css: 'whatsapp' },
   tips:     { label: 'טיפים',          css: 'tips' },
 };
+
+const CAT_COLORS = {
+  ai:       { bg: 'rgba(33,150,176,0.22)',  text: '#5ecfec' },
+  make:     { bg: 'rgba(108,70,220,0.22)',  text: '#b39dff' },
+  monday:   { bg: 'rgba(255,85,0,0.18)',    text: '#ff9a5c' },
+  whatsapp: { bg: 'rgba(37,211,102,0.18)',  text: '#5dde8a' },
+  tips:     { bg: 'rgba(255,200,0,0.15)',   text: '#ffd966' },
+};
+
+async function ensureBlogImage(slug, catCss, catLabel) {
+  const imgDir = join(BASE_DIR, 'images', 'blog');
+  for (const ext of ['webp', 'jpg', 'png']) {
+    if (existsSync(join(imgDir, `${slug}.${ext}`))) return;
+  }
+
+  const { bg, text } = CAT_COLORS[catCss] || CAT_COLORS.tips;
+  const W = 1200, H = 630;
+
+  const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e1628"/>
+      <stop offset="100%" stop-color="#141d35"/>
+    </linearGradient>
+    <radialGradient id="g1" cx="15%" cy="25%" r="55%">
+      <stop offset="0%" stop-color="#2196b0" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#2196b0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="85%" cy="75%" r="45%">
+      <stop offset="0%" stop-color="#e0176b" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#e0176b" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#bg)"/>
+  <rect width="${W}" height="${H}" fill="url(#g1)"/>
+  <rect width="${W}" height="${H}" fill="url(#g2)"/>
+  <line x1="0" y1="${H*0.65}" x2="${W}" y2="${H*0.65}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <line x1="${W*0.35}" y1="0" x2="${W*0.35}" y2="${H}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+  <rect x="${W*0.35}" y="0" width="${W*0.65}" height="${H}" fill="rgba(33,150,176,0.03)"/>
+  <circle cx="${W*0.78}" cy="${H*0.32}" r="180" fill="none" stroke="rgba(33,150,176,0.08)" stroke-width="1"/>
+  <circle cx="${W*0.78}" cy="${H*0.32}" r="120" fill="none" stroke="rgba(33,150,176,0.06)" stroke-width="1"/>
+  <rect x="80" y="80" rx="20" ry="20" width="${catLabel.length * 14 + 48}" height="40" fill="${bg}"/>
+  <text x="${catLabel.length * 7 + 80 + 24}" y="106" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="${text}" text-anchor="middle">${catLabel}</text>
+  <rect x="80" y="${H - 100}" width="60" height="4" rx="2" fill="#2196b0"/>
+  <rect x="80" y="${H - 100}" width="18" height="4" rx="2" fill="#e0176b"/>
+  <text x="80" y="${H - 54}" font-family="Arial,sans-serif" font-size="34" font-weight="700" fill="#ffffff">Clix</text>
+  <text x="148" y="${H - 54}" font-family="Arial,sans-serif" font-size="34" font-weight="400" fill="#e0176b">Automations</text>
+  <text x="80" y="${H - 24}" font-family="Arial,sans-serif" font-size="15" fill="rgba(255,255,255,0.35)">clix-automations.com</text>
+</svg>`;
+
+  await sharp(Buffer.from(svg)).png().toFile(join(imgDir, `${slug}.png`));
+  console.log(`🖼️  placeholder נוצר: images/blog/${slug}.png`);
+}
 
 function resolveImagePath(slug) {
   for (const ext of ['webp', 'jpg', 'png']) {
@@ -361,6 +415,9 @@ async function main() {
 
   const postSlug = dateArg;
   const postPath = join(POSTS_DIR, `${postSlug}.html`);
+
+  // ── 0. Auto-generate placeholder image if none exists ────────────────────────
+  await ensureBlogImage(imageSlug, cat.css, cat.label);
 
   // ── 1. Create post page ──────────────────────────────────────────────────────
   if (!existsSync(POSTS_DIR)) await mkdir(POSTS_DIR, { recursive: true });
