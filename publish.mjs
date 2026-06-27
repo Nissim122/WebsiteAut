@@ -1,4 +1,4 @@
-/**
+﻿/**
  * publish.mjs
  * מפרסם טיוטה מ-drafts/YYYY-MM-DD.json לתוך blog.html
  * ויוצר דף מאמר מלא ב-posts/YYYY-MM-DD.html
@@ -112,7 +112,9 @@ function pickRelated(currentSlug, currentCategory, index) {
 
 function buildRelatedSection(relatedPosts) {
   if (!relatedPosts || relatedPosts.length === 0) return '';
-  const rows = relatedPosts.map(p => `    <a href="${p.url}" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+  // p.url is root-relative ("posts/slug.html") but this HTML is rendered inside posts/,
+  // so strip the prefix to avoid resolving to /posts/posts/slug.html (404).
+  const rows = relatedPosts.map(p => `    <a href="${p.url.replace(/^posts\//, ``)}" style="display:flex;align-items:center;justify-content:space-between;padding:0.875rem 0;border-bottom:1px solid rgba(255,255,255,0.08);text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(33,150,176,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
       <span style="font-family:'Heebo',sans-serif;font-size:0.97rem;font-weight:500;color:rgba(224,232,240,0.88);line-height:1.5;">${p.title}</span>
       <span style="font-family:'Heebo',sans-serif;font-size:0.82rem;color:#2196b0;font-weight:600;white-space:nowrap;padding-right:1.25rem;">קריאה ←</span>
     </a>`).join('\n');
