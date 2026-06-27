@@ -30,9 +30,42 @@ oauth2Client.setCredentials(tokens);
 
 const analyticsData = google.analyticsdata({ version: 'v1beta', auth: oauth2Client });
 
+// ── ערים ידועות של מרכזי נתונים / בוטים ───────────────────────────────────────
+const BOT_CITIES = [
+  'Moses Lake',   // Microsoft Azure West US
+  'Boydton',      // Microsoft Azure East US
+  'Cheyenne',     // Microsoft Azure West Central US
+  'Des Moines',   // Google Cloud / Microsoft
+  'San Antonio',  // Microsoft Azure South Central US
+  'Quincy',       // Microsoft Azure West US
+  'Ashburn',      // AWS East / data center hub
+  'Council Bluffs', // Google Cloud
+];
+
+// ── בניית פילטר הרחקת בוטים ──────────────────────────────────────────────────
+function buildBotExcludeFilter() {
+  return {
+    notExpression: {
+      orGroup: {
+        expressions: BOT_CITIES.map(city => ({
+          filter: { fieldName: 'city', stringFilter: { matchType: 'EXACT', value: city } },
+        })),
+      },
+    },
+  };
+}
+
+function withBotFilter(existingFilter) {
+  const botFilter = buildBotExcludeFilter();
+  if (!existingFilter) return botFilter;
+  return { andGroup: { expressions: [existingFilter, botFilter] } };
+}
+
 // ── טווח תאריכים (--month YYYY-MM לדוח חודש ספציפי, ברירת מחדל = מתחילת השנה) ──
 const args = process.argv.slice(2);
 let startDate, endDate, reportLabel;
+
+const filterBots = !args.includes('--all');
 
 if (args[0] === '--week') {
   const now = new Date();
@@ -68,6 +101,7 @@ const deviceIcon = d => ({ desktop: '🖥️', mobile: '📱', tablet: '📟' }[
 
 // ── שאילתה 1: כלל האתר ───────────────────────────────────────────────────────
 async function getSiteWideReport() {
+  const botFilter = filterBots ? buildBotExcludeFilter() : undefined;
   const [overviewRes, locationRes] = await Promise.all([
     analyticsData.properties.runReport({
       property: `properties/${PROPERTY_ID}`,
@@ -82,6 +116,7 @@ async function getSiteWideReport() {
           { name: 'sessions' },
         ],
         dateRanges: [{ startDate, endDate }],
+        ...(botFilter && { dimensionFilter: botFilter }),
       },
     }),
     analyticsData.properties.runReport({
@@ -92,6 +127,7 @@ async function getSiteWideReport() {
         dateRanges: [{ startDate, endDate }],
         orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
         limit: 20,
+        ...(botFilter && { dimensionFilter: botFilter }),
       },
     }),
   ]);
@@ -146,6 +182,7 @@ async function getSiteWideReport() {
 
 // ── שאילתה 2: מקורות תנועה ───────────────────────────────────────────────────
 async function getTrafficSources() {
+  const botFilter = filterBots ? buildBotExcludeFilter() : undefined;
   const res = await analyticsData.properties.runReport({
     property: `properties/${PROPERTY_ID}`,
     requestBody: {
@@ -158,6 +195,7 @@ async function getTrafficSources() {
       ],
       dateRanges: [{ startDate, endDate }],
       orderBys: [{ metric: { metricName: 'sessions' }, desc: true }],
+      ...(botFilter && { dimensionFilter: botFilter }),
     },
   });
 
@@ -186,6 +224,9 @@ async function getTrafficSources() {
 
 // ── שאילתה 3: מאמרים ─────────────────────────────────────────────────────────
 async function getArticlesReport() {
+  const postsFilter = {
+    filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: '/posts/' } },
+  };
   const res = await analyticsData.properties.runReport({
     property: `properties/${PROPERTY_ID}`,
     requestBody: {
@@ -204,12 +245,7 @@ async function getArticlesReport() {
         { name: 'engagementRate' },
         { name: 'newUsers' },
       ],
-      dimensionFilter: {
-        filter: {
-          fieldName: 'pagePath',
-          stringFilter: { matchType: 'CONTAINS', value: '/posts/' },
-        },
-      },
+      dimensionFilter: filterBots ? withBotFilter(postsFilter) : postsFilter,
       dateRanges: [{ startDate, endDate }],
       orderBys: [{ metric: { metricName: 'screenPageViews' }, desc: true }],
     },
@@ -268,6 +304,12 @@ async function getArticlesReport() {
 
 // ── שאילתה 4: סורק אוטומציות ─────────────────────────────────────────────────
 async function getScannerReport() {
+  const scannerPageFilter = {
+    filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: 'scanner' } },
+  };
+  const scannerEventFilter = {
+    filter: { fieldName: 'eventName', stringFilter: { matchType: 'BEGINS_WITH', value: 'scanner_' } },
+  };
   const [pageRes, eventsRes] = await Promise.all([
     analyticsData.properties.runReport({
       property: `properties/${PROPERTY_ID}`,
@@ -280,9 +322,7 @@ async function getScannerReport() {
           { name: 'engagementRate' },
           { name: 'sessions' },
         ],
-        dimensionFilter: {
-          filter: { fieldName: 'pagePath', stringFilter: { matchType: 'CONTAINS', value: 'scanner' } },
-        },
+        dimensionFilter: filterBots ? withBotFilter(scannerPageFilter) : scannerPageFilter,
         dateRanges: [{ startDate, endDate }],
       },
     }),
@@ -291,9 +331,7 @@ async function getScannerReport() {
       requestBody: {
         dimensions: [{ name: 'eventName' }],
         metrics: [{ name: 'eventCount' }],
-        dimensionFilter: {
-          filter: { fieldName: 'eventName', stringFilter: { matchType: 'BEGINS_WITH', value: 'scanner_' } },
-        },
+        dimensionFilter: filterBots ? withBotFilter(scannerEventFilter) : scannerEventFilter,
         dateRanges: [{ startDate, endDate }],
       },
     }),
@@ -340,6 +378,7 @@ function buildReport(site, sources, articles, scanner) {
   const today = new Date().toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
   lines.push(`📊 דוח ביקורים — ${today}`);
+  if (filterBots) lines.push(`⚙️  סינון בוטים פעיל (ערים: ${BOT_CITIES.join(', ')}) | --all להצגת הכל`);
   lines.push('='.repeat(72));
 
   // ── כלל האתר ──
