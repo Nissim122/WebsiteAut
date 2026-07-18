@@ -37,6 +37,10 @@ jobs:
         with:
           node-version: '24'
 
+      - name: Install dependencies
+        if: steps.check.outputs.skip == 'false'
+        run: npm ci
+
       - name: Run Blog Agent
         if: steps.check.outputs.skip == 'false'
         env:
