@@ -187,6 +187,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+  <url>
+    <loc>https://clix-automations.com/posts/2026-08-12-1.html</loc>
+    <lastmod>2026-08-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- דפים נוספים -->
   <url>
     <loc>https://clix-automations.com/accessibility.html</loc>
